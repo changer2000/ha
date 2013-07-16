@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+	
+<hibernate-mapping package="com.etech.ha.peer">
+	<class name="UserPeer" table="t_user">
+		<!-- TODO -->
+		<id name="id" column="event_id">
+			<generator class="native"></generator>
+		</id>
+		<property name="date" column="event_date" type="timestamp"></property>
+		<property name="title"></property>
+		
+		<set name="participants" table="person_event" inverse="true">
+			<key column="event_id"></key>
+			<many-to-many column="person_id" class="Person"></many-to-many>
+		</set>
+	</class>
+</hibernate-mapping>
