@@ -1,17 +1,17 @@
 -----------  节假日出勤登记系统
-drop database if exists hldy_atdns;
-create database hldy_atdns default character set utf8;
+drop database if exists ha;
+create database ha default character set utf8;
 
-use hldy_atdns;
+use ha;
 
 drop table t_user;
 create table t_user(
 id int auto_increment primary key,
-user_id varchar(20),
-user_name varchar(100),
+empe_num varchar(20),
+empe_name varchar(100),
 pwd varchar(8),
 mobile varchar(11),
-tel_no varchar(20),
+tel_no varchar(50),
 email varchar(50),
 dept_cd varchar(20),
 del_flg int
@@ -41,25 +41,25 @@ p_id varchar(100)
 drop table t_holiday;
 create table t_holiday(
 id int auto_increment primary key,
-holiday_name varchar(100),
-year varchar(4),
+hldy_year int,
+hldy_name varchar(100),
+hldy_start date,
+hldy_end date,
 start_dt date,
-end_dt date,
-holiday_start date,
-holiday_end date
+end_dt date
 ) engine=InnoDB;
 
 drop table t_attendance_status;
 create table t_attendance_status(
-id int auto_increment primary key,
-attendance_cd varchar(20),
-attendance_name varchar(100)
+atndnc_id int auto_increment primary key,
+atndnc_name varchar(100)
 ) engine=InnoDB;
 
 drop table t_attendance_info;
 create table t_attendance_info(
 id int auto_increment primary key,
-user_id varchar(20),
-hldy_date date, 
-attendance_cd varchar(20)
+user_id int,
+work_date date, 
+atndnc_id int,
+hldy_id int
 ) engine=InnoDB;
