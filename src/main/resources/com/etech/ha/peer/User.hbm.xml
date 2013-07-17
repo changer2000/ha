@@ -5,16 +5,17 @@
 	
 <hibernate-mapping package="com.etech.ha.peer">
 	<class name="UserPeer" table="t_user">
-		<!-- TODO -->
-		<id name="id" column="event_id">
+		<id name="id" column="id" >
 			<generator class="native"></generator>
 		</id>
-		<property name="date" column="event_date" type="timestamp"></property>
-		<property name="title"></property>
+		<property name="empe_num" column="empe_num" type="string"></property>
+		<property name="empe_name" column="empe_name" type="string"></property>
+		<property name="pwd" column="pwd" type="string"></property>
+		<property name="mobile" column="mobile" type="string"></property>
+		<property name="tel_no" column="tel_no" type="string"></property>
+		<property name="email" column="email" type="string"></property>
+		<property name="dept_cd" column="dept_cd" type="string"></property>
+		<property name="del_flg" column="del_flg" type="int"></property>
 		
-		<set name="participants" table="person_event" inverse="true">
-			<key column="event_id"></key>
-			<many-to-many column="person_id" class="Person"></many-to-many>
-		</set>
 	</class>
 </hibernate-mapping>
