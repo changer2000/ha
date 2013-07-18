@@ -17,7 +17,7 @@
 		<property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
 		
 		
-		<mapping resource="com/etech/ha/peer/User.hbm.xml"/>
+		<mapping resource="com/etech/ha/peer/UserPeer.hbm.xml"/>
 		
 	</session-factory>
 </hibernate-configuration>

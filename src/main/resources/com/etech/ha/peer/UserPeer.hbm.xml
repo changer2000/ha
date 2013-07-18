@@ -3,7 +3,7 @@
 	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 	
-<hibernate-mapping package="com.etech.ha.peer">
+<hibernate-mapping package="com.etech.ha.peer" auto-import="true">
 	<class name="UserPeer" table="t_user">
 		<id name="id" column="id" >
 			<generator class="native"></generator>
