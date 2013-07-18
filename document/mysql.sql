@@ -66,4 +66,4 @@ hldy_id int
 
 
 -----------------------------------
-insert into t_user(empe_num,empe_name,pwd,mobile,tel_no,email,dept_cd,del_flg) values ('1404','李熙春','1234','13524656789','021-12345678',null,null,0);
+insert into t_user(empe_num,empe_name,pwd,mobile,tel_no,email,dept_cd,del_flg) values ('1404','li','1234','13524656789','021-12345678',null,null,0);
