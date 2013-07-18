@@ -14,4 +14,5 @@
 	<!-- 如果访问web url有错的话，试着把这句注释去掉，再试试看
 	<mvc:annotation-driven/>
 	-->
+	
 </beans>
