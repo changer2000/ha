@@ -1,4 +1,4 @@
-package com.etech.ha.controller;
+package com.etech.ha.login.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -7,8 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.etech.ha.login.service.UserService;
 import com.etech.ha.peer.UserPeer;
-import com.etech.ha.service.UserService;
 
 @Controller
 public class LoginController {
