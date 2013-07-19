@@ -10,9 +10,9 @@
 	<!-- Maps '/' requests to the 'home' view -->
 	<mvc:view-controller path="/" view-name="index"/>
 	
-	<context:component-scan base-package="com.etech.ha.controller"></context:component-scan>
-	<!-- 如果访问web url有错的话，试着把这句注释去掉，再试试看
+	<context:component-scan base-package="com.etech.ha.**.controller"></context:component-scan>
+	
+	<!-- Enables the Spring MVC @Controller programming model -->
 	<mvc:annotation-driven/>
-	-->
 	
 </beans>

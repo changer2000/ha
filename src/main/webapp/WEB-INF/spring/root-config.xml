@@ -13,22 +13,33 @@
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	<context:component-scan base-package="com.etech.ha.dao"></context:component-scan>
-	<context:component-scan base-package="com.etech.ha.service"></context:component-scan>
+	<context:component-scan base-package="com.etech.ha.**.service"></context:component-scan>
 	
 	<context:property-placeholder location="classpath:jdbc.properties"/>
 	
-	<!-- 老的hibernate sessionFactory写法 -->
+	<!-- 老的hibernate sessionFactory写法
 	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
 		<property name="configLocation" value="classpath:hibernate.cfg.xml"/>
 	</bean>
+	--> 
 	
-	<!--
+	<!-- 用了以下这种配置后，hibernate.cfg.xml就用不到了-->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="mappingLocations" value="classpath:/com/etech/ha/peer/*.xml"/>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+			</props>
+		</property>
+	</bean>
+	
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
 		  p:driverClassName="${jdbc.driverClassName}"
 		  p:url="${jdbc.url}"
 		  p:username="${jdbc.username}"
 		  p:password="${jdbc.password}"></bean>
-	-->
+	
 	
 	<!-- 用了以下这种配置后，hibernate.cfg.xml应该就用不到了 ，
 	还需要加上2个jar：lib\hibernate-annotations-3.2.1.ga.jar 和 com.springsource.javax.persistence-1.0.0.jar
@@ -54,9 +65,10 @@
 		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
 	
+	<!-- 用声明方式的事务,每个service文件中都要有@Transaction的声明  -->
 	<tx:annotation-driven transaction-manager="transactionManager"/>
 	
-	<!--
+	<!-- 最原始的配置方式
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
     	destroy-method="close"
     	p:driverClassName="com.mysql.jdbc.Driver"
