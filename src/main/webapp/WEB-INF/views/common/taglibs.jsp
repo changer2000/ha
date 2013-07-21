@@ -14,4 +14,6 @@
 <%@ taglib uri="/WEB-INF/tld/c.tld" prefix="c" %>
 <%@ taglib uri="/WEB-INF/tld/c-rt.tld" prefix="c-rt" %>
 <%@ taglib uri="/WEB-INF/tld/fmt.tld" prefix="fmt" %>
+<%@ taglib uri="/WEB-INF/tld/spring.tld" prefix="s" %>
+<%@ taglib uri="/WEB-INF/tld/spring-form.tld" prefix="form" %>
 <%-- next21 tags --%>
