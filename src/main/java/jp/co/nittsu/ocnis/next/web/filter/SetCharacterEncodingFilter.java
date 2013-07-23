@@ -24,10 +24,12 @@ public class SetCharacterEncodingFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
-		if (ignore || request.getCharacterEncoding()==null) {
-			String encoding = selectEncoding(request);
-			if (encoding!=null)
-				request.setCharacterEncoding(encoding);
+		if (!ignore) {
+			if (request.getCharacterEncoding()==null) {
+				String encoding = selectEncoding(request);
+				if (encoding!=null)
+					request.setCharacterEncoding(encoding);
+			}
 		}
 		
 		chain.doFilter(request, response);
