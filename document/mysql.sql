@@ -16,6 +16,7 @@ email varchar(50),
 dept_cd varchar(20),
 del_flg int
 ) engine=InnoDB;
+alter table t_user change empe_num empe_num varchar(50);
 
 drop table t_role;
 create table t_role(
