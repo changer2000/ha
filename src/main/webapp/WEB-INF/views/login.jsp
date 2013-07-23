@@ -13,7 +13,7 @@
 <br/>
 <br/>
 <br/>
-<div class="container" style="border-style:solid;border-width:1px;">
+<div class="container" >
 	<div class="row span12">
 		<div class="span4"></div>
 		<div class="span4">
@@ -28,8 +28,12 @@
 			<form:label path="pwd">Pwd:<br/><form:errors path="pwd" cssClass="error" delimiter="<br/>"/></form:label>
 			<form:password path="pwd"/>
 			<br/>
-			<input type="submit" id="login" value="Login"/>
 		</fieldset>
+		<br/>
+		<div align="center" class="span2">
+			<input type="submit" id="login" value="Login" class="btn btn-primary"/>
+			<input type="reset" id="reset" value="Reset" class="btn btn-primary"/>
+		</div>
 		</form:form>
 		</div>
 		<div class="span4"></div>
