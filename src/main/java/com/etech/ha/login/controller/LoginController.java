@@ -45,7 +45,7 @@ public class LoginController {
 	@RequestMapping(value="/login",method=RequestMethod.POST)
 	public ModelAndView doLogin(HttpServletRequest request, @ModelAttribute(value="user") @Valid LoginForm user, BindingResult result) {
 		if (result.hasErrors()) {
-			return new ModelAndView("login", "error", "错误");
+			return new ModelAndView("login");
 		}
 		
 		boolean rs = userService.checkLogin(user);
