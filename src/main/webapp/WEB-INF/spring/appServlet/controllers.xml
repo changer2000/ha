@@ -15,4 +15,8 @@
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<mvc:annotation-driven/>
 	
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename" value="conf/messages"></property>
+	</bean>
+	
 </beans>
