@@ -17,6 +17,10 @@
 	
 	<context:property-placeholder location="classpath:jdbc.properties"/>
 	
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename" value="conf/messages"></property>
+	</bean>
+	
 	<!-- 老的hibernate sessionFactory写法
 	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
 		<property name="configLocation" value="classpath:hibernate.cfg.xml"/>

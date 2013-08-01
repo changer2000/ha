@@ -1,10 +1,12 @@
 package com.etech.ha.login.bean;
 
+import javax.persistence.Entity;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
+
 
 public class LoginForm {
 	
@@ -12,11 +14,11 @@ public class LoginForm {
 	 * 千万注意以下的Min/Max的package，如果用hibernate的，就不起作用
 	 */
 	@NotEmpty
-	@Length(min=4, max=50)
+	@Length(message="{error.length}", min=4, max=50)
 	private String empe_num;
 	
 	@NotEmpty
-	@Length(min=4, max=8)
+	@Length(message="{error.length}", min=4, max=8)
 	private String pwd;
 	
 	
