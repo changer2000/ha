@@ -1,24 +1,27 @@
 package com.etech.ha.login.bean;
 
 import javax.persistence.Entity;
+import javax.validation.GroupSequence;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.etech.validator.group.login.FirstGroup;
 
+@GroupSequence({LoginForm.class, FirstGroup.class})
 public class LoginForm {
 	
 	/*
 	 * 千万注意以下的Min/Max的package，如果用hibernate的，就不起作用
 	 */
 	@NotEmpty
-	@Length(message="{error.length}", min=4, max=50)
+	@Length(message="{error.length}", min=4, max=50, groups=FirstGroup.class)
 	private String empe_num;
 	
 	@NotEmpty
-	@Length(message="{error.length}", min=4, max=8)
+	@Length(message="{error.length}", min=4, max=8, groups=FirstGroup.class)
 	private String pwd;
 	
 	

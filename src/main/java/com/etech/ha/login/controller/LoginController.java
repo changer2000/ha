@@ -1,11 +1,17 @@
 package com.etech.ha.login.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.GroupSequence;
 import javax.validation.Valid;
+import javax.validation.groups.Default;
 
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.etech.ha.login.bean.LoginForm;
 import com.etech.ha.login.service.UserService;
 import com.etech.ha.peer.UserPeer;
+import com.etech.validator.group.login.FirstGroup;
 
 @Controller
 public class LoginController {
@@ -43,7 +50,42 @@ public class LoginController {
 	} 
 	*/
 	@RequestMapping(value="/login",method=RequestMethod.POST)
+	/*
+	 * 方式1：
+	 *    (1)@Valid LoginForm user
+	 *    (2)public class LoginForm {
+			 	......
+			 	@NotEmpty
+				@Length(message="{error.length}", min=4, max=50)
+				private String empe_num;
+			 	......
+			 }
+	 *    ---- 结果：NotEmpty和Length同时做验证
+	 *    
+	 * 方式2：
+	 *    (1)@Valid LoginForm user
+	 *    (2)@GroupSequence({LoginForm.class, FirstGroup.class})
+			 public class LoginForm {
+			 	......
+			 	@NotEmpty
+				@Length(message="{error.length}", min=4, max=50, groups=FirstGroup.class)
+				private String empe_num;
+			 	......
+			 }
+		  ----- 结果：先做NotEmpty验证，都通过，再做Length验证
+	 * 
+	 */
+	//public ModelAndView doLogin(HttpServletRequest request, @ModelAttribute(value="user") @Valid LoginForm user, BindingResult result) {
 	public ModelAndView doLogin(HttpServletRequest request, @ModelAttribute(value="user") @Valid LoginForm user, BindingResult result) {
+		if (result.hasErrors()) {
+			return new ModelAndView("login");
+		}
+		//ObjectError err = new ObjectError();
+		//result.addError(arg0)
+		if ("1404".equals(user.getEmpe_num())) {	//如果框架validator无法实现，可以在这里加入程序，自己实现。
+			//result.rejectValue("empe_num", "reserved");
+			result.rejectValue("empe_num", "reserved.data", new Object[] {user.getEmpe_num()}, null);
+		}
 		if (result.hasErrors()) {
 			return new ModelAndView("login");
 		}

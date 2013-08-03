@@ -24,3 +24,10 @@
 一切就都正常了。
 这个是最精简版了，不能再少了。
 如果去掉<property name="validationMessageSource" ref="messageSource"/>，则显示的错误消息就是“{error.length}”这样。
+
+
+2.在LoginController里有关于编程处理输入check的例子:
+	result.rejectValue("empe_num", "reserved.data", new Object[] {user.getEmpe_num()}, null);
+
+	
+3.****** 在LoginController里有关于validator的group的例子，不过不是很典型的那种。等有了其他的，再补上
