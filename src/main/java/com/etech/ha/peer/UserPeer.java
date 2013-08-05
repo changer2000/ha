@@ -12,7 +12,9 @@ import com.etech.system.bean.BaseDomain;
 public class UserPeer extends BaseDomain {
 	
 	private static final long serialVersionUID = 5349810873546597127L;
-		
+	
+	public static String[] LOGIC_KEYS=new String[]{"empe_num"};
+	
 	@Column(name="empe_num")
 	private String empe_num;
 	
@@ -33,9 +35,6 @@ public class UserPeer extends BaseDomain {
 	
 	@Column(name="dept_cd")
 	private String dept_cd;
-	
-	@Column(name="del_flg")
-	private int del_flg;
 	
 	public String getEmpe_num() {
 		return empe_num;
@@ -78,12 +77,6 @@ public class UserPeer extends BaseDomain {
 	}
 	public void setDept_cd(String dept_cd) {
 		this.dept_cd = dept_cd;
-	}
-	public int getDel_flg() {
-		return del_flg;
-	}
-	public void setDel_flg(int del_flg) {
-		this.del_flg = del_flg;
 	}
 	
 	
