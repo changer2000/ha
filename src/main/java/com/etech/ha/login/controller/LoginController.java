@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.etech.ha.constants.HaConstants;
 import com.etech.ha.login.bean.LoginForm;
 import com.etech.ha.login.service.UserService;
 import com.etech.ha.peer.UserPeer;
+import com.etech.system.bean.UserInfo;
 import com.etech.system.controller.BaseController;
 import com.etech.validator.group.login.FirstGroup;
 
@@ -91,9 +93,13 @@ public class LoginController extends BaseController {
 			return new ModelAndView("login");
 		}
 		
-		boolean rs = userService.checkLogin(user);
-		if (rs) {
-			request.getSession().setAttribute("user", user);
+		UserPeer userPeer = userService.checkLogin(user);
+		if (userPeer!=null) {
+			UserInfo userInfo = new UserInfo();
+			userInfo.setUserPeer(userPeer);
+			//TODO 将来可能还有其他的属性需要被设置
+			
+			request.getSession().setAttribute(HaConstants.SESSION_KEY_USER_INFO, userInfo);
 			return new ModelAndView("main");
 		} else {
 			return new ModelAndView("login", "error", "用户名密码错误");

@@ -16,13 +16,13 @@ public class UserService {
 	@Autowired
 	private UserDAO userDao;
 	
-	public boolean checkLogin(LoginForm user) {
+	public UserPeer checkLogin(LoginForm user) {
 		//UserPeer dbUser = userDao.searchByEmpeNum2(user.getEmpe_num());
 		UserPeer dbUser = userDao.searchByEmpeNum3(user.getEmpe_num());
 		if (dbUser==null || !StringUtils.equals(user.getPwd(), dbUser.getPwd())) {
-			return false;
+			return null;
 		} else {
-			return true;
+			return dbUser;
 		}
 	}
 
