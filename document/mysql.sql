@@ -52,7 +52,7 @@ end_dt date
 
 drop table t_attendance_status;
 create table t_attendance_status(
-atndnc_id int auto_increment primary key,
+id int auto_increment primary key,
 atndnc_name varchar(100)
 ) engine=InnoDB;
 
