@@ -1,0 +1,209 @@
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	version="2.5"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee   http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+	<display-name>SHSC</display-name>
+
+	<!-- jstl标签国际化的应用 -->
+	<!--  Define the basename for a resource bundle for I18N   --> 
+    <context-param>
+        <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
+        <param-value>ApplicationResources</param-value>
+    </context-param>
+    <!-- Fallback locale if no bundles found for browser's preferred locale -->
+    <!-- Force a single locale using param-name 'javax.servlet.jsp.jstl.fmt.locale' -->
+    <context-param>
+        <param-name>javax.servlet.jsp.jstl.fmt.fallbackLocale</param-name>
+        <param-value>zh_CN</param-value>
+    </context-param>
+
+	<!--Spring的ContextLoaderListener载入多个配置文件 -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            classpath:/spring-config/*.xml
+        </param-value>
+    </context-param>
+
+
+	<!-- 
+		当前台JSP页面和JAVA代码中使用了不同的字符集进行编码的时候就会出现表单提交的数据或者上传/下载中文名称文件出现乱码的问题
+		但Struts2的话, 中文问题已经不是问题了，可以通过配置struts.i18n.encoding常量来实现统一字符编码。
+	-->
+	<filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter> 
+    <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping> 
+    
+    <!--
+    	By adding ActionContextCleanUp, the StrutsPrepareAndExecuteFilter will know to not clean up  the ActionContext, 
+    	and instead defer cleanup to this filter. 
+     
+		 从struts2.1.3开始ActionContextCleanUp 和 FilterDispatcher过滤器，已经不建议使用了。
+　　		将使用StrutsPrepareFilter和StrutsExecuteFilter拦截器替代
+
+	<filter>
+        <filter-name>struts-cleanup</filter-name>
+        <filter-class>org.apache.struts2.dispatcher.ActionContextCleanUp</filter-class>
+    </filter>
+	<filter-mapping>
+        <filter-name>struts-cleanup</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping> 
+	-->
+	
+	
+	<!-- StrutsPrepareFilter  -->
+	<filter>
+        <filter-name>StrutsPrepareFilter</filter-name>
+        <filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareFilter</filter-class>
+    </filter>
+	<filter-mapping>
+        <filter-name>StrutsPrepareFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping> 
+	
+	
+	<!-- sitemesh -->    
+    <filter>
+        <filter-name>sitemesh</filter-name>
+        <filter-class>com.opensymphony.sitemesh.webapp.SiteMeshFilter</filter-class>
+    </filter>
+	<filter-mapping>
+        <filter-name>sitemesh</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+    </filter-mapping>   
+
+	<!-- StrutsExecuteFilter  -->
+	<filter>
+        <filter-name>StrutsExecuteFilter</filter-name>
+        <filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsExecuteFilter</filter-class>
+    </filter>
+	<filter-mapping>
+        <filter-name>StrutsExecuteFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping> 
+
+
+    <!-- struts2 核心过滤器 -->
+	<filter>
+		<filter-name>struts2</filter-name>
+		<filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>struts2</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	
+	<!-- 自定义语言设置过滤器,从session中选择语言 -->
+	<!--  
+	<filter>  
+		<filter-name>i18nFilter</filter-name>  
+		<filter-class>com.etech.common.struts.filter.I18nFilter</filter-class>  
+	</filter>  
+	<filter-mapping>  
+		<filter-name>i18nFilter</filter-name>  
+		<url-pattern>*</url-pattern>  
+	</filter-mapping>
+	-->  
+
+	<!-- 将HTTP请求对象绑定到为该请求提供服务的线程上, 这使得具有request和session作用域的Bean实例能够在后面的调用链中被访问到 -->
+    <listener>
+        <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+    </listener>
+   <!--
+   		1. ContextLoaderListener实现了ServletContextListener接口, 使Spring容器随web的启动而启动
+   		2. 启动时, 自动查找WEB-INF/ApplicationContext.xml文件.
+   		3. 如果ContextLoaderListener需要载入多个配置文件, 使用<context-param />, 并指定 contextConfigLocation参数
+    -->        
+   <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>    
+    
+    <!-- 解决struts等框架可能产生的内存泄露问题 -->
+    <listener>
+        <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+    </listener>
+    
+    
+    
+    <!--自定义的 StartupListener/StartupSessionListener -->
+
+	 
+    <listener>
+        <listener-class>com.etech.shsc.system.StartupListener</listener-class>
+    </listener>    
+    <listener>
+        <listener-class>com.etech.shsc.system.StartupSessionListener</listener-class>
+    </listener>     
+     
+
+	<!-- dwr -->
+    <servlet>
+        <servlet-name>dwr-invoker</servlet-name>
+        <servlet-class>org.directwebremoting.servlet.DwrServlet</servlet-class>
+        <init-param>
+            <param-name>debug</param-name>
+            <param-value>true</param-value>
+        </init-param>
+		<init-param>      
+            <param-name>crossDomainSessionSecurity</param-name>      
+            <param-value>false</param-value>      
+   		</init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dwr-invoker</servlet-name>
+        <url-pattern>/dwr/*</url-pattern>
+    </servlet-mapping>
+    
+    <!-- autoComplete --> 
+    <servlet>
+		<servlet-name>autoComplete</servlet-name>
+		<servlet-class>com.etech.common.tools.autocomplete.AutoCompleteServlet</servlet-class>
+		<init-param>
+			<param-name>debug</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>package</param-name>
+			<param-value>com.etech.shsc.autocomplete</param-value>
+		</init-param>		
+	</servlet>
+    <servlet-mapping>
+		<servlet-name>autoComplete</servlet-name>
+		<url-pattern>/autocomplete/getCompleteRs</url-pattern>
+	</servlet-mapping>
+	 
+	<error-page>
+  		<error-code>500</error-code>
+  		<location>/common/error.jsp</location>
+  	</error-page>
+  	
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+	
+	<!-- 
+	<session-config>
+		<session-timeout>60</session-timeout>
+	</session-config>
+	 -->
+</web-app>

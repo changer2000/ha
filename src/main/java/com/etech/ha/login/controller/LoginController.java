@@ -82,7 +82,7 @@ public class LoginController {
 		}
 		//ObjectError err = new ObjectError();
 		//result.addError(arg0)
-		if ("1404".equals(user.getEmpe_num())) {	//如果框架validator无法实现，可以在这里加入程序，自己实现。
+		if ("haha".equals(user.getEmpe_num())) {	//如果框架validator无法实现，可以在这里加入程序，自己实现。
 			//result.rejectValue("empe_num", "reserved");
 			result.rejectValue("empe_num", "reserved.data", new Object[] {user.getEmpe_num()}, null);
 		}

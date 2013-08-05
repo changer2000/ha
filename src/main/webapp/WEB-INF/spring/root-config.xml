@@ -42,7 +42,21 @@
 		  p:driverClassName="${jdbc.driverClassName}"
 		  p:url="${jdbc.url}"
 		  p:username="${jdbc.username}"
-		  p:password="${jdbc.password}"></bean>
+		  p:password="${jdbc.password}">
+				
+			<property name="maxActive" value="3"/>
+			<property name="maxIdle" value="3"/>
+			<property name="minIdle" value="1"/>
+			
+			<property name="validationQuery" value="select 1"/>
+			<property name="testOnBorrow" value="true"/>
+			<property name="testOnReturn" value="true"/>
+			<property name="testWhileIdle" value="true"/>
+			<property name="timeBetweenEvictionRunsMillis" value="1800000"/>
+			<property name="minEvictableIdleTimeMillis" value="1800000"/>
+			<property name="numTestsPerEvictionRun" value="10"/>
+		
+	</bean>
 	
 	
 	<!-- 用了以下这种配置后，hibernate.cfg.xml应该就用不到了 ，
