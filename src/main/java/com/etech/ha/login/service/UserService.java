@@ -17,7 +17,8 @@ public class UserService {
 	private UserDAO userDao;
 	
 	public boolean checkLogin(LoginForm user) {
-		UserPeer dbUser = userDao.searchByEmpeNum(user.getEmpe_num());
+		//UserPeer dbUser = userDao.searchByEmpeNum2(user.getEmpe_num());
+		UserPeer dbUser = userDao.searchByEmpeNum3(user.getEmpe_num());
 		if (dbUser==null || !StringUtils.equals(user.getPwd(), dbUser.getPwd())) {
 			return false;
 		} else {

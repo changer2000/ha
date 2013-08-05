@@ -56,6 +56,14 @@ public class BaseDao<T> {
 		return getHibernateTemplate().find(hql, params);
 	}
 	
+	public T findPeer(String hql, Object... params) {
+		List list = getHibernateTemplate().find(hql, params);
+		if (list!=null && list.size()>0) {
+			return (T) list.get(0);
+		}
+		return null;
+	}
+	
 	public Query createQuery(String hql, Object... params) {
 		Query query = getSession().createQuery(hql);
 		for (int i=0; i<params.length; i++) {
