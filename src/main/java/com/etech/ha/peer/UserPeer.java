@@ -1,23 +1,18 @@
 package com.etech.ha.peer;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
+
+import com.etech.system.bean.BaseDomain;
 
 
 @Entity
 @Table(name="t_user")
-public class UserPeer implements Serializable {
+public class UserPeer extends BaseDomain {
 	
 	private static final long serialVersionUID = 5349810873546597127L;
-	
-	@Id
-	@Column(name="id")
-	private Long id;
-	
+		
 	@Column(name="empe_num")
 	private String empe_num;
 	
@@ -42,12 +37,6 @@ public class UserPeer implements Serializable {
 	@Column(name="del_flg")
 	private int del_flg;
 	
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
 	public String getEmpe_num() {
 		return empe_num;
 	}
