@@ -20,10 +20,11 @@ import org.springframework.web.servlet.ModelAndView;
 import com.etech.ha.login.bean.LoginForm;
 import com.etech.ha.login.service.UserService;
 import com.etech.ha.peer.UserPeer;
+import com.etech.system.controller.BaseController;
 import com.etech.validator.group.login.FirstGroup;
 
 @Controller
-public class LoginController {
+public class LoginController extends BaseController {
 	
 	@Autowired
 	private UserService userService;
