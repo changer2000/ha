@@ -47,7 +47,8 @@ hldy_name varchar(100),
 hldy_start date,
 hldy_end date,
 start_dt date,
-end_dt date
+end_dt date,
+init_flg int default 0
 ) engine=InnoDB;
 
 drop table t_attendance_status;
