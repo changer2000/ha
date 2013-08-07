@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <%@ include file="/WEB-INF/views/common/taglibs.jsp"%>
 <html>
 <head>
