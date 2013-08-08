@@ -15,17 +15,22 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.etech.ha.constants.HaConstants;
+import com.etech.ha.contact.bean.Contact;
 import com.etech.ha.login.bean.LoginForm;
 import com.etech.ha.login.service.UserService;
 import com.etech.ha.peer.UserPeer;
+import com.etech.system.bean.Menu;
+import com.etech.system.bean.MenuItem;
 import com.etech.system.bean.UserInfo;
 import com.etech.system.controller.BaseController;
 import com.etech.validator.group.login.FirstGroup;
 
 @Controller
+@SessionAttributes(value="menu")
 public class LoginController extends BaseController {
 	
 	@Autowired
@@ -39,6 +44,13 @@ public class LoginController extends BaseController {
 		mv.addObject("user", new LoginForm());
 		return mv;
 	}
+	
+	@ModelAttribute("menu")
+	public Menu initMenu() {
+		return new Menu();
+	}
+	
+	
 	/*
 	@RequestMapping(value="/login",method=RequestMethod.POST)
 	public String doLogin(HttpServletRequest request, UserPeer user) {
@@ -79,7 +91,8 @@ public class LoginController extends BaseController {
 	 * 
 	 */
 	//public ModelAndView doLogin(HttpServletRequest request, @ModelAttribute(value="user") @Valid LoginForm user, BindingResult result) {
-	public ModelAndView doLogin(HttpServletRequest request, @ModelAttribute(value="user") @Valid LoginForm user, BindingResult result) {
+	//public ModelAndView doLogin(HttpServletRequest request, @ModelAttribute(value="user") @Valid LoginForm user, BindingResult result) {
+	public ModelAndView doLogin(HttpServletRequest request, @ModelAttribute(value="menu") Menu menu, @ModelAttribute(value="user") @Valid LoginForm user, BindingResult result) {
 		if (result.hasErrors()) {
 			return new ModelAndView("login");
 		}
@@ -98,14 +111,23 @@ public class LoginController extends BaseController {
 			UserInfo userInfo = new UserInfo();
 			userInfo.setUserPeer(userPeer);
 			//TODO 将来可能还有其他的属性需要被设置
+			prepareMenu(menu);
 			
 			request.getSession().setAttribute(HaConstants.SESSION_KEY_USER_INFO, userInfo);
-			return new ModelAndView("main");
+			//return new ModelAndView("main");
+			return new ModelAndView("contact", "command", new Contact());
 		} else {
 			result.reject("error.login.user_pwd_error","login error");
 			return new ModelAndView("login", result.getModel());	//这一行的result.getModel()，可以去掉，对结果没影响
 			//return new ModelAndView("login", "error", "用户名密码错误");
 		}
+	}
+	
+	private void prepareMenu(Menu menu) {
+		MenuItem menuItem = new MenuItem();
+		menuItem.setMenuName("基础信息维护");
+		//TODO menuItem.setUrl();
+		menu.getMenuList().add(menuItem);
 	}
 
 	public UserService getUserService() {
