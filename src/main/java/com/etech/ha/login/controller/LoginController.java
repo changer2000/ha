@@ -102,7 +102,9 @@ public class LoginController extends BaseController {
 			request.getSession().setAttribute(HaConstants.SESSION_KEY_USER_INFO, userInfo);
 			return new ModelAndView("main");
 		} else {
-			return new ModelAndView("login", "error", "用户名密码错误");
+			result.reject("error.login.user_pwd_error","login error");
+			return new ModelAndView("login", result.getModel());
+			//return new ModelAndView("login", "error", "用户名密码错误");
 		}
 	}
 

@@ -20,6 +20,7 @@
 		       <font color="red"><c:out value="${error}" /></font>
 		</c:if>
 		<form:form id="loginFrm" action="/login.do" method="post" modelAttribute="user">
+		<form:errors cssClass="error"></form:errors>
 		<fieldset>
 			<legend>Login</legend>
 			<form:label path="empe_num"><s:message code="label.login.empe_num"/><br/><form:errors path="empe_num" cssClass="error" delimiter="<br/>"/></form:label>
