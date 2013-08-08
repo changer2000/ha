@@ -3,7 +3,7 @@
 <head>
 <%@ include file="/WEB-INF/views/common/meta.jsp"%>
 <tiles:useAttribute id="titleKey" name="titleKey"/><!-- 如果没有这一行，下面的title显示就是乱码?????? -->
-<title><fmt:message key="${titleKey2}"/></title>
+<title><fmt:message key="${titleKey}"/></title>
 </head>
 <body>
 <div id="headerDiv" style="height:30px">
