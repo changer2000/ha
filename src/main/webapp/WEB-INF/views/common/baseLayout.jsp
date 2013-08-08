@@ -1,8 +1,9 @@
 <%@ include file="/WEB-INF/views/common/taglibs.jsp"%>
 <html>
 <head>
-<tiles:useAttribute id="titleKey" name="titleKey"/>
-<title><fmt:message key="${titleKey}"/></title>
+<%@ include file="/WEB-INF/views/common/meta.jsp"%>
+<tiles:useAttribute id="titleKey" name="titleKey"/><!-- 如果没有这一行，下面的title显示就是乱码?????? -->
+<title><fmt:message key="${titleKey2}"/></title>
 </head>
 <body>
 <div id="headerDiv" style="height:30px">
