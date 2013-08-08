@@ -1,4 +1,4 @@
-<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ include file="/WEB-INF/views/common/taglibs.jsp"%>
 <html>
 <head>
 	<title>Spring 3 MVC Series - Contact Manager</title>

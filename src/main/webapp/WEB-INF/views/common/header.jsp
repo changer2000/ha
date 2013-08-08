@@ -1,1 +1,2 @@
-<h1>Header</h1>
+<%@ include file="/WEB-INF/views/common/taglibs.jsp"%>
+<h1 align="center"><s:message code="label.system.name"/></h1>

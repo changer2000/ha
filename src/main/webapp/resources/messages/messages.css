@@ -29,7 +29,7 @@ div.error {
 	background-color: #FFBABA;
 	background-image: url('error.png');
 }
-
+<!--
 span {
 	margin: 0px 0px 0px 0px;
 }
@@ -46,9 +46,6 @@ body {
 	font-family: Lucida Grande, sans-serif;
 	font-size: .75em;
 	margin: 1em auto;
-	width: 763px;
+	width: 800px;
 }
-
-ul li {
-	padding: 5px;
-}
+-->
