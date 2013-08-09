@@ -12,7 +12,16 @@ public class MenuItem implements Serializable {
 	private boolean disabled;
 	
 	private List<MenuItem> subMenuList;
-
+	
+	public MenuItem(String menuName, String url, boolean disabled) {
+		super();
+		
+		this.menuName = menuName;
+		this.url = url;
+		this.disabled = disabled;
+	}
+	
+	
 	public String getMenuName() {
 		return menuName;
 	}

@@ -16,10 +16,10 @@
 <div id="menuDiv" style="height:40px">
 	<tiles:insertAttribute name="menu"></tiles:insertAttribute>
 </div>
-<div id="contentDiv" style="height:730px">
+<div id="contentDiv" style="height:570px">
 	<tiles:insertAttribute name="content"></tiles:insertAttribute>
 </div>
-<div id="footerDiv" style="height:30px" align="center">
+<div id="footerDiv" style="height:20px" align="center">
 	<tiles:insertAttribute name="footer"></tiles:insertAttribute>
 </div>
 </body>

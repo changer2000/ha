@@ -1,5 +1,8 @@
 package com.etech.ha.login.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.GroupSequence;
 import javax.validation.Valid;
@@ -18,10 +21,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.etech.ha.common.service.MenuService;
+import com.etech.ha.common.service.UserService;
 import com.etech.ha.constants.HaConstants;
 import com.etech.ha.contact.bean.Contact;
 import com.etech.ha.login.bean.LoginForm;
-import com.etech.ha.login.service.UserService;
 import com.etech.ha.peer.UserPeer;
 import com.etech.system.bean.Menu;
 import com.etech.system.bean.MenuItem;
@@ -36,6 +40,8 @@ public class LoginController extends BaseController {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private MenuService menuService;
 	
 	@RequestMapping(value="/login",method=RequestMethod.GET)
 	public ModelAndView login() {
@@ -111,11 +117,12 @@ public class LoginController extends BaseController {
 			UserInfo userInfo = new UserInfo();
 			userInfo.setUserPeer(userPeer);
 			//TODO 将来可能还有其他的属性需要被设置
-			prepareMenu(menu);
+			
+			menuService.prepareMenu(userInfo, menu);
 			
 			request.getSession().setAttribute(HaConstants.SESSION_KEY_USER_INFO, userInfo);
 			//return new ModelAndView("main");
-			return new ModelAndView("contact", "command", new Contact());
+			return new ModelAndView("contact", "command", new Contact()).addObject("userPeer",userPeer);
 		} else {
 			result.reject("error.login.user_pwd_error","login error");
 			return new ModelAndView("login", result.getModel());	//这一行的result.getModel()，可以去掉，对结果没影响
@@ -123,12 +130,6 @@ public class LoginController extends BaseController {
 		}
 	}
 	
-	private void prepareMenu(Menu menu) {
-		MenuItem menuItem = new MenuItem();
-		menuItem.setMenuName("基础信息维护");
-		//TODO menuItem.setUrl();
-		menu.getMenuList().add(menuItem);
-	}
 
 	public UserService getUserService() {
 		return userService;
@@ -136,6 +137,14 @@ public class LoginController extends BaseController {
 
 	public void setUserService(UserService userService) {
 		this.userService = userService;
+	}
+
+	public MenuService getMenuService() {
+		return menuService;
+	}
+
+	public void setMenuService(MenuService menuService) {
+		this.menuService = menuService;
 	}
 	
 }
