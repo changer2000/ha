@@ -12,7 +12,7 @@
 	>
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
-	<context:component-scan base-package="com.etech.ha.dao"></context:component-scan>
+	<context:component-scan base-package="com.etech.ha.**.dao"></context:component-scan>
 	<context:component-scan base-package="com.etech.ha.**.service"></context:component-scan>
 	
 	<context:property-placeholder location="classpath:jdbc.properties"/>
@@ -28,9 +28,29 @@
 	--> 
 	
 	<!-- 用了以下这种配置后，hibernate.cfg.xml就用不到了-->
+	<!--  
 	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"/>
 		<property name="mappingLocations" value="classpath:/com/etech/ha/peer/*.xml"/>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+			</props>
+		</property>
+	</bean>
+	-->
+	
+	<!-- 用了以下这种配置后，com/etech/ha/peer/*.xml就用不到了-->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<!--  
+		<property name="mappingLocations" value="classpath:/com/etech/ha/peer/*.xml"/>
+		-->
+		<property name="packagesToScan">
+			<list>
+				<value>com.etech.ha.peer</value>
+			</list>
+		</property>
 		<property name="hibernateProperties">
 			<props>
 				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>

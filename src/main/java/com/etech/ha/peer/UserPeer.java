@@ -2,6 +2,9 @@ package com.etech.ha.peer;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.etech.system.bean.BaseDomain;
@@ -14,6 +17,11 @@ public class UserPeer extends BaseDomain {
 	private static final long serialVersionUID = 5349810873546597127L;
 	
 	public static String[] LOGIC_KEYS=new String[]{"empe_num"};
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="id")
+	protected Long id;
 	
 	@Column(name="empe_num")
 	private String empe_num;
@@ -35,6 +43,9 @@ public class UserPeer extends BaseDomain {
 	
 	@Column(name="dept_cd")
 	private String dept_cd;
+
+	@Column(name="del_flg")
+	protected Integer del_flg;
 	
 	public String getEmpe_num() {
 		return empe_num;
@@ -77,6 +88,19 @@ public class UserPeer extends BaseDomain {
 	}
 	public void setDept_cd(String dept_cd) {
 		this.dept_cd = dept_cd;
+	}
+
+	public Integer getDel_flg() {
+		return del_flg;
+	}
+	public void setDel_flg(Integer del_flg) {
+		this.del_flg = del_flg;
+	}
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
 	}
 	
 	

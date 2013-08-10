@@ -63,3 +63,11 @@ fmt-1_0-rt.tld 和 fmt-1_0.tld之间的区别只有一个：<rtexprvalue>true/fa
 （3）关于fmt.tld
 把<rtexprvalue>false</rtexprvalue>改成true，也能正常显示title。
 实在是搞不懂为什么rtexprvalue可以随便乱设值。
+
+
+5.BaseDomain.java的修改：
+由于把root-config.xml的<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+改成了<bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">，
+想不用写***.hbm.xml文件。
+
+结果导致一定要在基类里定义的id不能用，以后只好在每个子类里面分别定义id了。
