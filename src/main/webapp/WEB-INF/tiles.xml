@@ -16,4 +16,10 @@
 		<put-attribute name="titleKey" value="title.main" />
 		<put-attribute name="content" value="/WEB-INF/views/contact.jsp"/>
 	</definition>
+	
+	<definition name="adtnsStsList" extends="baseLayout.definition">
+		<put-attribute name="titleKey" value="title.maintain.atdnc_sts_list"></put-attribute>
+		<put-attribute name="content" value="/WEB-INF/views/mst/atdnc_sts.jsp"/>
+	</definition>
+	
 </tiles-definitions>

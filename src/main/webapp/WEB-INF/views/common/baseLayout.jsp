@@ -16,7 +16,7 @@
 <div id="menuDiv" style="height:40px">
 	<tiles:insertAttribute name="menu"></tiles:insertAttribute>
 </div>
-<div id="contentDiv" style="height:570px">
+<div id="contentDiv" style="height:570px" align="center">
 	<tiles:insertAttribute name="content"></tiles:insertAttribute>
 </div>
 <div id="footerDiv" style="height:20px" align="center">

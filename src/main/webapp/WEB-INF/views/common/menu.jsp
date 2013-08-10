@@ -17,7 +17,7 @@
 			      				<c:forEach items="${menuItem.subMenuList}" var="subMenuItem" varStatus="subStatus">
 			      					<li role="presentation">
 			      						<a role="menuitem" tabindex="-1" 
-			      							href="<c:out value="${subMenuItem.url}"/>">
+			      							href="<c:url value="/"/><c:out value="${subMenuItem.url}"/>">
 			      							<fmt:message key="${subMenuItem.menuName}"/>
 			      						</a>
 			      					</li>
