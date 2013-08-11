@@ -40,6 +40,10 @@ public class BaseDao<T> {
 		getHibernateTemplate().save(entity);
 	}
 	
+	public void saveOrUpdate(T entity) {
+		getHibernateTemplate().saveOrUpdate(entity);
+	}
+	
 	public void delete(T entity) {
 		getHibernateTemplate().delete(entity);
 	}
