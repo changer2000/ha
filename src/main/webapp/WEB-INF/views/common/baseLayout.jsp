@@ -1,8 +1,14 @@
+<!DOCTYPE html>
 <%@ include file="/WEB-INF/views/common/taglibs.jsp"%>
 <html>
 <head>
 <%@ include file="/WEB-INF/views/common/meta.jsp"%>
 <tiles:useAttribute id="titleKey" name="titleKey"/><!-- 如果没有这一行，下面的title显示就是乱码?????? -->
+<tiles:useAttribute id="actionURL" name="action" classname="java.lang.String" ignore="true" />
+<tiles:useAttribute id="methodType" name="methodType"  classname="java.lang.String" ignore="true"/>
+<tiles:useAttribute id="encType" name="encType"  classname="java.lang.String" ignore="true"/>
+<tiles:useAttribute id="commandName" name="command"  classname="java.lang.String" ignore="true"/>
+
 <title><fmt:message key="${titleKey}"/></title>
 <link href="<c:url value="/resources/bootstrap/css/bootstrap.css"/>"  rel="stylesheet" media="screen">
 <link href="<c:url value="/resources/messages/messages.css"/>" rel="stylesheet" media="screen">
@@ -10,6 +16,7 @@
 <script src="<c:url value="/resources/bootstrap/js/bootstrap.js"/>"></script>
 </head>
 <body>
+<form:form enctype="<%=encType%>" action="<%=actionURL%>" onsubmit="return formSubmit();" method="<%=methodType%>" modelAttribute="<%=commandName%>">
 <div id="headerDiv" style="height:60px">
 	<tiles:insertAttribute name="header"></tiles:insertAttribute>
 </div>
@@ -22,5 +29,6 @@
 <div id="footerDiv" style="height:20px" align="center">
 	<tiles:insertAttribute name="footer"></tiles:insertAttribute>
 </div>
+</form:form>
 </body>
 </html>
