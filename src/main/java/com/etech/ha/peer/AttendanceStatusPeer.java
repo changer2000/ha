@@ -6,9 +6,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.GroupSequence;
+
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import com.etech.system.bean.BaseDomain;
+import com.etech.validator.group.login.FirstGroup;
 
+@GroupSequence({AttendanceStatusPeer.class, FirstGroup.class})
 @Entity
 @Table(name="t_attendance_status")
 public class AttendanceStatusPeer extends BaseDomain {
@@ -21,6 +27,8 @@ public class AttendanceStatusPeer extends BaseDomain {
 	protected Long id;
 	
 	@Column(name="atndnc_name")
+	@NotEmpty
+	@Length(min=2, max=10, message="{error.length}", groups=FirstGroup.class)
 	private String atndnc_name;
 
 	public String getAtndnc_name() {
