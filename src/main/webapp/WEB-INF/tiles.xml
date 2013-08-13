@@ -22,7 +22,7 @@
 		<put-attribute name="footer" value="/WEB-INF/views/common/footer.jsp"/>
 	</definition>
 	
-	<definition name="contact" extends="baseLayout.definition">
+	<definition name="main" extends="baseLayout.definition">
 		<put-attribute name="titleKey" value="title.main" />
 		<!--  
 		<put-attribute name="content" value="/WEB-INF/views/contact.jsp"/>

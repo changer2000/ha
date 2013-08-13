@@ -1,20 +1,11 @@
 package com.etech.ha.login.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.GroupSequence;
 import javax.validation.Valid;
-import javax.validation.groups.Default;
 
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,14 +15,11 @@ import org.springframework.web.servlet.ModelAndView;
 import com.etech.ha.common.service.MenuService;
 import com.etech.ha.common.service.UserService;
 import com.etech.ha.constants.HaConstants;
-import com.etech.ha.contact.bean.Contact;
 import com.etech.ha.login.bean.LoginForm;
 import com.etech.ha.peer.UserPeer;
 import com.etech.system.bean.Menu;
-import com.etech.system.bean.MenuItem;
 import com.etech.system.bean.UserInfo;
 import com.etech.system.controller.BaseController;
-import com.etech.validator.group.login.FirstGroup;
 
 @Controller
 @SessionAttributes(value="menu")
@@ -122,7 +110,8 @@ public class LoginController extends BaseController {
 			
 			request.getSession().setAttribute(HaConstants.SESSION_KEY_USER_INFO, userInfo);
 			//return new ModelAndView("main");
-			return new ModelAndView("contact", "command", new Contact()).addObject("userPeer",userPeer);
+			//return new ModelAndView("main", "command", new Contact()).addObject("userPeer",userPeer);
+			return new ModelAndView("main").addObject("userPeer",userPeer);
 		} else {
 			result.reject("error.login.user_pwd_error","login error");
 			return new ModelAndView("login", result.getModel());	//这一行的result.getModel()，可以去掉，对结果没影响
