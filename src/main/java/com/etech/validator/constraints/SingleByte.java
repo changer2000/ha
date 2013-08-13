@@ -12,7 +12,7 @@ import javax.validation.Payload;
 import com.etech.validator.constraints.impl.SingleByteValidator;
 
 
-@Target({ElementType.FIELD})
+@Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy=SingleByteValidator.class)
 @Documented
