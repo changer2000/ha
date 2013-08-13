@@ -9,21 +9,19 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-import com.etech.validator.constraints.impl.ByteCountValidator;
+import com.etech.validator.constraints.impl.SingleByteValidator;
 
 
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy=ByteCountValidator.class)
+@Constraint(validatedBy=SingleByteValidator.class)
 @Documented
-public @interface ByteCount {
+public @interface SingleByte {
 	
-	String message() default "{com.etech.constraints.bytecount}";
+	String message() default "{com.etech.constraints.singlebyte}";
 	
 	Class<?>[] groups() default{};
 	
 	Class<? extends Payload>[] payload() default{};
-	
-	int value() default 0;
 	
 }

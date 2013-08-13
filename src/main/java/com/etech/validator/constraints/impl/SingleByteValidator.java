@@ -3,15 +3,13 @@ package com.etech.validator.constraints.impl;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import com.etech.validator.constraints.ByteCount;
+import com.etech.validator.constraints.SingleByte;
 
-public class ByteCountValidator implements ConstraintValidator<ByteCount, String>{
+public class SingleByteValidator implements ConstraintValidator<SingleByte, String>{
 	
-	private int value;
 	
 	@Override
-	public void initialize(ByteCount parameters) {
-		this.value = parameters.value();
+	public void initialize(SingleByte parameters) {
 		validateParameters();
 	}
 
@@ -29,16 +27,10 @@ public class ByteCountValidator implements ConstraintValidator<ByteCount, String
 	}
 	
 	private void validateParameters() {
+		/*
 		if (this.value<0)
 			throw new IllegalArgumentException("The value cannot be nagetive.");
-	}
-
-	public int getValue() {
-		return value;
-	}
-
-	public void setValue(int value) {
-		this.value = value;
+		*/
 	}
 
 }

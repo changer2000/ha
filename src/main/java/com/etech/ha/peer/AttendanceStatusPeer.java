@@ -12,6 +12,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.etech.system.bean.BaseDomain;
+import com.etech.validator.constraints.SingleByte;
 import com.etech.validator.group.login.FirstGroup;
 
 @GroupSequence({AttendanceStatusPeer.class, FirstGroup.class})
@@ -29,6 +30,7 @@ public class AttendanceStatusPeer extends BaseDomain {
 	@Column(name="atndnc_name")
 	@NotEmpty
 	@Length(min=2, max=100, message="{error.length}", groups=FirstGroup.class)
+	@SingleByte(groups=FirstGroup.class)
 	private String atndnc_name;
 
 	public String getAtndnc_name() {
