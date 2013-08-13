@@ -1,4 +1,4 @@
-package com.etech.ha.common.service;
+package com.etech.ha.mst.service;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.etech.ha.common.service.MenuService;
-import com.etech.ha.common.service.UserService;
 import com.etech.ha.constants.HaConstants;
 import com.etech.ha.login.bean.LoginForm;
+import com.etech.ha.mst.service.UserService;
 import com.etech.ha.peer.UserPeer;
 import com.etech.system.bean.Menu;
 import com.etech.system.bean.UserInfo;
