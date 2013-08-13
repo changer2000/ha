@@ -1,4 +1,4 @@
-package com.etech.ha.mst.dao;
+package com.etech.ha.dao;
 
 import java.util.List;
 

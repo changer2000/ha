@@ -24,9 +24,6 @@
 	
 	<definition name="main" extends="baseLayout.definition">
 		<put-attribute name="titleKey" value="title.main" />
-		<!--  
-		<put-attribute name="content" value="/WEB-INF/views/contact.jsp"/>
-		-->
 	</definition>
 		
 	<definition name="adtnsStsList" extends="baseLayout.definition">
@@ -35,9 +32,6 @@
 		<put-attribute name="a" value="/WEB-INF/views/mst/atdnc_sts_a.jsp"/>
 		<put-attribute name="b" value="/WEB-INF/views/mst/atdnc_sts_b.jsp"/>
 		<put-attribute name="c" value="/WEB-INF/views/mst/atdnc_sts_c.jsp"/>
-		<!--
-		<put-attribute name="content" value="/WEB-INF/views/mst/atdnc_sts.jsp"/>
-		-->
 	</definition>
 		
 	<definition name="adtnsStsInfo" extends="baseLayout.definition">
@@ -46,9 +40,6 @@
 		<put-attribute name="a" value="/WEB-INF/views/mst/atdnc_sts_info_a.jsp"/>
 		<put-attribute name="b" value="/WEB-INF/views/mst/atdnc_sts_info_b.jsp"/>
 		<put-attribute name="c" value="/WEB-INF/views/mst/atdnc_sts_info_c.jsp"/>
-		<!--
-		<put-attribute name="content" value="/WEB-INF/views/mst/atdnc_sts_info.jsp"/>
-		-->
 	</definition>
 	
 </tiles-definitions>
