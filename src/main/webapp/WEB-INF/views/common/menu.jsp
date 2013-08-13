@@ -3,7 +3,7 @@
 <%@ include file="/WEB-INF/views/common/taglibs.jsp"%>
 <div id="navbar-example" class="navbar navbar-static">
 	<div class="navbar-inner" style="padding-left:0px;padding-right:0px;">
-	    <div class="container" style="width:650px;margin-right:5px;margin-left:5px;height:100%;float:left;" align="left">
+	    <div class="container" style="width:860px;margin-right:5px;margin-left:5px;height:100%;float:left;" align="left">
 	      <!--  <a class="brand pull-right" href="#">Welcome </a> -->
 	      <ul class="nav" role="navigation">
 		      <c:if test="${menu!=null}">
@@ -31,7 +31,7 @@
 		      </c:if>
 	      </ul>
 	    </div> 
-	    <div class="container" style="width:140px;margin-left:650px;" >
+	    <div class="container" style="width:140px;margin-left:860px;" >
 	    	<span style="line-height:40px;vertical-align:middle;" >
 	    		<s:message code="label.welcome"/><a href="<c:url value="/empeinfo/modify?empe_num="/><%= ((UserInfo)session.getAttribute(HaConstants.SESSION_KEY_USER_INFO)).getUserPeer().getEmpe_name() %>"><%= ((UserInfo)session.getAttribute(HaConstants.SESSION_KEY_USER_INFO)).getUserPeer().getEmpe_name() %></a>
 	    		&nbsp;&nbsp;&nbsp;<a href="<c:url value="/logout"/>"><s:message code="label.logout"/></a>
