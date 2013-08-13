@@ -13,7 +13,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import com.etech.system.bean.BaseDomain;
 import com.etech.validator.constraints.SingleByte;
-import com.etech.validator.group.login.FirstGroup;
+import com.etech.validator.group.FirstGroup;
 
 @GroupSequence({AttendanceStatusPeer.class, FirstGroup.class})
 @Entity

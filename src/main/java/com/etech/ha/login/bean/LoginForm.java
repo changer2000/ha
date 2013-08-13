@@ -9,7 +9,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.etech.validator.constraints.SingleByte;
-import com.etech.validator.group.login.FirstGroup;
+import com.etech.validator.group.FirstGroup;
 
 @GroupSequence({LoginForm.class, FirstGroup.class})
 public class LoginForm {
