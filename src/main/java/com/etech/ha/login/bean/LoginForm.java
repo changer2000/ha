@@ -8,6 +8,7 @@ import javax.validation.constraints.Min;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.etech.validator.constraints.SingleByte;
 import com.etech.validator.group.login.FirstGroup;
 
 @GroupSequence({LoginForm.class, FirstGroup.class})
@@ -18,6 +19,7 @@ public class LoginForm {
 	 */
 	@NotEmpty
 	@Length(message="{error.length}", min=4, max=50, groups=FirstGroup.class)
+	@SingleByte(groups=FirstGroup.class)
 	private String empe_num;
 	
 	@NotEmpty
