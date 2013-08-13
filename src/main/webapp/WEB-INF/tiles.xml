@@ -11,7 +11,14 @@
 		<put-attribute name="header" value="/WEB-INF/views/common/header.jsp"/>
 		<put-attribute name="menu" value="/WEB-INF/views/common/menu.jsp"/>
 		<put-attribute name="command" value="command"/>
+		<put-attribute name="a" value=""/>
+		<put-attribute name="b" value=""/>
+		<put-attribute name="c" value=""/>
+		<put-attribute name="aHeight" value="60"/>
+		<put-attribute name="bHeight" value="450"/>
+		<!--
 		<put-attribute name="content" value=""/>
+		-->
 		<put-attribute name="footer" value="/WEB-INF/views/common/footer.jsp"/>
 	</definition>
 	
@@ -25,13 +32,23 @@
 	<definition name="adtnsStsList" extends="baseLayout.definition">
 		<put-attribute name="titleKey" value="title.maintain.atdnc_sts_list"></put-attribute>
 		<put-attribute name="action" value="adtnsSts"/>	<!-- 搞不懂，为什么不能写成maintain/adtnsSts -->
+		<put-attribute name="a" value="/WEB-INF/views/mst/atdnc_sts_a.jsp"/>
+		<put-attribute name="b" value="/WEB-INF/views/mst/atdnc_sts_b.jsp"/>
+		<put-attribute name="c" value="/WEB-INF/views/mst/atdnc_sts_c.jsp"/>
+		<!--
 		<put-attribute name="content" value="/WEB-INF/views/mst/atdnc_sts.jsp"/>
+		-->
 	</definition>
 		
 	<definition name="adtnsStsInfo" extends="baseLayout.definition">
 		<put-attribute name="titleKey" value="title.maintain.atdnc_sts_info"></put-attribute>
 		<put-attribute name="action" value="adtnsSts"/>
+		<put-attribute name="a" value="/WEB-INF/views/mst/atdnc_sts_info_a.jsp"/>
+		<put-attribute name="b" value="/WEB-INF/views/mst/atdnc_sts_info_b.jsp"/>
+		<put-attribute name="c" value="/WEB-INF/views/mst/atdnc_sts_info_c.jsp"/>
+		<!--
 		<put-attribute name="content" value="/WEB-INF/views/mst/atdnc_sts_info.jsp"/>
+		-->
 	</definition>
 	
 </tiles-definitions>

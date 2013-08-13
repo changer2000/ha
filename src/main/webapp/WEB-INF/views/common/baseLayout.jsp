@@ -9,6 +9,9 @@
 <tiles:useAttribute id="encType" name="encType"  classname="java.lang.String" ignore="true"/>
 <tiles:useAttribute id="commandName" name="command"  classname="java.lang.String" ignore="true"/>
 
+<tiles:useAttribute id="aHeight" name="aHeight" classname="java.lang.String" ignore="true"/>
+<tiles:useAttribute id="bHeight" name="bHeight" classname="java.lang.String" ignore="true"/>
+
 <title><fmt:message key="${titleKey}"/></title>
 <link href="<c:url value="/resources/bootstrap/css/bootstrap.css"/>"  rel="stylesheet" media="screen">
 <link href="<c:url value="/resources/messages/messages.css"/>" rel="stylesheet" media="screen">
@@ -23,8 +26,14 @@
 <div id="menuDiv" style="height:40px">
 	<tiles:insertAttribute name="menu"></tiles:insertAttribute>
 </div>
-<div id="contentDiv" style="height:570px" align="center">
-	<tiles:insertAttribute name="content"></tiles:insertAttribute>
+<div id="a" align="center" style="height:<tiles:insertAttribute name="aHeight"/>px">
+	<tiles:insertAttribute name="a"/>
+</div>
+<div id="b" align="center" style="height:<tiles:insertAttribute name="bHeight"/>px">
+	<tiles:insertAttribute name="b"></tiles:insertAttribute>
+</div>
+<div id="c" align="center" style="height:60px">
+	<tiles:insertAttribute name="c"></tiles:insertAttribute>
 </div>
 <div id="footerDiv" style="height:20px" align="center">
 	<tiles:insertAttribute name="footer"></tiles:insertAttribute>

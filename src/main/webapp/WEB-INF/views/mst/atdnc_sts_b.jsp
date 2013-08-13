@@ -1,6 +1,4 @@
 <%@ include file="/WEB-INF/views/common/taglibs.jsp"%>
-<h4><s:message code="page.header.atdnc_sts_list"></s:message></h4>
-
 <c:if test="${!empty logicCheckErrors}">
 	<font color="red"><c:out value="${logicCheckErrors}"/></font>
 </c:if>
@@ -24,13 +22,3 @@
 		</c:forEach>
 	</c:if>
 </table>
-
-<input type="submit" name="create" value="<s:message code="button.create"/>"/>
-<input type="submit" name="modify" value="<s:message code="button.modify"/>"/>
-<input type="submit" name="delete" value="<s:message code="button.delete"/>"/>
-
-<script type="text/javascript">
-	function formSubmit() {
-		
-	}
-</script>
