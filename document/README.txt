@@ -71,3 +71,25 @@ fmt-1_0-rt.tld 和 fmt-1_0.tld之间的区别只有一个：<rtexprvalue>true/fa
 想不用写***.hbm.xml文件。
 
 结果导致一定要在基类里定义的id不能用，以后只好在每个子类里面分别定义id了。
+
+
+6.想做个去掉List中为空的对象的实验。
+以下是可能的修改位置：
+org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest
+
+ServletModelAttributeMethodProcessor
+
+org.springframework.web.method.annotation.ModelAttributeMethodProcessor.resolveArgument, line 95
+
+org.springframework.web.bind.ServletRequestDataBinder.bind, line 105
+
+
+org.springframework.validation.DataBinder, line 740
+
+
+org.springframework.beans.AbstractPropertyAccessor.setPropertyValues, line 67
+
+org.springframework.beans.BeanWrapperImpl, line 525
+
+
+大位置：org.springframework.web.method.annotation.ModelAttributeMethodProcessor.resolveArgument(), line 106~107
