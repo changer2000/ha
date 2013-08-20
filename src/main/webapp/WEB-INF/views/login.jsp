@@ -30,23 +30,22 @@
 				<form:password path="pwd"/>
 				<br/>
 			</fieldset>
-			<table border="1">
+			<table border="1" id="tablea">
+			<c:forEach var="peer" items="${user.atdncList}" varStatus="status">
+				<c:set var="si" value="${status.index}"/>
 				<tr>
 					<td>
-						<input type="text" name="atdncList[0].id" value="0"/>
+						<input type="text" name="atdncList[<c:out value="${status.index }" />].id" value="<c:out value="${peer.id}"/>"/>
 					</td>
 					<td>
-						<input type="text" name="atdncList[0].atndnc_name" value="name0"/>
+						<input type="text" name="atdncList[<c:out value="${status.index }" />].atndnc_name" value="<c:out value="${peer.atndnc_name}"/>"/>
+						<% Integer num=(Integer)pageContext.getAttribute("si");
+							String fn = "atdncList["+num+"].atndnc_name";
+						%>
+						<form:errors path="<%=fn%>"/>
 					</td>
 				</tr>
-				<tr>
-					<td>
-						<input type="text" name="atdncList[2].id" value="2"/>
-					</td>
-					<td>
-						<input type="text" name="atdncList[2].atndnc_name" value="name2"/>
-					</td>
-				</tr>
+			</c:forEach>
 			</table>
 			<br/>
 			<div align="center" class="span2">
@@ -58,5 +57,13 @@
 		<div class="span4"></div>
 	</div>
 </div>
+<script type="text/javascript">
+	function init() {
+		if ($('#tablea').find('tr').length>2)
+			$('#tablea').find('tr').get(1).remove();
+	}
+	
+	init();
+</script>
 </body>
 </html>

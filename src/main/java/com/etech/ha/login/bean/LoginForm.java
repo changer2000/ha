@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.Entity;
 import javax.validation.GroupSequence;
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
@@ -30,6 +31,7 @@ public class LoginForm {
 	@Length(message="{error.length}", min=4, max=8, groups=FirstGroup.class)
 	private String pwd;
 	
+	@Valid 
 	private List<AttendanceStatusPeer> atdncList = new ArrayList<AttendanceStatusPeer>();
 	
 	

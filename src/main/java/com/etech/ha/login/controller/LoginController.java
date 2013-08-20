@@ -16,6 +16,7 @@ import com.etech.ha.common.service.MenuService;
 import com.etech.ha.constants.HaConstants;
 import com.etech.ha.login.bean.LoginForm;
 import com.etech.ha.mst.service.UserService;
+import com.etech.ha.peer.AttendanceStatusPeer;
 import com.etech.ha.peer.UserPeer;
 import com.etech.system.bean.Menu;
 import com.etech.system.bean.UserInfo;
@@ -35,8 +36,19 @@ public class LoginController extends BaseController {
 	public ModelAndView login() {
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("login");
-		mv.addObject("user", new LoginForm());
+		LoginForm frm = new LoginForm();
+		frm.getAtdncList().add(createPeer(0));
+		frm.getAtdncList().add(createPeer(1));
+		frm.getAtdncList().add(createPeer(2));
+		mv.addObject("user", frm);
 		return mv;
+	}
+	
+	private AttendanceStatusPeer createPeer(long i) {
+		AttendanceStatusPeer peer = new AttendanceStatusPeer();
+		peer.setId(new Long(i));
+		peer.setAtndnc_name("name"+i);
+		return peer;
 	}
 	
 	@ModelAttribute("menu")
