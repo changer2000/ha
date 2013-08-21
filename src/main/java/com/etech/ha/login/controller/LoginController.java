@@ -37,9 +37,6 @@ public class LoginController extends BaseController {
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("login");
 		LoginForm frm = new LoginForm();
-		frm.getAtdncList().add(createPeer(0));
-		frm.getAtdncList().add(createPeer(1));
-		frm.getAtdncList().add(createPeer(2));
 		mv.addObject("user", frm);
 		return mv;
 	}

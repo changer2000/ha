@@ -1,13 +1,19 @@
 package com.etech.ha.login.bean;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.validation.GroupSequence;
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.etech.ha.peer.AttendanceStatusPeer;
+import org.springframework.web.method.annotation.FilterEmptyBean;
 import com.etech.validator.constraints.SingleByte;
 import com.etech.validator.group.FirstGroup;
 
@@ -26,6 +32,10 @@ public class LoginForm {
 	@Length(message="{error.length}", min=4, max=8, groups=FirstGroup.class)
 	private String pwd;
 	
+	@FilterEmptyBean
+	@Valid 
+	private List<AttendanceStatusPeer> atdncList = new ArrayList<AttendanceStatusPeer>();
+	
 	
 	public String getEmpe_num() {
 		return empe_num;
@@ -38,6 +48,12 @@ public class LoginForm {
 	}
 	public void setPwd(String pwd) {
 		this.pwd = pwd;
+	}
+	public List<AttendanceStatusPeer> getAtdncList() {
+		return atdncList;
+	}
+	public void setAtdncList(List<AttendanceStatusPeer> atdncList) {
+		this.atdncList = atdncList;
 	}
 	
 }
