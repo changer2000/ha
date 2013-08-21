@@ -93,3 +93,36 @@ org.springframework.beans.BeanWrapperImpl, line 525
 
 
 大位置：org.springframework.web.method.annotation.ModelAttributeMethodProcessor.resolveArgument(), line 106~107
+
+
+(1)打包流程：
+   a. 在C:下建立spring-web-3.2.1.RELEASE目录，把原始的jar里的文件解开，放到这个目录下
+   b. eclipse的spring-web项目的java编译等级设为1.5
+   c. spring-web目录下的bin\main\org\springframework\web\method\annotation\ModelAttributeMethodProcessor.class copy到c:\spring-web-3.2.1.RELEASE的对应目录
+   d. 在C:\spring-web-3.2.1.RELEASE目录下运行 "jar cvf spring-web-3.2.1.RELEASE.jar ." ，得到目标jar
+   
+   
+(2)网上的一个代替form:errors的方案:
+<!-- instead of <form:errors path="name"> -->
+<spring:bind path="name">
+  <c:if test="${status.error}">
+    <img src="<c:url value="/resources/images/warning.png"/>"
+       width="31" height="32" class="error_tooltip" title="${status.errorMessage}" />
+  </c:if>
+</spring:bind>
+
+
+(3)比较难看的一种显示多行validate错误方法:
+					<c:forEach var="peer" items="${user.atdncList}" varStatus="status">
+						......
+						<c:set var="si" scope="page" value="${status.index}"/>
+						<c:if test="${status.index == 0}">
+							<c:out value="${si}"></c:out>
+							<%=pageContext.getAttribute("si", pageContext.PAGE_SCOPE)%>
+							<% Integer num=(Integer)pageContext.getAttribute("si", pageContext.PAGE_SCOPE);
+								String fn = "atdncList["+num+"].atndnc_name";
+							%>
+							<form:errors path="<%=fn%>"/>
+						</c:if>
+						......
+					</c:forEach>

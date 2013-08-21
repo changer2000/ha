@@ -1,13 +1,9 @@
-package com.etech.ha.login.bean;
+package filter.empty.bean;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.validation.GroupSequence;
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -17,7 +13,6 @@ import org.springframework.web.method.annotation.FilterEmptyBean;
 import com.etech.validator.constraints.SingleByte;
 import com.etech.validator.group.FirstGroup;
 
-@GroupSequence({LoginForm.class, FirstGroup.class})
 public class LoginForm {
 	
 	/*
@@ -35,6 +30,9 @@ public class LoginForm {
 	@FilterEmptyBean
 	@Valid 
 	private List<AttendanceStatusPeer> atdncList = new ArrayList<AttendanceStatusPeer>();
+	
+	@FilterEmptyBean
+	private List<LoginForm> frmList = new ArrayList<LoginForm>();
 	
 	
 	public String getEmpe_num() {
@@ -55,5 +53,13 @@ public class LoginForm {
 	public void setAtdncList(List<AttendanceStatusPeer> atdncList) {
 		this.atdncList = atdncList;
 	}
+	public List<LoginForm> getFrmList() {
+		return frmList;
+	}
+	public void setFrmList(List<LoginForm> frmList) {
+		this.frmList = frmList;
+	}
 	
+
+
 }
