@@ -14,37 +14,34 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.etech.ha.mst.service.AttendanceStatusService;
-import com.etech.ha.peer.AttendanceStatusPeer;
+import com.etech.ha.mst.service.HolidayService;
+import com.etech.ha.peer.HolidayPeer;
 import com.etech.system.controller.BaseController;
 import com.etech.system.utils.MessageUtils;
 
 @Controller
-@SessionAttributes(value="menu")
-@RequestMapping("/maintain/adtnsSts")
-public class AttendanceStatusController extends BaseController {
+@RequestMapping("/maintain/holiday")
+public class HolidayController extends BaseController {
 	
-	private static Log logger = LogFactory.getLog(AttendanceStatusController.class);
+	private static Log logger = LogFactory.getLog(HolidayController.class);
 	
 	@Autowired
-	private AttendanceStatusService atndcStsSvc;
+	private HolidayService hldySvc;
 	
 	@RequestMapping(method=RequestMethod.GET)
 	public ModelAndView list() {
-		List<AttendanceStatusPeer> list = atndcStsSvc.loadAll();
-		ModelAndView mv = new ModelAndView("adtnsStsList");
-		mv.addObject("adtnsStsList", list);
+		List<HolidayPeer> list = hldySvc.listAll();
+		ModelAndView mv = new ModelAndView("hldyList");
+		mv.addObject("list", list);
 		return mv;
 	}
 	
 	@RequestMapping(params="create", method=RequestMethod.POST)
 	public ModelAndView create() {
-		ModelAndView mv = new ModelAndView();
-		mv.addObject("command", new AttendanceStatusPeer());
-		mv.setViewName("adtnsStsInfo");
+		ModelAndView mv = new ModelAndView("hldyInfo");
+		mv.addObject("command", new HolidayPeer());
 		return mv;
 	}
 	
@@ -66,16 +63,15 @@ public class AttendanceStatusController extends BaseController {
 			return mv;
 		}
 		
-		AttendanceStatusPeer peer = atndcStsSvc.findById(NumberUtils.createLong(id[0]));
+		HolidayPeer peer = hldySvc.findById(NumberUtils.createLong(id[0]));
 		mv.addObject("command", peer);
-		mv.setViewName("adtnsStsInfo");
+		mv.setViewName("hldyInfo");
 		return mv;
 	}
 	
 	@RequestMapping(params="delete")
 	public ModelAndView delete(HttpServletRequest request, String[] id) {
 		ModelAndView mv = new ModelAndView();
-		
 		if (id==null || id.length==0) {
 			mv = list();
 			MessageUtils.getMessagesBean()
@@ -84,17 +80,16 @@ public class AttendanceStatusController extends BaseController {
 			return mv;
 		}
 		
-		atndcStsSvc.delete(id);
+		hldySvc.delete(id);
 		return list();
 	}
 	
-	@RequestMapping(params="register", method=RequestMethod.POST)
-	public ModelAndView register(@Valid @ModelAttribute(value="command") AttendanceStatusPeer peer, BindingResult result) {
-		ModelAndView mv = new ModelAndView();
+	@RequestMapping(params="register")
+	public ModelAndView register(@Valid @ModelAttribute(value="command") HolidayPeer peer, BindingResult result) {
+		ModelAndView mv = new ModelAndView("hldyInfo");
 		if (!result.hasErrors())
-			atndcStsSvc.reisger(peer);
+			hldySvc.register(peer);
 		
-		mv.setViewName("adtnsStsInfo");
 		return mv;
 	}
 	
@@ -102,13 +97,14 @@ public class AttendanceStatusController extends BaseController {
 	public ModelAndView back() {
 		return list();
 	}
-
-	public AttendanceStatusService getAtndcStsSvc() {
-		return atndcStsSvc;
+	
+	
+	public HolidayService getHldySvc() {
+		return hldySvc;
 	}
 
-	public void setAtndcStsSvc(AttendanceStatusService atndcStsSvc) {
-		this.atndcStsSvc = atndcStsSvc;
+	public void setHldySvc(HolidayService hldySvc) {
+		this.hldySvc = hldySvc;
 	}
 	
 }

@@ -42,8 +42,14 @@ p_id varchar(100)
 drop table t_holiday;
 create table t_holiday(
 id int auto_increment primary key,
+name varchar(100)
+) engine=InnoDB;
+
+drop table t_holiday_list;
+create table t_holiday_list(
+id int auto_increment primary key,
 hldy_year int,
-hldy_name varchar(100),
+hldy_id int,
 hldy_start date,
 hldy_end date,
 start_dt date,
@@ -63,7 +69,7 @@ id int auto_increment primary key,
 user_id int,
 work_date date, 
 atndnc_id int,
-hldy_id int
+hldy_list_id int
 ) engine=InnoDB;
 
 

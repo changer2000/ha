@@ -42,4 +42,20 @@
 		<put-attribute name="c" value="/WEB-INF/views/mst/atdnc_sts_info_c.jsp"/>
 	</definition>
 	
+	<definition name="hldyList" extends="baseLayout.definition">
+		<put-attribute name="titleKey" value="title.maintain.hldy_list"/>
+		<put-attribute name="action" value="holiday"/>
+		<put-attribute name="a" value="/WEB-INF/views/mst/hldy_list_a.jsp"/>
+		<put-attribute name="b" value="/WEB-INF/views/mst/hldy_list_b.jsp"/>
+		<put-attribute name="c" value="/WEB-INF/views/mst/hldy_list_c.jsp"/>
+	</definition>
+	
+	<definition name="hldyInfo" extends="baseLayout.definition">
+		<put-attribute name="titleKey" value="title.maintain.hldy_info"/>
+		<put-attribute name="action" value="holiday"/>
+		<put-attribute name="a" value="/WEB-INF/views/mst/hldy_info_a.jsp"/>
+		<put-attribute name="b" value="/WEB-INF/views/mst/hldy_info_b.jsp"/>
+		<put-attribute name="c" value="/WEB-INF/views/mst/hldy_info_c.jsp"/>
+	</definition>
+	
 </tiles-definitions>
