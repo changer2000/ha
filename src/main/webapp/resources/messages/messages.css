@@ -29,6 +29,20 @@ div.error {
 	background-color: #FFBABA;
 	background-image: url('error.png');
 }
+
+div.errorArea {
+	border: 1px solid;
+	margin: 5px 0px;
+	color: #D8000C;
+	background-color: #FFBABA;
+}
+
+div.infoArea {
+	border: 1px solid;
+	margin: 5px 0px;
+	color: #00529B;
+	background-color: #BDE5F8;
+}
 <!--
 span {
 	margin: 0px 0px 0px 0px;
@@ -47,5 +61,11 @@ body {
 	font-size: .75em;
 	margin: 1em auto;
 	width: 1024px;
+}
+
+img.icon {
+	width:20px;
+	height:20px;
+	padding: 2px 5px 2px 5px;
 }
 -->

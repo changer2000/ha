@@ -4,9 +4,5 @@ import com.etech.system.bean.MessagesBean;
 
 public class MessageUtils {
 	
-	public static MessagesBean getMessagesBean() {
-		return new MessagesBean();
-	}
-	
 	
 }

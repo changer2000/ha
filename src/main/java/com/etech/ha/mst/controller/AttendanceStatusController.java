@@ -19,8 +19,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.etech.ha.mst.service.AttendanceStatusService;
 import com.etech.ha.peer.AttendanceStatusPeer;
+import com.etech.system.bean.MessagesBean;
 import com.etech.system.controller.BaseController;
-import com.etech.system.utils.MessageUtils;
 
 @Controller
 @SessionAttributes(value="menu")
@@ -54,15 +54,15 @@ public class AttendanceStatusController extends BaseController {
 		
 		if (id==null || id.length==0) {
 			mv = list();
-			MessageUtils.getMessagesBean()
-				.addMessage(request, messageSource, "error.need.select.one", null)
-				.setIntoModelView(mv);
+			MessagesBean msgBean = new MessagesBean();
+			msgBean.addError(request, messageSource, "error.need.select.one", null)
+				.setErrorsIntoModelView(mv);
 			return mv;
 		} else if (id.length>1) {
 			mv = list();
-			MessageUtils.getMessagesBean()
-				.addMessage(request, messageSource, "error.cant.select.more.than.one", null)
-				.setIntoModelView(mv);
+			MessagesBean msgBean = new MessagesBean();
+			msgBean.addError(request, messageSource, "error.cant.select.more.than.one", null)
+				.setErrorsIntoModelView(mv);
 			return mv;
 		}
 		
@@ -78,9 +78,9 @@ public class AttendanceStatusController extends BaseController {
 		
 		if (id==null || id.length==0) {
 			mv = list();
-			MessageUtils.getMessagesBean()
-				.addMessage(request, messageSource, "error.need.select.one", null)
-				.setIntoModelView(mv);
+			MessagesBean msgBean = new MessagesBean();
+			msgBean.addError(request, messageSource, "error.need.select.one", null)
+				.setErrorsIntoModelView(mv);
 			return mv;
 		}
 		
@@ -89,11 +89,15 @@ public class AttendanceStatusController extends BaseController {
 	}
 	
 	@RequestMapping(params="register", method=RequestMethod.POST)
-	public ModelAndView register(@Valid @ModelAttribute(value="command") AttendanceStatusPeer peer, BindingResult result) {
+	public ModelAndView register(HttpServletRequest request, @Valid @ModelAttribute(value="command") AttendanceStatusPeer peer, BindingResult result) {
 		ModelAndView mv = new ModelAndView();
-		if (!result.hasErrors())
+		if (!result.hasErrors()) {
 			atndcStsSvc.reisger(peer);
-		
+
+			MessagesBean msgBean = new MessagesBean();
+			msgBean.addMessage(request, messageSource, "msg.info.register.success", null)
+				.setMessagesIntoModelView(mv);
+		}
 		mv.setViewName("adtnsStsInfo");
 		return mv;
 	}

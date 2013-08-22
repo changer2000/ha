@@ -30,6 +30,7 @@
 	<tiles:insertAttribute name="a"/>
 </div>
 <div id="b" align="center" style="height:<tiles:insertAttribute name="bHeight"/>px">
+	<tiles:insertAttribute name="messages"></tiles:insertAttribute>
 	<tiles:insertAttribute name="b"></tiles:insertAttribute>
 </div>
 <div id="c" align="center" style="height:60px">

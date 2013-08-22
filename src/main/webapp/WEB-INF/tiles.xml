@@ -12,6 +12,7 @@
 		<put-attribute name="menu" value="/WEB-INF/views/common/menu.jsp"/>
 		<put-attribute name="command" value="command"/>
 		<put-attribute name="a" value=""/>
+		<put-attribute name="messages" value="/WEB-INF/views/common/messages.jsp"/>
 		<put-attribute name="b" value=""/>
 		<put-attribute name="c" value=""/>
 		<put-attribute name="aHeight" value="60"/>

@@ -1,7 +1,4 @@
 <%@ include file="/WEB-INF/views/common/taglibs.jsp"%>
-<c:if test="${!empty logicCheckErrors}">
-	<font color="red"><c:out value="${logicCheckErrors}"/></font>
-</c:if>
 <table id="table1" border="1" cellspacing="0" cellpadding="0"  width="300px">
 	<thead>
 		<tr>

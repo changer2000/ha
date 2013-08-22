@@ -12,7 +12,13 @@ import com.etech.ha.constants.HaConstants;
 
 public class MessagesBean {
 	
+	private Map<String, String> errMap = new LinkedMap();
 	private Map<String, String> msgMap = new LinkedMap();
+	
+	public MessagesBean addError(HttpServletRequest req, MessageSource messageSource, String key, String[] args) {
+		errMap.put(key, messageSource.getMessage(key, args, req.getLocale()));
+		return this;
+	}
 	
 	public MessagesBean addMessage(HttpServletRequest req, MessageSource messageSource, String key, String[] args) {
 		msgMap.put(key, messageSource.getMessage(key, args, req.getLocale()));
@@ -21,7 +27,7 @@ public class MessagesBean {
 	
 	public String getAllMessage() {
 		StringBuilder buf = new StringBuilder();
-		for (String s : msgMap.values()) {
+		for (String s : errMap.values()) {
 			if (buf.length()>0)
 				buf.append("\r\n");
 			buf.append(s);
@@ -29,7 +35,12 @@ public class MessagesBean {
 		return buf.toString();
 	}
 	
-	public void setIntoModelView(ModelAndView mv) {
-		mv.addObject(HaConstants.LOGIC_CHECK_ERRORS, getAllMessage());
+	public void setErrorsIntoModelView(ModelAndView mv) {
+		//mv.addObject(HaConstants.LOGIC_CHECK_ERRORS, getAllMessage());
+		mv.addObject(HaConstants.LOGIC_CHECK_ERRORS, errMap.values());
+	}
+	
+	public void setMessagesIntoModelView(ModelAndView mv) {
+		mv.addObject(HaConstants.LOGIC_MESSAGE, msgMap.values());
 	}
 }

@@ -18,8 +18,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.etech.ha.mst.service.HolidayService;
 import com.etech.ha.peer.HolidayPeer;
+import com.etech.system.bean.MessagesBean;
 import com.etech.system.controller.BaseController;
-import com.etech.system.utils.MessageUtils;
 
 @Controller
 @RequestMapping("/maintain/holiday")
@@ -51,15 +51,15 @@ public class HolidayController extends BaseController {
 		
 		if (id==null || id.length==0) {
 			mv = list();
-			MessageUtils.getMessagesBean()
-				.addMessage(request, messageSource, "error.need.select.one", null)
-				.setIntoModelView(mv);
+			MessagesBean msgBean = new MessagesBean();
+			msgBean.addError(request, messageSource, "error.need.select.one", null)
+				.setErrorsIntoModelView(mv);
 			return mv;
 		} else if (id.length>1) {
 			mv = list();
-			MessageUtils.getMessagesBean()
-				.addMessage(request, messageSource, "error.cant.select.more.than.one", null)
-				.setIntoModelView(mv);
+			MessagesBean msgBean = new MessagesBean();
+			msgBean.addError(request, messageSource, "error.cant.select.more.than.one", null)
+				.setErrorsIntoModelView(mv);
 			return mv;
 		}
 		
@@ -74,9 +74,9 @@ public class HolidayController extends BaseController {
 		ModelAndView mv = new ModelAndView();
 		if (id==null || id.length==0) {
 			mv = list();
-			MessageUtils.getMessagesBean()
-				.addMessage(request, messageSource, "error.need.select.one", null)
-				.setIntoModelView(mv);
+			MessagesBean msgBean = new MessagesBean();
+			msgBean.addError(request, messageSource, "error.need.select.one", null)
+				.setErrorsIntoModelView(mv);
 			return mv;
 		}
 		
@@ -85,11 +85,14 @@ public class HolidayController extends BaseController {
 	}
 	
 	@RequestMapping(params="register")
-	public ModelAndView register(@Valid @ModelAttribute(value="command") HolidayPeer peer, BindingResult result) {
+	public ModelAndView register(HttpServletRequest request, @Valid @ModelAttribute(value="command") HolidayPeer peer, BindingResult result) {
 		ModelAndView mv = new ModelAndView("hldyInfo");
-		if (!result.hasErrors())
+		if (!result.hasErrors()) {
 			hldySvc.register(peer);
-		
+			MessagesBean msgBean = new MessagesBean();
+			msgBean.addMessage(request, messageSource, "msg.info.register.success", null)
+				.setMessagesIntoModelView(mv);
+		}
 		return mv;
 	}
 	

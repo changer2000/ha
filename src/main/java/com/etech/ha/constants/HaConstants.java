@@ -3,6 +3,7 @@ package com.etech.ha.constants;
 public class HaConstants {
 	
 	public static String LOGIC_CHECK_ERRORS = "logicCheckErrors";
+	public static String LOGIC_MESSAGE = "logicMessages";
 	
 	public static String SESSION_KEY_USER_INFO = "SESSION_KEY_USER_INFO";
 	
