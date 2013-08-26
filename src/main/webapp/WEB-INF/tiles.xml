@@ -30,9 +30,9 @@
 	<definition name="adtnsStsList" extends="baseLayout.definition">
 		<put-attribute name="titleKey" value="title.maintain.atdnc_sts_list"></put-attribute>
 		<put-attribute name="action" value="adtnsSts"/>	<!-- 搞不懂，为什么不能写成maintain/adtnsSts -->
-		<put-attribute name="a" value="/WEB-INF/views/mst/atdnc_sts_a.jsp"/>
-		<put-attribute name="b" value="/WEB-INF/views/mst/atdnc_sts_b.jsp"/>
-		<put-attribute name="c" value="/WEB-INF/views/mst/atdnc_sts_c.jsp"/>
+		<put-attribute name="a" value="/WEB-INF/views/mst/atdnc_sts_list_a.jsp"/>
+		<put-attribute name="b" value="/WEB-INF/views/mst/atdnc_sts_list_b.jsp"/>
+		<put-attribute name="c" value="/WEB-INF/views/mst/atdnc_sts_list_c.jsp"/>
 	</definition>
 		
 	<definition name="adtnsStsInfo" extends="baseLayout.definition">

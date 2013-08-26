@@ -36,3 +36,7 @@ span.success {
 span.error {
 	color: #D8000C;
 }
+
+tr.title {
+	background-color : #83C4F3
+}
