@@ -126,3 +126,32 @@ org.springframework.beans.BeanWrapperImpl, line 525
 						</c:if>
 						......
 					</c:forEach>
+					
+					
+7.今天在用<form:select>时，发现一个非常奇怪的问题: items="${***}"总是无法解析成功。
+调试了半天发现和下面这段程序有关：
+ExpressionEvaluationUtils.java, line 72
+	public static boolean isSpringJspExpressionSupportActive(PageContext pageContext) {
+		ServletContext sc = pageContext.getServletContext();
+		String springJspExpressionSupport = sc.getInitParameter(EXPRESSION_SUPPORT_CONTEXT_PARAM);
+		if (springJspExpressionSupport != null) {
+			return Boolean.valueOf(springJspExpressionSupport);
+		}
+		if (sc.getMajorVersion() >= 3) {
+			// We're on a Servlet 3.0+ container: Let's check what the application declares...
+			if (sc.getEffectiveMajorVersion() == 2 && sc.getEffectiveMinorVersion() < 4) {
+				// Application declares Servlet 2.3- in its web.xml: JSP 2.0 expressions not active.
+				// Activate our own expression support.
+				return true;
+			}
+		}
+		return false;
+	}
+	
+这个工程用的是tomecat 7,sc.getMajorVersion() >= 3，(猜测是在project-->properties -->project facets --> Dynamic Web Module --> 3.0)
+if (sc.getEffectiveMajorVersion() == 2 && sc.getEffectiveMinorVersion() < 4)，而在web.xml里配置的version=3.0，
+所以这一段总是返回false，造成不进行el表达式解析。
+
+解决方法：
+把web.xml里的version改为"2.3"即可。
+这个解决方法需要时间的检验！！！！
