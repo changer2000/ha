@@ -155,3 +155,15 @@ if (sc.getEffectiveMajorVersion() == 2 && sc.getEffectiveMinorVersion() < 4)，�
 解决方法：
 把web.xml里的version改为"2.3"即可。
 这个解决方法需要时间的检验！！！！
+  \----- 不幸言中！ 上面这个解决方案并不好。
+         比较好的一个办法是：在web.xml文件里，增加：
+         <context-param>
+			<description>Spring Expression Language Support</description>
+			<param-name>springJspExpressionSupport</param-name>
+			<param-value>true</param-value>
+		</context-param>
+	但这样做，会有隐患：http://www.dbappsecurity.com.cn/news/n2013/201301_28_01.html，造成远程代码执行漏洞。所以这个值只能设为false。
+	也就是意味着<form:select>里的items="${***}"基本上是不能用了
+	
+	
+         

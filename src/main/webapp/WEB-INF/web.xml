@@ -1,7 +1,7 @@
 <web-app xmlns="http://java.sun.com/xml/ns/javaee"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-      version="2.3">
+      version="3.0">
 	<!--
 	<filter>
 		<display-name>
@@ -22,6 +22,12 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	-->
+	<context-param>
+		<description>Spring Expression Language Support</description>
+		<param-name>springJspExpressionSupport</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	
 	<filter>
 		<filter-name>loginCheckFilter</filter-name>
 		<filter-class>com.etech.system.filter.LoginCheckFilter</filter-class>
