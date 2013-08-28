@@ -25,7 +25,7 @@
 	<context-param>
 		<description>Spring Expression Language Support</description>
 		<param-name>springJspExpressionSupport</param-name>
-		<param-value>true</param-value>
+		<param-value>false</param-value>
 	</context-param>
 	
 	<filter>
