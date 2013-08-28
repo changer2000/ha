@@ -44,17 +44,10 @@ public class HolidayListController extends BaseController {
 		return mapping;
 	}
 	
-	public List<Long> initHldyOptions2() {
-		List<Long> rs = new ArrayList<Long>();
+	public List<HolidayPeer> initHldyOptions2() {
 		
 		List<HolidayPeer> list = hldySvc.listAll();
-		if (list!=null && list.size()>0) {
-			for (HolidayPeer peer : list) {
-				rs.add(peer.getId());
-			}
-		}
-		
-		return rs;
+		return list;
 	}
 	
 	@RequestMapping(method=RequestMethod.GET)

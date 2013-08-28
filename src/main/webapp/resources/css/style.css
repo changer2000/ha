@@ -37,6 +37,10 @@ span.error {
 	color: #D8000C;
 }
 
+table.topSpace {
+	margin-top: 2px;
+}
+
 tr.title {
 	background-color : #83C4F3
 }
