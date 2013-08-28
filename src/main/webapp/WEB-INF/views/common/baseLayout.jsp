@@ -14,11 +14,14 @@
 
 <title><fmt:message key="${titleKey}"/></title>
 <link href="<c:url value="/resources/bootstrap/css/bootstrap.css"/>"  rel="stylesheet" media="screen">
+<link href="<c:url value="/resources/bootstrap/css/datetimepicker.css"/>"  rel="stylesheet" media="screen">
 <link href="<c:url value="/resources/messages/messages.css"/>" rel="stylesheet" media="screen">
 <link href="<c:url value="/resources/css/style.css"/>" rel="stylesheet" media="screen">
 
 <script src="<c:url value="/resources/bootstrap/js/jquery.js"/>"></script>
 <script src="<c:url value="/resources/bootstrap/js/bootstrap.js"/>"></script>
+<script src="<c:url value="/resources/bootstrap/js/bootstrap-datetimepicker.js"/>"></script>
+<script src="<c:url value="/resources/bootstrap/js/bootstrap-datetimepicker.zh-CN.js"/>"></script>
 </head>
 <body>
 <form:form enctype="<%=encType%>" action="<%=actionURL%>" onsubmit="return formSubmit();" method="<%=methodType%>" modelAttribute="<%=commandName%>">
