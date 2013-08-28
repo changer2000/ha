@@ -60,6 +60,8 @@
 	</definition>
 	
 	<definition name="hldyListList" extends="baseLayout.definition">
+		<put-attribute name="aHeight" value="150"/>
+		<put-attribute name="bHeight" value="360"/>
 		<put-attribute name="titleKey" value="title.maintain.hldy_list_list"/>
 		<put-attribute name="action" value="holiday_list"/>
 		<put-attribute name="a" value="/WEB-INF/views/mst/hldy_list_list_a.jsp"/>
