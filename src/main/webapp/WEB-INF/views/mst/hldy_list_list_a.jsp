@@ -1,5 +1,6 @@
 <%@page import="java.util.List"%>
 <%@ include file="/WEB-INF/views/common/taglibs.jsp"%>
+<script src='<c:url value="/resources/js/mst/hldy_list_list.js"/>'></script>
 <h4><s:message code="page.header.hldy_list_list"></s:message></h4>
 <br/>
 <table border="0" cellspacing="1" cellpadding="1"  class="span8">
@@ -45,16 +46,3 @@
 	</td>
 </tr>
 </table>
-
-<script type="text/javascript">
-	$('.form_datetime').datetimepicker({
-		format:"yyyy-mm-dd", 
-		language:  'zh-CN',
-		weekStart : 1,
-		autoclose : true,
-		minView : 2,
-		todayBtn : "linked",
-		todayHighlight : true,
-		forceParse:true
-		});
-</script>

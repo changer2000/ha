@@ -17,7 +17,7 @@ import javax.persistence.TemporalType;
 import com.etech.system.bean.BaseDomain;
 
 @Entity
-@Table(name="t_history_list")
+@Table(name="t_holiday_list")
 public class HolidayListPeer extends BaseDomain {
 
 	private static final long serialVersionUID = -252344152667921246L;
@@ -44,13 +44,13 @@ public class HolidayListPeer extends BaseDomain {
 	@Temporal(TemporalType.DATE)
 	private Date hldy_end;
 	
-	@Column(name="start_date")
+	@Column(name="start_dt")
 	@Temporal(TemporalType.DATE)
-	private Date start_date;
+	private Date start_dt;
 	
-	@Column(name="end_date")
+	@Column(name="end_dt")
 	@Temporal(TemporalType.DATE)
-	private Date end_date;
+	private Date end_dt;
 	
 	@Column(name="init_flg")
 	private Integer init_flg;
@@ -95,20 +95,20 @@ public class HolidayListPeer extends BaseDomain {
 		this.hldy_end = hldy_end;
 	}
 
-	public Date getStart_date() {
-		return start_date;
+	public Date getStart_dt() {
+		return start_dt;
 	}
 
-	public void setStart_date(Date start_date) {
-		this.start_date = start_date;
+	public void setStart_dt(Date start_dt) {
+		this.start_dt = start_dt;
 	}
 
-	public Date getEnd_date() {
-		return end_date;
+	public Date getEnd_dt() {
+		return end_dt;
 	}
 
-	public void setEnd_date(Date end_date) {
-		this.end_date = end_date;
+	public void setEnd_dt(Date end_dt) {
+		this.end_dt = end_dt;
 	}
 
 	public Integer getInit_flg() {
@@ -118,4 +118,5 @@ public class HolidayListPeer extends BaseDomain {
 	public void setInit_flg(Integer init_flg) {
 		this.init_flg = init_flg;
 	}
+
 }

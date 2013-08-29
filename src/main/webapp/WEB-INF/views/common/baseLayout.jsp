@@ -22,8 +22,10 @@
 <script src="<c:url value="/resources/bootstrap/js/bootstrap.js"/>"></script>
 <script src="<c:url value="/resources/bootstrap/js/bootstrap-datetimepicker.js"/>"></script>
 <script src="<c:url value="/resources/bootstrap/js/bootstrap-datetimepicker.zh-CN.js"/>"></script>
+
+<script src="<c:url value="/resources/js/function.js"/>"></script>
 </head>
-<body>
+<body onload="loadForm();">
 <form:form enctype="<%=encType%>" action="<%=actionURL%>" onsubmit="return formSubmit();" method="<%=methodType%>" modelAttribute="<%=commandName%>">
 <div id="headerDiv" style="height:60px">
 	<tiles:insertAttribute name="header"></tiles:insertAttribute>

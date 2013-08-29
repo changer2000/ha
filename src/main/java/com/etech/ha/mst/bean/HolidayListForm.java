@@ -14,7 +14,6 @@ public class HolidayListForm implements Serializable {
 	
 	private String[] selKey;
 	
-	private List<Long> hldyOptions;
 	
 	public HolidayListSearchBean getSearchBean() {
 		return searchBean;
@@ -33,12 +32,6 @@ public class HolidayListForm implements Serializable {
 	}
 	public void setSelKey(String[] selKey) {
 		this.selKey = selKey;
-	}
-	public List<Long> getHldyOptions() {
-		return hldyOptions;
-	}
-	public void setHldyOptions(List<Long> hldyOptions) {
-		this.hldyOptions = hldyOptions;
 	}
 	
 }
