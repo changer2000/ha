@@ -27,8 +27,26 @@ public class HolidayListService {
 	}
 	
 	public HolidayListPeer register(HolidayListPeer peer) {
+		boolean isCreate = false;
+		if (peer.getId()!=null) {
+			HolidayListPeer dbPeer = findById(peer.getId());
+			if (dbPeer==null) {
+				isCreate = true;
+				peer.setId(null);
+			}
+		} else {
+			isCreate = true;
+		}
+		
 		hldyListDao.saveOrUpdate(peer);
+		if (!isCreate) {
+			//TODO do initialize holiday or work date status. 
+		}
 		return peer;
+	}
+	
+	public void initDate(HolidayListPeer peer) {
+		
 	}
 	
 	public void delete(String[] ids) {
