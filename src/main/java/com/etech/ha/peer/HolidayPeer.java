@@ -1,10 +1,14 @@
 package com.etech.ha.peer;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.GroupSequence;
 
@@ -30,6 +34,9 @@ public class HolidayPeer extends BaseDomain {
 	@NotEmpty
 	@Length(min=2, max=100, message="{error.length}", groups=FirstGroup.class)
 	private String name;
+	
+	@OneToMany(mappedBy="holidayPeer", fetch=FetchType.EAGER)	//XXX Just for sample
+	private List<HolidayListPeer> hldyList;
 
 	public Long getId() {
 		return id;
@@ -45,6 +52,14 @@ public class HolidayPeer extends BaseDomain {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public List<HolidayListPeer> getHldyList() {
+		return hldyList;
+	}
+
+	public void setHldyList(List<HolidayListPeer> hldyList) {
+		this.hldyList = hldyList;
 	}
 	
 }
