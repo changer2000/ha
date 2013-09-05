@@ -13,11 +13,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import com.etech.system.bean.BaseDomain;
 
 @Entity
-@Table(name="t_holiday_list")
+@Table(name="t_holiday_list", uniqueConstraints={@UniqueConstraint(columnNames={"hldy_year","hldy_id"})})	//XXX
 public class HolidayListPeer extends BaseDomain {
 
 	private static final long serialVersionUID = -252344152667921246L;
@@ -32,12 +36,12 @@ public class HolidayListPeer extends BaseDomain {
 	@Column(name="hldy_year")
 	private Integer hldy_year;
 	
-	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="hldy_id")
+	@ManyToOne(fetch=FetchType.EAGER)	//, cascade={javax.persistence.CascadeType.REMOVE}   <=== 不起作用，仍然会被更新
+	@JoinColumn(name="hldy_id")			//, updatable=false   <=== 不起作用，仍然会被更新
 	private HolidayPeer holidayPeer;	//XXX
 	
 	@Column(name="hldy_start")
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.DATE)	//XXX
 	private Date hldy_start;
 	
 	@Column(name="hldy_end")
