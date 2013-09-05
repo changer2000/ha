@@ -6,12 +6,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import com.etech.system.bean.BaseDomain;
 
 
 @Entity
-@Table(name="t_user")
+@Table(name="t_user", uniqueConstraints={@UniqueConstraint(columnNames={"email"})})
 public class UserPeer extends BaseDomain {
 	
 	private static final long serialVersionUID = 5349810873546597127L;
