@@ -17,6 +17,7 @@ dept_cd varchar(20),
 del_flg int
 ) engine=InnoDB;
 alter table t_user change empe_num empe_num varchar(50);
+alter table t_user add unique(email);
 
 drop table t_role;
 create table t_role(
@@ -56,6 +57,7 @@ start_dt date,
 end_dt date,
 init_flg int default 0
 ) engine=InnoDB;
+alter table t_holiday_list add unique (hldy_year, hldy_id);
 
 drop table t_attendance_status;
 create table t_attendance_status(
@@ -71,6 +73,7 @@ work_date date,
 atndnc_id int,
 hldy_list_id int
 ) engine=InnoDB;
+alter table t_attendance_info add unique (user_id, work_date);
 
 
 -----------------------------------
