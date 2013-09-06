@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.etech.ha.peer.HolidayListPeer;
+import com.etech.ha.peer.UserPeer;
 import com.etech.system.utils.HibernateUtils;
 
 public class ManyToOneTest {
@@ -44,7 +45,8 @@ public class ManyToOneTest {
 		try {
 			tx.begin();
 			
-			HolidayListPeer hlPeer = (HolidayListPeer) session.get(HolidayListPeer.class, new Long(1));
+			HolidayListPeer hlPeer = (HolidayListPeer) session.get(HolidayListPeer.class, new Long(1));	//XXX 会发出2个sql，因为有个双向关联。
+			//1个可行的办法是把HolidayPeer里的fetch=FetchType.EAGER改成FetchType.LAZAY;另外一个估计可以用查询sql来避免
 			assertNotNull(hlPeer);
 			
 			//tx.commit();
@@ -55,6 +57,11 @@ public class ManyToOneTest {
 			
 			hlPeer.setEnd_dt(new Date(System.currentTimeMillis()));	//It will call update sql.
 			hlPeer.getHolidayPeer().setName("国庆节");	//无论怎么修改HolidayListPeer.holidayPeer处的注解，都无法阻止holidayPeer的update
+			
+			
+			//UserPeer userPeer = (UserPeer) session.get(UserPeer.class, new Long(1));
+			//logger.debug(">>> userPeer=" + userPeer);
+			
 			tx.commit();
 		} catch (Exception e) {
 			logger.error("error:", e);
