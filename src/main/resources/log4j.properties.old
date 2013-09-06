@@ -10,12 +10,13 @@ log4j.logger.org.hibernate.type=trace
 #log4j.logger.org.hibernate.engine.QueryParameters=DEBUG
 #log4j.logger.org.hibernate.engine.query.HQLQueryPlan=DEBUG
 
-log4j.logger.org.springframework.core=debug
-log4j.logger.org.springframework.beans=debug
-log4j.logger.org.springframework.context=debug
-log4j.logger.org.springframework.http=debug
-log4j.logger.org.springframework.web=debug
-log4j.logger.org.springframework.orm=debug
+log4j.logger.org.springframework.core=error
+log4j.logger.org.springframework.beans=error
+log4j.logger.org.springframework.context=error
+log4j.logger.org.springframework.http=error
+log4j.logger.org.springframework.web=error
+log4j.logger.org.springframework.orm=error
+log4j.logger.org.apache.jasper.compiler.TldLocationsCache=error
  
 #log4j.logger.org.hibernate.tutorial=debug
 log4j.logger.com.etech=debug
