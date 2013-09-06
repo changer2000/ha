@@ -2,9 +2,12 @@ package com.etech.ha.peer;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -17,7 +20,7 @@ public class UserPeer extends BaseDomain {
 	
 	private static final long serialVersionUID = 5349810873546597127L;
 	
-	public static String[] LOGIC_KEYS=new String[]{"empe_num"};
+	public static String[] LOGIC_KEYS=new String[]{"email"};
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -44,6 +47,10 @@ public class UserPeer extends BaseDomain {
 	
 	@Column(name="dept_cd")
 	private String dept_cd;
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="dflt_atndnc_sts_id")
+	private AttendanceStatusPeer attendanceStatusPeer;
 
 	@Column(name="del_flg")
 	protected Integer del_flg;
@@ -102,6 +109,12 @@ public class UserPeer extends BaseDomain {
 	}
 	public void setId(Long id) {
 		this.id = id;
+	}
+	public AttendanceStatusPeer getAttendanceStatusPeer() {
+		return attendanceStatusPeer;
+	}
+	public void setAttendanceStatusPeer(AttendanceStatusPeer attendanceStatusPeer) {
+		this.attendanceStatusPeer = attendanceStatusPeer;
 	}
 	
 	
