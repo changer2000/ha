@@ -15,7 +15,7 @@
 		<property name="dialect">org.hibernate.dialect.MySQL5InnoDBDialect</property>
 		<property name="current_session_context_class">thread</property>
 		<property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
-		
+		<property name="hibernate.mapping.precedence">class,hbm</property>
 		
 		<mapping resource="com/etech/ha/peer/UserPeer.hbm.xml"/>
 		
