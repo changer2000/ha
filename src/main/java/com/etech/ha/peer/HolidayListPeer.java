@@ -36,7 +36,8 @@ public class HolidayListPeer extends BaseDomain {
 	@Column(name="hldy_year")
 	private Integer hldy_year;
 	
-	@ManyToOne(fetch=FetchType.EAGER)	//, cascade={javax.persistence.CascadeType.REMOVE}   <=== 不起作用，仍然会被更新
+	@ManyToOne(fetch=FetchType.EAGER)	// , cascade={javax.persistence.CascadeType.PERSIST}  <=== 不起作用，仍然会被更新 
+	@Cascade(value={CascadeType.PERSIST})
 	@JoinColumn(name="hldy_id")			//, updatable=false   <=== 不起作用，仍然会被更新
 	private HolidayPeer holidayPeer;	//XXX
 	

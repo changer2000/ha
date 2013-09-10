@@ -200,3 +200,17 @@ selector.class:pseudo-class {property: value}
 在CSS选择器内星号+CSS样式属性单词，一般区别IE6和IE8、IE6和FF，IE7和IE8，IE7和FF浏览器之间属性CSS HAC
   例如：.divcss5{border:1px solid #000;width:220px;*width:300px;}
                  在IE6和IE7中宽度为300px，而在IE8及以上MSIE版本、谷歌浏览器、火狐(FF)浏览器却显示为220px宽度
+------------------------------------------	
+                 
+9.关于外键：
+(1)新建一个外键
+alter table t_holiday_list add foreign key (hldy_id) references t_holiday(id);
+无论把HolidayListPeer里的“private HolidayPeer holidayPeer;”处的@Cascade(value={CascadeType.???})改为DELETE或DELETE_ORPHAN，
+注意：此时public void testRemove() 中的“hlPeer.setHolidayPeer(null);”没有被注释掉（如果注释掉，因为有外键约束，无法删除holidayListPeer）
+当调用session.delete(holidayListPeer)时，都不会删除引用的HolidayPeer
+
+(2)删掉外键
+ALTER TABLE t_holiday_list DROP FOREIGN KEY t_holiday_list_ibfk_1;
+   (1)无论把HolidayListPeer里的“private HolidayPeer holidayPeer;”处的@Cascade(value={CascadeType.???})改为DELETE或DELETE_ORPHAN，
+   	     注意：此时public void testRemove() 中的“hlPeer.setHolidayPeer(null);”已经被注释掉
+               当调用session.delete(holidayListPeer)时，都会删除引用的HolidayPeer

@@ -59,6 +59,8 @@ end_dt date,
 init_flg int default 0
 ) engine=InnoDB;
 alter table t_holiday_list add unique (hldy_year, hldy_id);
+alter table t_holiday_list add foreign key (hldy_id) references t_holiday(id);
+--ALTER TABLE t_holiday_list DROP FOREIGN KEY t_holiday_list_ibfk_1;
 
 drop table t_attendance_status;
 create table t_attendance_status(
