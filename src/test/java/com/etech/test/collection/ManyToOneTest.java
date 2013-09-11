@@ -8,7 +8,9 @@ import javax.persistence.FetchType;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.FlushMode;
 import org.hibernate.LockMode;
+import org.hibernate.ReplicationMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.annotations.CascadeType;
@@ -44,6 +46,8 @@ public class ManyToOneTest {
 
 	
 	public void test() {
+		session.setFlushMode(FlushMode.AUTO);
+		
 		Transaction tx = session.getTransaction();
 		try {
 			tx.begin();
@@ -73,6 +77,8 @@ public class ManyToOneTest {
 			hlPeer2.setHldy_end(new Date());
 			hlPeer2.setStart_dt(new Date());
 			hlPeer2.setEnd_dt(new Date());
+			
+			
 			
 			tx.commit();
 			System.out.println("hlPeer2.getId() >>> " + hlPeer2.getId());
@@ -166,7 +172,7 @@ public class ManyToOneTest {
 			
 			//下面2行代码，虽然改了数据，依然不会保存进数据库，因为是detached 数据
 			hlPeer.setEnd_dt(new Date(System.currentTimeMillis()));	
-			hlPeer.getHolidayPeer().setName("国庆节2");	//无论怎么修改HolidayListPeer.holidayPeer处的注解，都无法阻止holidayPeer的update
+			hlPeer.getHolidayPeer().setName("国庆节");	//无论怎么修改HolidayListPeer.holidayPeer处的注解，都无法阻止holidayPeer的update
 			
 			
 			//UserPeer userPeer = (UserPeer) session.get(UserPeer.class, new Long(1));
@@ -178,7 +184,7 @@ public class ManyToOneTest {
 			
 			HolidayListPeer hlPeer2 = new HolidayListPeer();
 			hlPeer2.setHldy_year(2013);
-			hlPeer2.setHolidayPeer(hlPeer.getHolidayPeer());
+			//hlPeer2.setHolidayPeer(hlPeer.getHolidayPeer());
 			hlPeer2.setHldy_start(new Date());
 			hlPeer2.setHldy_end(new Date());
 			hlPeer2.setStart_dt(new Date());
@@ -189,11 +195,21 @@ public class ManyToOneTest {
 			newHPeer.setName("test1");			//HolidayListPeer's CascadeType.PERSIST
 			hlPeer.setHolidayPeer(newHPeer);	//session.persist(hlPeer) will STILL be error : org.hibernate.PersistentObjectException: detached entity passed to persist: com.etech.ha.peer.HolidayListPeer
 			
-			session.lock(oldhPeer, LockMode.NONE);	//尽管lock了，但oldhPeer依然是detached状态
+			session.lock(oldhPeer, LockMode.NONE);	//尽管lock了，但oldhPeer依然是detached状态：估计原始状态就是瞬态的(不是游离态)
 			session.lock(oldhPeer, LockMode.READ);
 			hlPeer.setHolidayPeer(oldhPeer);
 			
-			session.persist(hlPeer);
+			session.persist(hlPeer);	//session.persist(hlPeer) will STILL be error
+			//session.update(hlPeer);		//It will update HolidayListPeer, but will not update HolidayPeer.
+			
+			//以下4行会出错，因为hlPeer2的主键为空。
+			//因为update()的对象是游离态的
+			//session.update(hlPeer2);	//It will be error : org.hibernate.TransientObjectException: The given object has a null identifier:
+			//因为replicate()的对象是游离态的
+			//session.replicate(hlPeer2, ReplicationMode.IGNORE);	//org.hibernate.TransientObjectException: instance with null id passed to replicate()
+			//session.replicate(hlPeer2, ReplicationMode.LATEST_VERSION);	//error 同上
+			//session.replicate(hlPeer2, ReplicationMode.OVERWRITE);	//error 同上
+			session.save(hlPeer2);	//成功
 			
 			tx.commit();
 			System.out.println("hlPeer2.getId() >>> " + hlPeer2.getId());
@@ -224,7 +240,8 @@ public class ManyToOneTest {
 			hlPeer2.setHldy_end(new Date());
 			hlPeer2.setStart_dt(new Date());
 			hlPeer2.setEnd_dt(new Date());
-			session.save(hlPeer2);
+			session.save(hlPeer2);	//当HolidayListPeer中HolidayPeer处的注解为CascadeType.SAVE_UPDATE是，能够正常执行；
+									//但当注解是CascadeType.PERSIST时，会报org.hibernate.TransientObjectException: object references an unsaved transient instance - save the transient instance before flushing
 			
 			tx.commit();
 			System.out.println("hPeer.getId() >>> " + hPeer.getId());
