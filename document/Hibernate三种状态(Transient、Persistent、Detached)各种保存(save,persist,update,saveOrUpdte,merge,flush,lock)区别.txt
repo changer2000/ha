@@ -1,0 +1,277 @@
+Hibernate三种状态(Transient、Persistent、Detached)各种保存(save,persist,update,saveOrUpdte,merge,flush,lock)区别
+
+一、三种状态（Transient、Persistent、Detached）
+ 
+ 
+在Hibernate中有三种状态，对它的深入理解，才能更好的理解hibernate的运行机理，刚开始不太注意这些概念，后来发现它是重要的。
+对于理解hibernate，JVM和sql的关系有更好的理解。
+对于需要持久化的JAVA对象，在它的生命周期中有三种状态，而且互相转化。
+ 
+ 
+1，  临时状态（Transient）：用new创建的对象，它没有持久化，没有处于Session中，处于此状态的对象叫临时对象；
+2，  持久化状态（Persistent）：已经持久化，加入到了Session缓存中。如通过hibernate语句保存的对象。处于此状态的对象叫持久对象；
+3，  游离状态（Detached）：持久化对象脱离了Session的对象。如Session缓存被清空的对象。
+ 
+特点：已经持久化，但不在Session缓存中。处于此状态的对象叫游离对象；
+ 
+×√
+ 临时状态
+ 
+（Transient）
+ 持久化状态
+ 
+（Persistent）
+ 游离状态
+ 
+（Detached）
+ 
+是否处于Session缓存中
+ ×
+ √
+ ×
+ 
+数据库中是否有对应记录
+ ×
+ √
+ √
+ 
+ 
+ 
+游离对象和临时对象异同：
+两者都不会被Session关联，对象属性和数据库可能不一致；
+游离对象由持久化对象关闭Session而转化而来，在内存中还有对象所以此时就变成游离状态了；
+ 
+图是精华：\ha\document\Hibernate3种状态之间转换关系.gif
+
+
+
+-----------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------
+
+
+二、各种保存的区别（save,persist,update,saveOrUpdte,merge,flush,lock）
+ 
+ 
+游离状态的实例可以通过调用save()、persist()或者saveOrUpdate()方法进行持久化。
+持久化实例可以通过调用 delete()变成脱管状态。通过get()或load()方法得到的实例都是持久化状态的。
+脱管状态的实例可以通过调用 update()、saveOrUpdate()、lock()或者replicate()进行持久化。
+ 
+save()和persist()将会引发SQL的INSERT，
+delete()会引发SQLDELETE，
+而update()或merge()会引发SQLUPDATE。
+对持久化（persistent）实例的修改在刷新提交的时候会被检测到，它也会引起SQLUPDATE。
+saveOrUpdate()或者replicate()会引发SQLINSERT或者UPDATE
+ 
+
+ 
+2.1 save 和update区别:把这一对放在第一位的原因是因为这一对是最常用的。
+save的作用是把一个新的对象保存
+update是把一个脱管状态的对象保存。如果保存的对象没有主键的话，会报错：It will be error : org.hibernate.TransientObjectException: The given object has a null identifier:
+ 
+ 
+2.2 update 和saveOrUpdate区别
+这个是比较好理解的，顾名思义，saveOrUpdate基本上就是合成了save和update
+引用hibernate reference中的一段话来解释他们的使用场合和区别
+通常下面的场景会使用update()或saveOrUpdate()： 
+程序在第一个session中加载对象 
+该对象被传递到表现层 
+对象发生了一些改动 
+该对象被返回到业务逻辑层 
+程序调用第二个session的update()方法持久这些改动 
+ 
+saveOrUpdate()做下面的事: 
+如果对象已经在本session中持久化了，不做任何事 
+如果另一个与本session关联的对象拥有相同的持久化标识(identifier)，抛出一个异常 
+如果对象没有持久化标识(identifier)属性，对其调用save()													<----- 这里3行才相当于如果对象不存在，就做insert
+如果对象的持久标识(identifier)表明其是一个新实例化的对象，对其调用save() 
+如果对象是附带版本信息的（通过<version>或<timestamp>） 并且版本属性的值表明其是一个新实例化的对象，save()它。 
+否则update() 这个对象																					<----- 这里才相当于如果对象存在，就做update
+ 
+ 
+2.3 persist和save区别
+这个是最迷离的一对，表面上看起来使用哪个都行，在hibernate reference文档中也没有明确的区分他们.
+这里给出一个明确的区分。（可以跟进src看一下，虽然实现步骤类似，但是还是有细微的差别）
+这里参考http://opensource.atlassian.com/projects/hibernate/browse/HHH-1682中的一个说明：
+---------------------------------------------------------------------------------
+I found that a lot of people have the same doubt. To help to solve this issue 
+I'm quoting Christian Bauer:
+"In case anybody finds this thread... 
+ 
+persist() is well defined. It makes a transient instance persistent. However, 
+it doesn't guarantee that the identifier value will be assigned to the persistent 
+instance immediately, the assignment might happen at flush time. The spec doesn't say 
+that, which is the problem I have with persist().
+ 
+persist() also guarantees that it will not execute an INSERT statement if it is 
+called outside of transaction boundaries. This is useful in long-running conversations 
+with an extended Session/persistence context.A method like persist() is required.
+ 
+save() does not guarantee the same, it returns an identifier, and if an INSERT 
+has to be executed to get the identifier (e.g. "identity" generator, not "sequence"), 
+this INSERT happens immediately, no matter if you are inside or outside of a transaction. This is not good in a long-running conversation with an extended Session/persistence context."
+
+
+2.4 replicate():
+replicate()方法完全使用给定对象各个属性的值(包括oid)来持久化给定的游离状态的实体,其中还需要指定存储模式.
+replicate会先用select看数据是否在数据库已经存在,如果存在,就update,否则save(在存储模式为LATEST_VERSION或者OVERWRITE时).
+ 
+与save的区别:
+如果id已经存在,save会有异常(主键冲突,org.hibernate.exception.ConstraintViolationException),
+在不是由代码指定主键的时候,给save的对象赋的oid不会起作用,而由hibernate配置的机制负责.
+而replicate会用赋值的oid对数据库进行操作.
+
+与update的区别:比update多执行一条select语句.
+
+
+2.5,delete和evict
+evict,从session的缓存中去除当前实例.执行后对象的改变将不再和数据库保持同步.当指定级联风格为evict时,会级联操作关联对象.在用于批量操作的时候,清空缓存,防止内存紧张.
+delete,也会从session的缓存中去除当前实例,但flunsh时会执行数据库delete,之后对象就成了临时状态.
+
+delete之后的对象不能调用update和merge方法,但是可以运用saveOrUpdate方法.
+可以看出delete比起evict,不仅从session删除,还会从数据库删除.
+
+
+2.6
+如果找不到符合条件的纪录，get()方法将返回null．而load()将会报出ObjectNotFoundEcception．
+如果你使用 load方法，hibernate认为该id对应的对象（数据库记录）在数据库中是一定存在的，所以它可以放心的使用，它可以放心的使用代理来延迟加载该对象。
+在用到对象中的其他属性数据时才查询数据库，但是万一数据库中不存在该记录，那没办法，只能抛异常，
+所说的load方法抛异常是指在使用该对象的数据时，数据库中不存在该数据时抛异常，而不是在创建这个对象时。
+由于 session中的缓存对于hibernate来说是个相当廉价的资源，所以在load时会先查一下session缓存看看该id对应的对象是否存在，不存在则创建代理,实际使用数据时才查询二级缓存和数据库.
+所以如果你知道该id在数据库中一定有对应记录存在就可以使用load方法来实现延迟加载。
+
+load()方法可以返回实体的代理类实例，而get返回的可能是实体类,也可能是代理类.
+get方法如果在session缓存中找到了该id 对应的对象，
+如果刚好该对象前面是被代理过的，如被load方法使用过，或者被其他关联对象延迟加载过，那么返回的还是原先的代理对象，而不是实体类对象，
+如果该代理对象还没有加载实体数据（就是id以外的其他属性数据），那么它会查询二级缓存或者数据库来加载数据，但是返回的还是代理对象，只不过已经加载了实体数据。 
+
+
+2.7
+query的list和iterate方法:list会一次取数据,iterate会先取id,再根据id多次取数据. refer http://www.linuxidc.com/Linux/2012-01/52003.htm
+
+
+2.8
+Session的clear,evict和flush方法
+clear()方法清除Session级别缓存中的所有实体(包括各种状态)对象，目的是释放内存.
+evict()方法清除Session级别缓存中的指定的实体(包括各种状态)对象.
+flush()强制持久化Session缓存中的实体对象,不会从缓存中清除对象.
+
+例子：
+sessionFactory.getCurrentSession().save(tbo1);
+sessionFactory.getCurrentSession().flush();//执行SQL,如果在clear之前不执行flush,tbo1不会被保存到数据库
+sessionFactory.getCurrentSession().clear();
+
+sessionFactory.getCurrentSession().save(tbo1);
+sessionFactory.getCurrentSession().flush();
+sessionFactory.getCurrentSession().evict(tbo1); //如果在evict之前不执行flush,会有异常.
+
+
+---------------------------------------------------------------------------------
+简单翻译一下上边的句子的主要内容：
+1，persist把一个瞬态的实例持久化，但是并"不保证"标识符被立刻填入到持久化实例中，标识符的填入可能被推迟
+到flush的时间。
+ 
+2，persist"保证"，当它在一个transaction外部被调用的时候并不触发一个Sql Insert，这个功能是很有用的，
+当我们通过继承Session/persistence context来封装一个长会话流程的时候，一个persist这样的函数是需要的。
+ 
+3，	(1)save要返回标识符；
+	(2)save"不保证"第2条,所以它会立即执行Sql insert，不管是不是在transaction内部还是外部
+ 
+ 
+ 
+2.4 saveOrUpdateCopy,merge和update区别
+首先说明merge是用来代替saveOrUpdateCopy的，这个详细见文章最后（hibernate 3.2新的Session接口与之前接口的不同）
+
+然后比较update和merge
+update的作用上边说了，这里说一下merge的
+如果session中存在相同持久化标识(identifier)的实例，用用户给出的对象的状态覆盖旧有的持久实例 
+如果session没有相应的持久实例，则尝试从数据库中加载，或创建新的持久化实例,最后返回该持久实例 			<----- 注意啊！这里返回的对象才是持久化状态
+用户给出的这个对象没有被关联到session上，它依旧是脱管的 
+重点是最后一句：
+当我们使用update的时候，执行完成后，我们提供的对象A的状态变成持久化状态
+但当我们使用merge的时候，执行完成，我们提供的对象A还是脱管状态，hibernate或者new了一个B，或者检索到
+一个持久对象B，并把我们提供的对象A的所有的值拷贝到这个B，执行完成后B是持久状态，而我们提供的A还是托管状态 
+ 
+ 
+ 
+ 
+3.5 flush和update区别																					<----- 感觉没啥可比性
+这两个的区别好理解
+update操作的是在脱管状态的对象
+而flush是操作的在持久状态的对象。
+默认情况下，一个持久状态的对象是不需要update的，只要你更改了对象的值，等待hibernate flush就自动			<----- 持久化的对象，如果改变值，会自动保存。太他妈.....
+保存到数据库了。
+
+hibernate flush发生在几种情况下：
+1，调用某些查询的时候
+2，transaction commit的时候
+3，手动调用flush的时候 
+ 
+ 
+ 
+3.6 lock和update区别																					<----- 这里的lock的说明，经过程序(ha工程的test文件夹下com.etech.test.collection.ManyToOneTest.test3())检验，发现完全是错误的。lock以后的对象，依然被认作是dettached状态
+update是把一个已经更改过的脱管状态的对象变成持久状态
+lock是把一个没有更改过的脱管状态的对象变成持久状态
+对应更改一个记录的内容，两个的操作不同：
+update的操作步骤是：
+（1）更改脱管的对象->调用update
+lock的操作步骤是：
+（2）调用lock把对象从脱管状态变成持久状态-->更改持久状态的对象的内容-->等待flush或者手动flush 
+ 
+ 
+ 
+-----------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------
+ 
+附：hibernate 3.2新的Session接口与之前接口的不同
+ 
+hibernate 3中的session接口的不同
+hibernate3.2版本中session出现了2个
+新session接口：org.hibernate.Session
+老session接口：org.hibernate.classic.Session
+顾名思义，classic包下的session就是以前常用的session，新的这个相比老的有很大变化。下边详细列出
+
+1，去掉了所有的find方法
+在新的session接口中没有find方法，而在老的session接口中把find全部注释成deprecated了。
+
+2,去掉所有的saveOrUpdateCopy，使用merge代替，这是classic.Session注释中的一段原话.
+/**
+  * Copy the state of the given object onto the persistent object with the same
+  * identifier. If there is no persistent instance currently associated with
+  * the session, it will be loaded. Return the persistent instance. If the
+  * given instance is unsaved or does not exist in the database, save it and
+  * return it as a newly persistent instance. Otherwise, the given instance
+  * does not become associated with the session.
+  *
+  * @deprecated use {@link org.hibernate.Session#merge(String, Object)}
+  *
+  * @param object a transient instance with state to be copied
+  * @return an updated persistent instance
+  */
+注意这句：@deprecated use {@link org.hibernate.Session#merge(String, Object)}
+
+3,去掉了iterate方法
+给出的注释是使用createQuery，自己获得iterate
+
+4，去掉了filter方法
+@deprecated use {@link #createFilter(Object, String)}.{@link Query#list}
+给出的注释说用createFilter代替，实际就是自己从createFilter获得query然后自己查询
+
+5，增加了一些方法
+具体自己看api吧，主要是提供了一些新的功能。
+总结：
+从上边的改变不难看出hibernate对于接口的设定观念改变了。
+ 
+以前的策略是：
+尽量给出全的接口，这样减少用户的代码量，所以filter直接返回collection，iterate直接返回iterate。
+但这样的结果是过度的提供接口，造成了学习上的负担和选择上的负担。如何记住这些函数，如何在众多函数中选择是个麻烦事情。
+凡是做java的都知道，用一个java的东西最辛苦的是选择，在开源的世界里边选择一个适合自己的工程，再在这个选择的工程里边选择实现方法
+因为可能提供很多种实现方法，而且有些还是deprecated的。
+ 
+现在的策略：
+尽量简化接口，或减少函数，或者简化函数名，例如把saveOrUpdateCopy变成merge。
+这样的好处是记忆学习负担少。多写几句代码不是特别麻烦。其实我个人来讲更喜欢现在的感觉。
+以前的策略其实很大程度上是满足程序员的个人需求，更有成就感。但确不适合使用者的需求。
+ 
+ok，无论如何现在的情况是更好了。
