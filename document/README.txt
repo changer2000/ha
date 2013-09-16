@@ -214,3 +214,19 @@ ALTER TABLE t_holiday_list DROP FOREIGN KEY t_holiday_list_ibfk_1;
    (1)无论把HolidayListPeer里的“private HolidayPeer holidayPeer;”处的@Cascade(value={CascadeType.???})改为DELETE或DELETE_ORPHAN，
    	     注意：此时public void testRemove() 中的“hlPeer.setHolidayPeer(null);”已经被注释掉
                当调用session.delete(holidayListPeer)时，都会删除引用的HolidayPeer
+
+               
+               
+------------------------------------------	
+10.eclipse的一些快捷键
+-------------------------------------
+ctrl+m：全屏
+ctrl+e:显示打开的文件列表
+ctrl+o:显示文件中的方法名列表
+alt+shift+r:重命名变量
+alt+shift+l:提取字符串中的内容为一个新的变量名
+alt+shift+m:从大块的方法中，提取小块代码为新方法              
+shift+enter:在当前行下建立一个空行
+ctrl+shift+enter:在当前行上建立一个空行
+alt+方向键：将当前行上移或下移
+ctrl+2，L：为本地变量赋值
