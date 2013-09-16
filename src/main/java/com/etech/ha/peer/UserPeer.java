@@ -22,6 +22,20 @@ public class UserPeer extends BaseDomain {
 	
 	public static String[] LOGIC_KEYS=new String[]{"email"};
 	
+	
+	public UserPeer() {
+		super();
+	}
+	
+	//要是有如下的构造函数，就一定要加一个如上默认的构造函数，否则，其他地方用的时候会出错
+	//下面这个构造函数可以由于定制select列的查询返回对象
+	public UserPeer(Long id, String empe_num, String empe_name) {
+		this.id = id;
+		this.empe_num = empe_num;
+		this.empe_name = empe_name;
+	}
+	
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="id")
