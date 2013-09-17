@@ -2,6 +2,8 @@ package com.etech.system.bean;
 
 import java.io.Serializable;
 
+import javax.persistence.FetchType;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class BaseDomain implements Serializable {
@@ -32,8 +34,9 @@ public class BaseDomain implements Serializable {
 	//将来所有的peer里都要定义自己的LOGIC_KEYS，以方便按逻辑主键进行的相关操作
 	public static String[] LOGIC_KEYS=new String[]{"id"};
 	
+	/* 有可能会影响到fetch=FetchType.LAZY的数据，造成不必要的查询
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}
-	
+	*/
 }
