@@ -10,7 +10,7 @@
 		</layout>
 	</appender>
 	
-	<logger name="com.etech.ha">
+	<logger name="com.etech">
 		<level value="debug" />
 	</logger>
 	
@@ -37,9 +37,18 @@
 	<logger name="org.apache.jasper.compiler.TldLocationsCache">
 		<level value="error" />
 	</logger>
-
+	
+	<logger name="org.hibernate.SQL">
+		<level value="debug" />
+	</logger>
+	
+	<logger name="org.hibernate.type">
+		<level value="trace" />
+	</logger>
+	
 	<root>
-		<priority value="debug" />
+		<!-- <priority value="debug" /> -->
+		<level value="error"></level>
 		<appender-ref ref="console" />
 	</root>
 	
