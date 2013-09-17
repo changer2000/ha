@@ -20,6 +20,7 @@ import org.junit.Test;
 
 import com.etech.ha.mst.bean.HolidayListBean;
 import com.etech.ha.peer.HolidayListPeer;
+import com.etech.ha.peer.HolidayPeer;
 import com.etech.ha.peer.UserPeer;
 import com.etech.system.utils.HibernateUtils;
 import com.etech.test.collection.ManyToOneTest;
@@ -287,9 +288,11 @@ public class QueryTest {
 		}
 	}
 
-	//测试昨连接查询:返回的list中每个元素是一个对象数组
+	//测试左连接查询:返回的list中每个元素是一个对象数组
 	//@Test
 	public void testRelationLeftJoin() {
+		if (logger.isDebugEnabled())
+			logger.debug("============= testRelationLeftJoin() =============");
 		try {
 			Query query = session.createQuery("from HolidayListPeer a left join a.holidayPeer b where a.end_dt=?");	//XXX
 			//Calendar c = Calendar.getInstance();
@@ -306,6 +309,76 @@ public class QueryTest {
 			assertNotNull(list);
 		} catch (Exception e) {
 			logger.error("", e);
+			fail("error");
+		}
+	}
+	
+	//测试fetch用法
+	@Test
+	public void testFetch() {
+		if (logger.isDebugEnabled())
+			logger.debug("============= testFetch() =============");
+		try {
+			Date dt = DateUtils.parseDate("2013-09-11", new String[] {"yyyy-MM-dd"});
+			
+			//这个例子并不典型，因为HolidayListPeer本身就fetch HolidayPeer
+			List<HolidayListPeer> list = session.createQuery("from HolidayListPeer a left join fetch a.holidayPeer b where a.end_dt=? and b.id=?")
+				.setParameter(0, dt).setParameter(1, 1L).list();
+			assertNotNull(list);
+			for (HolidayListPeer peer : list) {
+				System.out.println(peer);
+				System.out.println(peer.getHolidayPeer().getName());
+			}
+			
+			//这个例子比较典型
+			//(1)只会有一个sql，hldyList属性的数据是Lazy的，所以不用的时候，是不会发出search sql的。
+			//相反的例子，可以看(4)
+			if (logger.isDebugEnabled())
+				logger.debug("(1)");
+			List<HolidayPeer> list2 = session.createQuery("from HolidayPeer a where a.id=?")
+					.setParameter(0, new Long(1)).list();	//only : select holidaypee0_.id as id1_, holidaypee0_.name as name1_ from t_holiday holidaypee0_ where holidaypee0_.id=?
+			assertNotNull(list2);
+			for (HolidayPeer peer : list2) {
+				System.out.println(peer.getName() + ":" );	//+ peer.getHldyList().size()
+			}
+			
+			//(2)会有2个sql，因为“peer.getHldyList().size()”
+			if (logger.isDebugEnabled())
+				logger.debug("(2)");
+			list2 = session.createQuery("from HolidayPeer a where a.id=?")
+					.setParameter(0, new Long(1)).list();	//select holidaypee0_.id as id1_, holidaypee0_.name as name1_ from t_holiday holidaypee0_ where holidaypee0_.id=?
+															//select hldylist0_.hldy_id as hldy8_1_, hldylist0_.id as id1_, hldylist0_.id as id2_0_, hldylist0_.hldy_year as hldy2_2_0_, hldylist0_.hldy_id as hldy8_2_0_, hldylist0_.hldy_start as hldy3_2_0_, hldylist0_.hldy_end as hldy4_2_0_, hldylist0_.start_dt as start5_2_0_, hldylist0_.end_dt as end6_2_0_, hldylist0_.init_flg as init7_2_0_ from t_holiday_list hldylist0_ where hldylist0_.hldy_id=?
+			assertNotNull(list2);
+			for (HolidayPeer peer : list2) {
+				System.out.println(peer.getName() + ":" + peer.getHldyList().size());
+			}
+			
+			//(3)只会有一个sql，因为"left join fetch a.hldyList b"。注意其中left join的是个list（挺有意思，这样也行！！！）
+			//非常重要的一个查询方法!!!!!!
+			if (logger.isDebugEnabled())
+				logger.debug("(3)");
+			list2 = session.createQuery("from HolidayPeer a left join fetch a.hldyList b where a.id=?")
+					.setParameter(0, new Long(1)).list();	//select holidaypee0_.id as id1_0_, hldylist1_.id as id2_1_, holidaypee0_.name as name1_0_, hldylist1_.hldy_year as hldy2_2_1_, hldylist1_.hldy_id as hldy8_2_1_, hldylist1_.hldy_start as hldy3_2_1_, hldylist1_.hldy_end as hldy4_2_1_, hldylist1_.start_dt as start5_2_1_, hldylist1_.end_dt as end6_2_1_, hldylist1_.init_flg as init7_2_1_, hldylist1_.hldy_id as hldy8_0__, hldylist1_.id as id0__ from t_holiday holidaypee0_ left outer join t_holiday_list hldylist1_ on holidaypee0_.id=hldylist1_.hldy_id where holidaypee0_.id=?
+			assertNotNull(list2);
+			for (HolidayPeer peer : list2) {
+				System.out.println(peer.getName() + ":" + peer.getHldyList().size());
+			}
+			
+			//(4) fetch all properties可以强制Hibernate抓取那些原来是延迟加载的属性!!!
+			//非常重要的一个查询方法
+			if (logger.isDebugEnabled())
+				logger.debug("(4)");
+			list2 = session.createQuery("from HolidayPeer a fetch all properties where id=? order by name")
+					.setParameter(0, new Long(1)).list();
+			assertNotNull(list2);
+			for (HolidayPeer peer : list2) {
+				System.out.println(peer.getName() + ":" + peer.getHldyList().size());
+				System.out.println(peer.getHldyList().get(0).getHldy_end());
+			}
+			
+			
+		} catch (Exception e) {
+			logger.error(e);
 			fail("error");
 		}
 	}
@@ -329,7 +402,7 @@ public class QueryTest {
 	}
 
 	//测试集合查询方法,返回对象
-	@Test
+	//@Test
 	public void testGroupSearchAsObject() {
 		try {
 			Query query = session.createQuery("select new com.etech.ha.mst.bean.HolidayListBean(a.holidayPeer.name,count(a)) from HolidayListPeer a group by a.holidayPeer.id order by a.holidayPeer.name");	//XXX

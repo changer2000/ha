@@ -35,7 +35,7 @@ public class HolidayPeer extends BaseDomain {
 	@Length(min=2, max=100, message="{error.length}", groups=FirstGroup.class)
 	private String name;
 	
-	@OneToMany(mappedBy="holidayPeer", fetch=FetchType.EAGER)	//XXX Just for sample
+	@OneToMany(mappedBy="holidayPeer", fetch=FetchType.LAZY)	//XXX Just for sample,fetch默认值就是FetchType.LAZY
 	private List<HolidayListPeer> hldyList;
 
 	public Long getId() {
