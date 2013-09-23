@@ -1,6 +1,7 @@
 package com.etech.ha.peer;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -41,14 +43,10 @@ public class HolidayListPeer extends BaseDomain {
 	@JoinColumn(name="hldy_id")			//, updatable=false   <=== 不起作用，仍然会被更新
 	private HolidayPeer holidayPeer;	//XXX
 	
-	@Column(name="hldy_start")
-	@Temporal(TemporalType.DATE)	//XXX
-	private Date hldy_start;
-	
-	@Column(name="hldy_end")
-	@Temporal(TemporalType.DATE)
-	private Date hldy_end;
-	
+	@OneToMany(fetch=FetchType.EAGER, mappedBy="hldyListPeer")
+	@Cascade(value={CascadeType.DELETE})
+	private List<HolidayListDtlPeer> hldyListDtlList;
+		
 	@Column(name="start_dt")
 	@Temporal(TemporalType.DATE)
 	private Date start_dt;
@@ -84,22 +82,6 @@ public class HolidayListPeer extends BaseDomain {
 		this.holidayPeer = holidayPeer;
 	}
 
-	public Date getHldy_start() {
-		return hldy_start;
-	}
-
-	public void setHldy_start(Date hldy_start) {
-		this.hldy_start = hldy_start;
-	}
-
-	public Date getHldy_end() {
-		return hldy_end;
-	}
-
-	public void setHldy_end(Date hldy_end) {
-		this.hldy_end = hldy_end;
-	}
-
 	public Date getStart_dt() {
 		return start_dt;
 	}
@@ -122,6 +104,14 @@ public class HolidayListPeer extends BaseDomain {
 
 	public void setInit_flg(Integer init_flg) {
 		this.init_flg = init_flg;
+	}
+
+	public List<HolidayListDtlPeer> getHldyListDtlList() {
+		return hldyListDtlList;
+	}
+
+	public void setHldyListDtlList(List<HolidayListDtlPeer> hldyListDtlList) {
+		this.hldyListDtlList = hldyListDtlList;
 	}
 
 }

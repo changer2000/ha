@@ -373,7 +373,7 @@ public class QueryTest {
 			assertNotNull(list2);
 			for (HolidayPeer peer : list2) {
 				System.out.println(peer.getName() + ":" + peer.getHldyList().size());
-				System.out.println(peer.getHldyList().get(0).getHldy_end());
+				//System.out.println(peer.getHldyList().get(0).getHldy_end());
 			}
 			
 			

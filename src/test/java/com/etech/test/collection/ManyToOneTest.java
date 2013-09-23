@@ -73,8 +73,6 @@ public class ManyToOneTest {
 			HolidayListPeer hlPeer2 = new HolidayListPeer();	//这个peer不会被保存进数据库
 			hlPeer2.setHldy_year(2013);
 			hlPeer2.setHolidayPeer(hlPeer.getHolidayPeer());
-			hlPeer2.setHldy_start(new Date());
-			hlPeer2.setHldy_end(new Date());
 			hlPeer2.setStart_dt(new Date());
 			hlPeer2.setEnd_dt(new Date());
 			
@@ -108,7 +106,7 @@ public class ManyToOneTest {
 			session.close(); //测试HolidayPeer里fetch=FetchType.EAGER，如果不是FetchType.EAGER，下面的logger.debug会出错。因为对象还没被真正取得
 			session = null;
 			
-			logger.debug("Holiday start date:" + hlPeer.getHolidayPeer().getHldyList().get(0).getHldy_start());
+			logger.debug("Holiday start date:" + hlPeer.getHolidayPeer().getHldyList().get(0).getStart_dt());
 			
 			//下面2行代码，虽然改了数据，依然不会保存进数据库，因为是detached 数据
 			hlPeer.setEnd_dt(new Date(System.currentTimeMillis()));	
@@ -125,8 +123,6 @@ public class ManyToOneTest {
 			HolidayListPeer hlPeer2 = new HolidayListPeer();
 			hlPeer2.setHldy_year(2013);
 			hlPeer2.setHolidayPeer(hlPeer.getHolidayPeer());
-			hlPeer2.setHldy_start(new Date());
-			hlPeer2.setHldy_end(new Date());
 			hlPeer2.setStart_dt(new Date());
 			hlPeer2.setEnd_dt(new Date());
 			
@@ -168,7 +164,7 @@ public class ManyToOneTest {
 			session.close(); //测试HolidayPeer里fetch=FetchType.EAGER，如果不是FetchType.EAGER，下面的logger.debug会出错。因为对象还没被真正取得
 			session = null;
 			
-			logger.debug("Holiday start date:" + hlPeer.getHolidayPeer().getHldyList().get(0).getHldy_start());
+			logger.debug("Holiday start date:" + hlPeer.getHolidayPeer().getHldyList().get(0).getStart_dt());
 			
 			//下面2行代码，虽然改了数据，依然不会保存进数据库，因为是detached 数据
 			hlPeer.setEnd_dt(new Date(System.currentTimeMillis()));	
@@ -185,8 +181,6 @@ public class ManyToOneTest {
 			HolidayListPeer hlPeer2 = new HolidayListPeer();
 			hlPeer2.setHldy_year(2013);
 			//hlPeer2.setHolidayPeer(hlPeer.getHolidayPeer());
-			hlPeer2.setHldy_start(new Date());
-			hlPeer2.setHldy_end(new Date());
 			hlPeer2.setStart_dt(new Date());
 			hlPeer2.setEnd_dt(new Date());
 			
@@ -236,8 +230,6 @@ public class ManyToOneTest {
 			HolidayListPeer hlPeer2 = new HolidayListPeer();
 			hlPeer2.setHldy_year(2013);
 			hlPeer2.setHolidayPeer(hPeer);
-			hlPeer2.setHldy_start(new Date());
-			hlPeer2.setHldy_end(new Date());
 			hlPeer2.setStart_dt(new Date());
 			hlPeer2.setEnd_dt(new Date());
 			session.save(hlPeer2);	//当HolidayListPeer中HolidayPeer处的注解为CascadeType.SAVE_UPDATE是，能够正常执行；
