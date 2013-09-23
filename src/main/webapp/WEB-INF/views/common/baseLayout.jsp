@@ -34,6 +34,7 @@
 	<tiles:insertAttribute name="menu"></tiles:insertAttribute>
 </div>
 <div id="a" align="center" style="height:<tiles:insertAttribute name="aHeight"/>px">
+	<h4><fmt:message key="${titleKey}"/></h4>
 	<tiles:insertAttribute name="a"/>
 </div>
 <div id="b" align="center" style="height:<tiles:insertAttribute name="bHeight"/>px">
