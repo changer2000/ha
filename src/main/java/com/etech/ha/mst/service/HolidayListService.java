@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.etech.ha.dao.HolidayListDAO;
+import com.etech.ha.mst.bean.HolidayListSearchBean;
 import com.etech.ha.peer.HolidayListPeer;
 
 @Service
@@ -17,6 +18,9 @@ public class HolidayListService {
 	@Autowired
 	private HolidayListDAO hldyListDao;
 	
+	public List<HolidayListPeer> search(HolidayListSearchBean searchBean) {
+		return hldyListDao.search(searchBean);
+	}
 	
 	public List<HolidayListPeer> listAll() {
 		return hldyListDao.loadAll();

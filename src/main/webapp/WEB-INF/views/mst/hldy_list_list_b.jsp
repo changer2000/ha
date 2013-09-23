@@ -5,9 +5,7 @@
 	<tr class="title">
 		<th width="20px">&nbsp;</th>
 		<th width="40px"><s:message code="label.year"></s:message></th>
-		<th width="80px"><s:message code="label.holiday.name"></s:message></th>
-		<th width="80px"><s:message code="label.holiday.start.date"></s:message></th>
-		<th width="80px"><s:message code="label.holiday.end.date"></s:message></th>
+		<th width="240px"><s:message code="label.holiday.name"></s:message></th>
 		<th width="110px"><s:message code="label.holiday.statistic.start.date"></s:message></th>
 		<th width="110px"><s:message code="label.holiday.statistic.end.date"></s:message></th>
 		<th><s:message code="label.initial.flag"></s:message></th>
@@ -25,14 +23,8 @@
 			<td width="40px">
 				<c:out value="${peer.hldy_year}"/>
 			</td>
-			<td width="80px">
+			<td width="240px">
 				<c:out value="${peer.holidayPeer.name}"/>
-			</td>
-			<td width="80px">
-				<c:out value="${peer.hldy_start}"/>
-			</td>
-			<td width="80px">
-				<c:out value="${peer.hldy_end}"/>
 			</td>
 			<td width="110px">
 				<c:out value="${peer.start_dt}"/>

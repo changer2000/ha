@@ -54,7 +54,7 @@ public class HolidayListController extends BaseController {
 	public ModelAndView search(@ModelAttribute("command") HolidayListForm frm) {
 		ModelAndView mv = new ModelAndView("hldyListList");
 		
-		List<HolidayListPeer> list = hldyListSvc.listAll();
+		List<HolidayListPeer> list = hldyListSvc.search(frm.getSearchBean());
 		frm.setList(list);
 		//mv.addObject("command", frm);
 		
