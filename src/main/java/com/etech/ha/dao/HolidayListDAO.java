@@ -20,7 +20,7 @@ public class HolidayListDAO extends BaseDao<HolidayListPeer> {
 		if (searchBean.getHldy_start()!=null || searchBean.getHldy_end()!=null) {
 			//bAddedWhere = true;
 			//hqlBuf.append(" left join HolidayListDtlPeer b where a.id=b.hldyListPeer.id ");	//这是一个失败的查询例子。供以后参考
-			hqlBuf.append(" left join a.hldyListDtlList b  ");
+			hqlBuf.append(" inner join a.hldyListDtlList b  ");
 		}
 		
 		if (searchBean.getHldy_id()!=null) {
@@ -33,6 +33,18 @@ public class HolidayListDAO extends BaseDao<HolidayListPeer> {
 			hqlBuf.append(" a.holidayPeer.id=? ");
 			paramList.add(searchBean.getHldy_id());
 		}
+		
+		if (searchBean.getHldy_year()!=null) {
+			if (!bAddedWhere) {
+				bAddedWhere = true;
+				hqlBuf.append(" where ");
+			} else {
+				hqlBuf.append(" and ");
+			}
+			hqlBuf.append(" a.hldy_year=? ");
+			paramList.add(searchBean.getHldy_year());
+		}
+		
 		if (searchBean.getStart_date()!=null) {
 			if (!bAddedWhere) {
 				bAddedWhere = true;
