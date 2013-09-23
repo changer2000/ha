@@ -52,8 +52,6 @@ create table t_holiday_list(
 id int auto_increment primary key,
 hldy_year int,
 hldy_id int,
-hldy_start date,
-hldy_end date,
 start_dt date,
 end_dt date,
 init_flg int default 0
@@ -61,6 +59,15 @@ init_flg int default 0
 alter table t_holiday_list add unique (hldy_year, hldy_id);
 alter table t_holiday_list add foreign key (hldy_id) references t_holiday(id);
 --ALTER TABLE t_holiday_list DROP FOREIGN KEY t_holiday_list_ibfk_1;
+
+drop table t_holiday_list_dtl;
+create table t_holiday_list_dtl(
+id int auto_increment primary key,
+hldy_list_id int,
+hldy_start date,
+hldy_end date
+) engine=InnoDB;
+alter table t_holiday_list_dtl add foreign key (hldy_list_id) references t_holiday_list(id);
 
 drop table t_attendance_status;
 create table t_attendance_status(
