@@ -6,9 +6,14 @@ function afterLoad() {
 }
 
 function line_add() {
-	var tmpName = $('input[name=selKey]:last').closest('td').next().find('input').eq(0).attr('name');
-	tmpName = tmpName.substring(tmpName.indexOf('[')+1, tmpName.indexOf(']'));
-	var tmpIndex = parseInt(tmpName)+1;
+	var tmpIndex = 0;
+
+	var selObj = $('input[name=selKey]:last');
+	if (selObj.get(0)!=null) {
+		var tmpName = selObj.closest('td').next().find('input').eq(0).attr('name');
+		tmpName = tmpName.substring(tmpName.indexOf('[')+1, tmpName.indexOf(']'));
+		tmpIndex = parseInt(tmpName)+1;
+	}
 	var tmpJs = sample_js_dtl.replace(/##/g,tmpIndex);
 	$('#tableb').append(tmpJs);
 	initDatePicker();

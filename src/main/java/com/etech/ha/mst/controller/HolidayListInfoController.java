@@ -18,6 +18,7 @@ import com.etech.ha.mst.bean.HolidayListForm;
 import com.etech.ha.mst.bean.HolidayListSearchBean;
 import com.etech.ha.mst.service.HolidayListService;
 import com.etech.ha.mst.service.HolidayService;
+import com.etech.ha.peer.HolidayListDtlPeer;
 import com.etech.ha.peer.HolidayListPeer;
 import com.etech.ha.peer.HolidayPeer;
 import com.etech.system.bean.MessagesBean;
@@ -61,7 +62,9 @@ public class HolidayListInfoController extends BaseController {
 			//prepare peer
 			listPeer.setHolidayPeer(new HolidayPeer());
 			listPeer.getHolidayPeer().setId(listPeer.getHolidayPeerId());
-			
+			for (HolidayListDtlPeer dtlPeer : listPeer.getHldyListDtlList()) {
+				dtlPeer.setHldyListPeer(listPeer);
+			}
 			hldyListSvc.register(listPeer);
 
 			MessagesBean msgBean = new MessagesBean();

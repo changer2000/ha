@@ -38,7 +38,8 @@ public class HolidayListService {
 				isCreate = true;
 				peer.setId(null);
 			} else {
-				hldyListDao.getSession().evict(dbPeer);
+				//hldyListDao.getSession().evict(dbPeer);
+				hldyListDao.getSession().clear();
 			}
 		} else {
 			isCreate = true;

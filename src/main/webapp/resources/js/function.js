@@ -6,7 +6,9 @@ function loadForm() {
 		var allObjs = document.forms[0].elements;
 		if (allObjs) {
 			for (var i=0; i<allObjs.length; i++) {
-				if (!($(allObjs[i]).prop("readonly")) && !($(allObjs[i]).prop("disabled"))) {
+				if (!($(allObjs[i]).prop("readonly")) 
+						&& !($(allObjs[i]).prop("disabled"))
+						&& ($(allObjs[i]).prop("type")!='hidden')) {
 					allObjs[i].focus();
 					break;
 				}

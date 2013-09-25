@@ -51,11 +51,13 @@
 		<c:set var="si" scope="page" value="${status.index}"/>
 		<tr>
 			<td width="20px">
-				<input type="checkbox" name="selKey" value="<c:out value="${peer.id}"/>"/>
 				<% 	Integer num=(Integer)pageContext.getAttribute("si", pageContext.PAGE_SCOPE);
+					String fieldNameId = "hldyListDtlList["+num+"].id";
 					String fieldNameStart = "hldyListDtlList["+num+"].hldy_start";
 					String fieldNameEnd = "hldyListDtlList["+num+"].hldy_end";
-				%>		
+				%>
+				<input type="checkbox" name="selKey" value="<c:out value="${peer.id}"/>"/>
+				<form:hidden path="<%=fieldNameId%>"/>	
 			</td>
 			<td width="140px">
 				<form:input path="<%=fieldNameStart%>" maxlength="10" cssClass="form_datetime" cssStyle="width:120px"/>

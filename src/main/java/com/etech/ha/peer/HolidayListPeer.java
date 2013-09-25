@@ -56,7 +56,7 @@ public class HolidayListPeer extends BaseDomain {
 	private HolidayPeer holidayPeer;	//XXX
 	
 	@OneToMany(fetch=FetchType.EAGER, mappedBy="hldyListPeer")
-	@Cascade(value={CascadeType.DELETE})
+	@Cascade(value={CascadeType.DELETE, CascadeType.SAVE_UPDATE})
 	@FilterEmptyBean
 	@Valid
 	private List<HolidayListDtlPeer> hldyListDtlList;

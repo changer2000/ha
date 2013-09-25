@@ -73,7 +73,7 @@ public class HolidayListController extends BaseController {
 	}
 	
 	@RequestMapping(params="modify", method=RequestMethod.POST)
-	public ModelAndView modify(HttpServletRequest request, HolidayListForm frm) {
+	public ModelAndView modify(HttpServletRequest request, @ModelAttribute("command") HolidayListForm frm) {
 		ModelAndView mv = null;
 		
 		String[] selKey = frm.getSelKey();
@@ -92,10 +92,7 @@ public class HolidayListController extends BaseController {
 		} else {
 			HolidayListPeer listPeer = hldyListSvc.findById(NumberUtils.createLong(selKey[0]));
 			listPeer.setHolidayPeerId(listPeer.getHolidayPeer().getId());
-			
-			listPeer.setHldyListDtlList(new ArrayList<HolidayListDtlPeer>());
-			listPeer.getHldyListDtlList().add(new HolidayListDtlPeer());
-			
+						
 			mv = new ModelAndView("hldyListInfo");
 			mv.addObject("command", listPeer);
 		}
