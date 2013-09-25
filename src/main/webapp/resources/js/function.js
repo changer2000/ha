@@ -13,6 +13,8 @@ function loadForm() {
 			}
 		}
 		
+		initDatePicker();
+		
 		if (typeof(afterLoad)!="undefined") {
 			afterLoad();
 		}
@@ -24,6 +26,18 @@ function loadForm() {
 	}
 }
 
+function initDatePicker() {
+	$('.form_datetime').datetimepicker({
+		format:"yyyy-mm-dd", 
+		language:  'zh-CN',
+		weekStart : 1,
+		autoclose : true,
+		minView : 2,
+		todayBtn : "linked",
+		todayHighlight : true,
+		forceParse:true
+		});
+}
 
 function formSubmit() {
 	try {
@@ -39,4 +53,9 @@ function formSubmit() {
 	} catch (ex) {
 		alert(ex.message);
 	}
+}
+
+function line_del(containerId, chkboxName) {
+	$('#'+containerId).find('input[name='+chkboxName+']:checked').closest('tr').remove();
+	return false;
 }

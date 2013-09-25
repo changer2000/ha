@@ -37,6 +37,8 @@ public class HolidayListService {
 			if (dbPeer==null) {
 				isCreate = true;
 				peer.setId(null);
+			} else {
+				hldyListDao.getSession().evict(dbPeer);
 			}
 		} else {
 			isCreate = true;
@@ -60,7 +62,7 @@ public class HolidayListService {
 		for (String id : ids) {
 			HolidayListPeer peer = new HolidayListPeer();
 			peer.setId(NumberUtils.createLong(id));
-			hldyListDao.delete(peer);
+			hldyListDao.delete(peer);	//TODO need confirm whether delete t_holiday_list_dtl.
 		}
 	}
 	

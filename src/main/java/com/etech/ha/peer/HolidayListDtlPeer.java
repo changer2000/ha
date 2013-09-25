@@ -12,6 +12,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.etech.system.bean.BaseDomain;
 
@@ -27,10 +30,14 @@ public class HolidayListDtlPeer extends BaseDomain {
 	
 	@Column(name="hldy_start")
 	@Temporal(TemporalType.DATE)	//XXX
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@NotNull(message="{error.not.be.null}")
 	private Date hldy_start;
 	
 	@Column(name="hldy_end")
 	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@NotNull(message="{error.not.be.null}")
 	private Date hldy_end;
 	
 	@ManyToOne

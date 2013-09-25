@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.etech.ha.constants.HaConstants;
 import com.etech.ha.mst.bean.HolidayListForm;
 import com.etech.ha.mst.service.HolidayListService;
 import com.etech.ha.mst.service.HolidayService;
+import com.etech.ha.peer.HolidayListDtlPeer;
 import com.etech.ha.peer.HolidayListPeer;
 import com.etech.ha.peer.HolidayPeer;
 import com.etech.system.bean.MessagesBean;
@@ -51,8 +53,9 @@ public class HolidayListController extends BaseController {
 	}
 	
 	@RequestMapping(params="search", method=RequestMethod.POST)
-	public ModelAndView search(@ModelAttribute("command") HolidayListForm frm) {
+	public ModelAndView search(HttpServletRequest request, @ModelAttribute("command") HolidayListForm frm) {
 		ModelAndView mv = new ModelAndView("hldyListList");
+		request.getSession().setAttribute(HaConstants.SESSION_KEY_HOLIDAY_LIST_SEARCH_KEY, frm.getSearchBean());
 		
 		List<HolidayListPeer> list = hldyListSvc.search(frm.getSearchBean());
 		frm.setList(list);
@@ -75,19 +78,24 @@ public class HolidayListController extends BaseController {
 		
 		String[] selKey = frm.getSelKey();
 		if (selKey==null || selKey.length==0) {
-			mv = search(frm);
+			mv = search(request, frm);
 
 			MessagesBean msgBean = new MessagesBean();
 			msgBean.addError(request, messageSource, "error.need.select.one", null)
 				.setErrorsIntoModelView(mv);
 		} else if (selKey.length>1) {
-			mv = search(frm);
+			mv = search(request, frm);
 
 			MessagesBean msgBean = new MessagesBean();
 			msgBean.addError(request, messageSource, "error.cant.select.more.than.one", null)
 				.setErrorsIntoModelView(mv);
 		} else {
 			HolidayListPeer listPeer = hldyListSvc.findById(NumberUtils.createLong(selKey[0]));
+			listPeer.setHolidayPeerId(listPeer.getHolidayPeer().getId());
+			
+			listPeer.setHldyListDtlList(new ArrayList<HolidayListDtlPeer>());
+			listPeer.getHldyListDtlList().add(new HolidayListDtlPeer());
+			
 			mv = new ModelAndView("hldyListInfo");
 			mv.addObject("command", listPeer);
 		}
@@ -99,7 +107,7 @@ public class HolidayListController extends BaseController {
 	public ModelAndView delete(HttpServletRequest request, @ModelAttribute("command") HolidayListForm frm) {
 		ModelAndView mv = null;
 		if (frm.getSelKey()==null || frm.getSelKey().length==0) {
-			mv = search(frm);
+			mv = search(request, frm);
 
 			MessagesBean msgBean = new MessagesBean();
 			msgBean.addError(request, messageSource, "error.need.select.one", null)
@@ -108,17 +116,11 @@ public class HolidayListController extends BaseController {
 		} else {
 			hldyListSvc.delete(frm.getSelKey());
 			
-			mv = search(frm);
+			mv = search(request, frm);
 		}
 		return mv;
 	}
 	
-	@RequestMapping(params="register", method=RequestMethod.POST)
-	public ModelAndView register(@ModelAttribute("command") HolidayListPeer peer) {
-		ModelAndView mv = new ModelAndView("hldyListInfo");
-		hldyListSvc.register(peer);
-		return mv;
-	}
 	
 
 	public HolidayListService getHldyListSvc() {
