@@ -19,7 +19,7 @@
 			itemLabel="name" itemValue="id" cssClass="span2"/><form:errors path="holidayPeerId" cssClass="error"/>
 	</td>
 	<td class='span2 label'>
-		<s:message code="label.holiday.start.end.date"></s:message>
+		<s:message code="label.holiday.statistic.start.end.date"></s:message>
 	</td>
 	<td>
 		<form:input path="start_dt" maxlength='10' cssClass="span2 form_datetime"/><form:errors path="start_dt" cssClass="error"/>
@@ -41,7 +41,7 @@
 <tr class="title">
 	<th width="20px">&nbsp;</th>
 	<th width="140px"><s:message code="label.holiday.start.date"/></th>
-	<th><s:message code="label.holiday.start.date"/></th>
+	<th><s:message code="label.holiday.end.date"/></th>
 </tr>
 </table>
 <div style="width:320px;height:300px;">

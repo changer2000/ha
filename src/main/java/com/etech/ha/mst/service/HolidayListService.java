@@ -1,6 +1,9 @@
 package com.etech.ha.mst.service;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +22,22 @@ public class HolidayListService {
 	private HolidayListDAO hldyListDao;
 	
 	public List<HolidayListPeer> search(HolidayListSearchBean searchBean) {
-		return hldyListDao.search(searchBean);
+		List<HolidayListPeer> list = hldyListDao.search(searchBean);
+		
+		//filter duplicate data
+		if (list!=null && list.size()>0) {
+			Map<Long, Long> map = new HashMap<Long, Long>();
+			Iterator<HolidayListPeer> iter = list.iterator();
+			while (iter.hasNext()) {
+				HolidayListPeer listPeer = iter.next();
+				if (map.get(listPeer.getId())==null) {
+					map.put(listPeer.getId(), listPeer.getId());
+				} else {
+					iter.remove();
+				}
+			}
+		}
+		return list;
 	}
 	
 	public List<HolidayListPeer> listAll() {

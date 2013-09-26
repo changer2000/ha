@@ -17,11 +17,8 @@ public class HolidayListDAO extends BaseDao<HolidayListPeer> {
 		List<Object> paramList = new ArrayList<Object>();
 		
 		StringBuilder hqlBuf = new StringBuilder("from HolidayListPeer a");
-		if (searchBean.getHldy_start()!=null || searchBean.getHldy_end()!=null) {
-			//bAddedWhere = true;
-			//hqlBuf.append(" left join HolidayListDtlPeer b where a.id=b.hldyListPeer.id ");	//这是一个失败的查询例子。供以后参考
-			hqlBuf.append(" inner join a.hldyListDtlList b  ");
-		}
+		//hqlBuf.append(" left join HolidayListDtlPeer b where a.id=b.hldyListPeer.id ");	//这是一个失败的查询例子。供以后参考
+		hqlBuf.append(" left join fetch a.hldyListDtlList b  ");
 		
 		if (searchBean.getHldy_id()!=null) {
 			if (!bAddedWhere) {
@@ -85,6 +82,7 @@ public class HolidayListDAO extends BaseDao<HolidayListPeer> {
 			hqlBuf.append(" b.hldy_end<=? ");
 			paramList.add(searchBean.getEnd_date());
 		}
+		hqlBuf.append(" order by a.start_dt,b.hldy_start");
 		
 		
 		Object[] params = paramList.toArray();

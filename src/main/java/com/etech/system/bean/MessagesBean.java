@@ -43,4 +43,10 @@ public class MessagesBean {
 	public void setMessagesIntoModelView(ModelAndView mv) {
 		mv.addObject(HaConstants.LOGIC_MESSAGE, msgMap.values());
 	}
+	
+	public boolean hasErrors() {
+		if (errMap.size()>0)
+			return true;
+		return false;
+	}
 }
