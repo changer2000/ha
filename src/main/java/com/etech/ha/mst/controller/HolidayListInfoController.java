@@ -71,8 +71,10 @@ public class HolidayListInfoController extends BaseController {
 				//prepare peer
 				listPeer.setHolidayPeer(new HolidayPeer());
 				listPeer.getHolidayPeer().setId(listPeer.getHolidayPeerId());
-				for (HolidayListDtlPeer dtlPeer : listPeer.getHldyListDtlList()) {
-					dtlPeer.setHldyListPeer(listPeer);
+				if (listPeer.getHldyListDtlList()!=null) {
+					for (HolidayListDtlPeer dtlPeer : listPeer.getHldyListDtlList()) {
+						dtlPeer.setHldyListPeer(listPeer);
+					}
 				}
 				hldyListSvc.register(listPeer);
 	

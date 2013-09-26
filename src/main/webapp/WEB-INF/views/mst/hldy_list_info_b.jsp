@@ -47,6 +47,7 @@
 <div style="width:320px;height:300px;">
 <c:if test="${command.hldyListDtlList != null}">
 <table id="tableb" border="1" cellspacing="0" cellpadding="0" width="300px">
+<tbody id="tableb_body">
 	<c:forEach items="${command.hldyListDtlList}" var="peer" varStatus="status">
 		<c:set var="si" scope="page" value="${status.index}"/>
 		<tr>
@@ -69,6 +70,7 @@
 			</td>
 		</tr>
 	</c:forEach>
+</tbody>
 </table>
 </c:if>
 </div>

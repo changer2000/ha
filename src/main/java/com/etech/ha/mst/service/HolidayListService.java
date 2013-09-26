@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.etech.ha.dao.AttendanceInfoDAO;
 import com.etech.ha.dao.HolidayListDAO;
 import com.etech.ha.mst.bean.HolidayListSearchBean;
 import com.etech.ha.peer.HolidayListPeer;
@@ -20,6 +21,9 @@ public class HolidayListService {
 	
 	@Autowired
 	private HolidayListDAO hldyListDao;
+	
+	@Autowired
+	private AttendanceInfoDAO attendanceInfoDao;
 	
 	public List<HolidayListPeer> search(HolidayListSearchBean searchBean) {
 		List<HolidayListPeer> list = hldyListDao.search(searchBean);
@@ -71,7 +75,7 @@ public class HolidayListService {
 	}
 	
 	public void initDate(HolidayListPeer peer) {
-		
+		//TODO
 	}
 	
 	public void delete(String[] ids) {
@@ -81,7 +85,9 @@ public class HolidayListService {
 		for (String id : ids) {
 			HolidayListPeer peer = new HolidayListPeer();
 			peer.setId(NumberUtils.createLong(id));
-			hldyListDao.delete(peer);	//TODO need confirm whether delete t_holiday_list_dtl.
+			hldyListDao.delete(peer);	//It will delete t_holiday_list_dtl.
+			
+			attendanceInfoDao.deleteByHldyList(peer);
 		}
 	}
 	
@@ -92,6 +98,14 @@ public class HolidayListService {
 
 	public void setHldyListDao(HolidayListDAO hldyListDao) {
 		this.hldyListDao = hldyListDao;
+	}
+
+	public AttendanceInfoDAO getAttendanceInfoDao() {
+		return attendanceInfoDao;
+	}
+
+	public void setAttendanceInfoDao(AttendanceInfoDAO attendanceInfoDao) {
+		this.attendanceInfoDao = attendanceInfoDao;
 	}
 	
 }

@@ -89,4 +89,9 @@ public class HolidayListDAO extends BaseDao<HolidayListPeer> {
 		return (List<HolidayListPeer>) createQuery(hqlBuf.toString(), params).list();
 	}
 	
+
+	public void delete(HolidayListPeer peer) {
+		HolidayListPeer dbPeer = get(peer.getId());
+		getHibernateTemplate().delete(dbPeer);
+	}
 }
