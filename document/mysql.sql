@@ -6,8 +6,7 @@ use ha;
 
 drop table t_user;
 create table t_user(
-id int auto_increment primary key,
-empe_num varchar(20),
+empe_num varchar(20) primary key,
 empe_name varchar(100),
 pwd varchar(8),
 mobile varchar(11),

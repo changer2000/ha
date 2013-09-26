@@ -153,7 +153,7 @@ public class QueryTest {
 	//@Test
 	public void test4SomeColumnsAsObject() {
 		try {
-			Query query = session.createQuery("select new UserPeer(id, empe_num ,empe_name) from UserPeer");	//XXX
+			Query query = session.createQuery("select new UserPeer(empe_num ,empe_name) from UserPeer");	//XXX
 			List<UserPeer> list = query.list();
 			for (UserPeer peer: list) {
 				System.out.println(peer.getEmpe_num()+":"+peer.getEmpe_name());
@@ -169,7 +169,7 @@ public class QueryTest {
 	//@Test
 	public void testSearchCondition() {
 		try {
-			Query query = session.createQuery("select new UserPeer(id, empe_num ,empe_name) from UserPeer where empe_num=? and empe_name=?");	//XXX
+			Query query = session.createQuery("select new UserPeer(empe_num ,empe_name) from UserPeer where empe_num=? and empe_name=?");	//XXX
 			//第一种方法
 			//query.setParameter(0, "1404", Hibernate.STRING);
 			//query.setParameter(1, "lixichun", Hibernate.STRING);
@@ -192,7 +192,7 @@ public class QueryTest {
 	//@Test
 	public void testSearchCondition2() {
 		try {
-			Query query = session.createQuery("select new UserPeer(id, empe_num ,empe_name) from UserPeer where empe_num=:empe_num and empe_name=:empe_name");	//XXX
+			Query query = session.createQuery("select new UserPeer(empe_num ,empe_name) from UserPeer where empe_num=:empe_num and empe_name=:empe_name");	//XXX
 			
 			query.setParameter("empe_num", "1404");
 			query.setParameter("empe_name", "lixichun");
@@ -211,7 +211,7 @@ public class QueryTest {
 	//@Test
 	public void testInSql() {
 		try {
-			Query query = session.createQuery("select new UserPeer(id, empe_num ,empe_name) from UserPeer where empe_num in (:empe_num)");	//XXX
+			Query query = session.createQuery("select new UserPeer(empe_num ,empe_name) from UserPeer where empe_num in (:empe_num)");	//XXX
 			
 			query.setParameterList("empe_num", new Object[] {"1404","1234"});
 			List<UserPeer> list = query.list();

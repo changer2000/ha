@@ -3,8 +3,6 @@ package com.etech.ha.peer;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -29,18 +27,12 @@ public class UserPeer extends BaseDomain {
 	
 	//要是有如下的构造函数，就一定要加一个如上默认的构造函数，否则，其他地方用的时候会出错
 	//下面这个构造函数可以由于定制select列的查询返回对象
-	public UserPeer(Long id, String empe_num, String empe_name) {
-		this.id = id;
+	public UserPeer(String empe_num, String empe_name) {
 		this.empe_num = empe_num;
 		this.empe_name = empe_name;
 	}
 	
-	
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id")
-	protected Long id;
-	
 	@Column(name="empe_num")
 	private String empe_num;
 	
@@ -117,12 +109,6 @@ public class UserPeer extends BaseDomain {
 	}
 	public void setDel_flg(Integer del_flg) {
 		this.del_flg = del_flg;
-	}
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
 	}
 	public AttendanceStatusPeer getAttendanceStatusPeer() {
 		return attendanceStatusPeer;
