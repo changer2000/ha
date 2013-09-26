@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -27,7 +28,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.method.annotation.FilterEmptyBean;
 
 import com.etech.system.bean.BaseDomain;
-import com.etech.validator.group.FirstGroup;
 import com.etech.validator.group.SecondGroup;
 
 @GroupSequence({HolidayListPeer.class, SecondGroup.class})
@@ -56,6 +56,7 @@ public class HolidayListPeer extends BaseDomain {
 	private HolidayPeer holidayPeer;	//XXX
 	
 	@OneToMany(fetch=FetchType.EAGER, mappedBy="hldyListPeer")
+	@OrderBy("hldy_start")		//XXX 非常好的一个子表排序例子
 	@Cascade(value={CascadeType.DELETE, CascadeType.SAVE_UPDATE})
 	@FilterEmptyBean
 	@Valid
