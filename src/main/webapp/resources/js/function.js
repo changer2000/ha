@@ -2,6 +2,10 @@ function loadForm() {
 	try {
 		//do something common
 		//...
+
+		if (typeof(preLoad)!="undefined") {
+			preLoad();
+		}
 		
 		var allObjs = document.forms[0].elements;
 		if (allObjs) {
@@ -14,15 +18,15 @@ function loadForm() {
 				}
 			}
 		}
-		
 		initDatePicker();
 		
-		if (typeof(afterLoad)!="undefined") {
-			afterLoad();
-		}
 
 		//do something common
 		//...
+
+		if (typeof(afterLoad)!="undefined") {
+			afterLoad();
+		}
 	} catch (ex) {
 		alert(ex.message);
 	}
