@@ -75,6 +75,14 @@ public class BaseDao<T> {
 		}
 		return query;
 	}
+	
+	public Query createSQLQuery(String sql, Object... params) {
+		Query query = getSession().createSQLQuery(sql);
+		for (int i=0; i<params.length; i++) {
+			query.setParameter(i, params[i]);
+		}
+		return query;
+	}
 
 	/**
 	 * 对延迟加载的实体PO执行初始化
