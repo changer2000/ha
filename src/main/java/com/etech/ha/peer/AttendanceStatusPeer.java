@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.GroupSequence;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -23,8 +24,8 @@ public class AttendanceStatusPeer extends BaseDomain {
 	private static final long serialVersionUID = -7310928382710559939L;
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="id")
+	@NotNull(message="{error.not.be.null}")
 	protected Long id;
 	
 	@Column(name="atndnc_name")
@@ -32,6 +33,9 @@ public class AttendanceStatusPeer extends BaseDomain {
 	@Length(min=2, max=100, message="{error.length}", groups=FirstGroup.class)
 	//@SingleByte(groups=FirstGroup.class)
 	private String atndnc_name;
+	
+	@Column(name="in_shanghai")
+	private Integer in_shanghai = new Integer(1);
 
 	public String getAtndnc_name() {
 		return atndnc_name;
@@ -47,6 +51,14 @@ public class AttendanceStatusPeer extends BaseDomain {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Integer getIn_shanghai() {
+		return in_shanghai;
+	}
+
+	public void setIn_shanghai(Integer in_shanghai) {
+		this.in_shanghai = in_shanghai;
 	}
 	
 	

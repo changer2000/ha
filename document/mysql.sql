@@ -71,8 +71,9 @@ alter table t_holiday_list_dtl add foreign key (hldy_list_id) references t_holid
 
 drop table t_attendance_status;
 create table t_attendance_status(
-id int auto_increment primary key,
-atndnc_name varchar(100)
+id int primary key,
+atndnc_name varchar(100),
+in_shanghai int default 1
 ) engine=InnoDB;
 
 drop table t_attendance_info;

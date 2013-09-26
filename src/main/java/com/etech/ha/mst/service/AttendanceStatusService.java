@@ -27,7 +27,13 @@ public class AttendanceStatusService {
 	}
 	
 	public AttendanceStatusPeer reisger(AttendanceStatusPeer peer) {
-		atndcStsDao.saveOrUpdate(peer);
+		AttendanceStatusPeer dbPeer = atndcStsDao.get(peer.getId());
+		if (dbPeer!=null) {
+			dbPeer.setAtndnc_name(peer.getAtndnc_name());
+			dbPeer.setIn_shanghai(peer.getIn_shanghai());
+		} else {
+			atndcStsDao.saveOrUpdate(peer);
+		}
 		return peer;
 	}
 	
