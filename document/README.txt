@@ -127,7 +127,7 @@ org.springframework.beans.BeanWrapperImpl, line 525
 						......
 					</c:forEach>
 ********************************
-经过艰苦卓绝的努力，终于找到一种比较不难看的方式。解决方案如下：
+经过艰苦卓绝的努力，终于找到一种比较不难看的方式。解决方案如下：可能会引起其他地方的bug，要有个清醒认识。
 a) 修改spring-webmvc工程中，org.springframework.web.servlet.tags.form.AbstractDataBoundFormElementTag.java，
 增加protected String parsePath(String path) throws JspException {...}方法，在getPath()的返回值处被调用，
 返回解析后的path
