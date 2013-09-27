@@ -3,6 +3,10 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.servlet.jsp.JspException;
 
 import org.springframework.beans.BeanUtils;
 
@@ -18,6 +22,11 @@ public class A {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception {
+		filterEmptyBean();
+		
+	}
+	
+	public void filterEmptyBean() throws Exception {
 		LoginForm frm = new LoginForm();
 		frm.getAtdncList().add(new AttendanceStatusPeer());
 		frm.getAtdncList().add(new AttendanceStatusPeer());
@@ -50,8 +59,6 @@ public class A {
 		
 		System.out.println(frm.getAtdncList().size());
 	}
-	
-	
 
 	
 	public void filterEmptyList(Object target) throws Exception {
