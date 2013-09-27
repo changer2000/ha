@@ -126,7 +126,17 @@ org.springframework.beans.BeanWrapperImpl, line 525
 						</c:if>
 						......
 					</c:forEach>
-					
+********************************
+经过艰苦卓绝的努力，终于找到一种比较不难看的方式。解决方案如下：
+a) 修改spring-webmvc工程中，org.springframework.web.servlet.tags.form.AbstractDataBoundFormElementTag.java，
+增加protected String parsePath(String path) throws JspException {...}方法，在getPath()的返回值处被调用，
+返回解析后的path
+b)jsp端，需要加入<c:set var="si" scope="page" value="${status.index}"/>，调用处：<form:input path="hldyListDtlList[si].hldy_start" ..../>
+
+具体例子可以看hldy_list_info_b.jsp
+********************************					
+
+
 					
 7.今天在用<form:select>时，发现一个非常奇怪的问题: items="${***}"总是无法解析成功。
 调试了半天发现和下面这段程序有关：

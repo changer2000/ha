@@ -52,16 +52,22 @@
 		<c:set var="si" scope="page" value="${status.index}"/>
 		<tr>
 			<td width="20px">
+				<% 	Integer num=(Integer)pageContext.getAttribute("si", pageContext.PAGE_SCOPE);
+					String fieldNameId = "hldyListDtlList["+num+"].id";
+					String fieldNameStart = "hldyListDtlList["+num+"].hldy_start";
+					String fieldNameEnd = "hldyListDtlList["+num+"].hldy_end";
+				%>
 				<input type="checkbox" name="selKey" value="<c:out value="${peer.id}"/>"/>
+				<form:hidden path="<%=fieldNameId%>"/>	<!-- use spring's tag doing this in further -->
 				<form:hidden path="hldyListDtlList[si].id"/>
 			</td>
 			<td width="140px">
-				<form:input path="hldyListDtlList[si].hldy_start" maxlength="10" cssClass="form_datetime" cssStyle="width:120px"/>
-				<form:errors path="hldyListDtlList[si].hldy_start" cssClass="error"/>	
+				<form:input path="<%=fieldNameStart%>" maxlength="10" cssClass="form_datetime" cssStyle="width:120px"/>
+				<form:errors path="<%=fieldNameStart%>" cssClass="error"/>	
 			</td>
 			<td>
-				<form:input path="hldyListDtlList[si].hldy_end" maxlength="10" cssClass="form_datetime" cssStyle="width:120px"/>
-				<form:errors path="hldyListDtlList[si].hldy_end" cssClass="error"/>
+				<form:input path="<%=fieldNameEnd%>" maxlength="10" cssClass="form_datetime" cssStyle="width:120px"/>
+				<form:errors path="<%=fieldNameEnd%>" cssClass="error"/>
 			</td>
 		</tr>
 	</c:forEach>
