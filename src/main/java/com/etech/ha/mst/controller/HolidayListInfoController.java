@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.etech.ha.constants.HaConstants;
-import com.etech.ha.mst.bean.HolidayListForm;
 import com.etech.ha.mst.bean.HolidayListSearchBean;
+import com.etech.ha.mst.form.HolidayListForm;
 import com.etech.ha.mst.service.HolidayListService;
 import com.etech.ha.mst.service.HolidayService;
 import com.etech.ha.peer.HolidayListDtlPeer;

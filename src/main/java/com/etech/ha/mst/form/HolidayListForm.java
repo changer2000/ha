@@ -1,8 +1,9 @@
-package com.etech.ha.mst.bean;
+package com.etech.ha.mst.form;
 
 import java.io.Serializable;
 import java.util.List;
 
+import com.etech.ha.mst.bean.HolidayListSearchBean;
 import com.etech.ha.peer.HolidayListPeer;
 
 public class HolidayListForm implements Serializable {

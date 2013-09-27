@@ -30,7 +30,7 @@ public class MenuService {
 		menuItem.setSubMenuList(new ArrayList<MenuItem>());
 		
 		List<MenuItem> list = menuItem.getSubMenuList();
-		list.add(new MenuItem("menu.maintain.empe_info", null, false));
+		list.add(new MenuItem("menu.maintain.user_list", "maintain/user_list", false));
 		list.add(new MenuItem("menu.maintain.holiday", "maintain/holiday", false));
 		list.add(new MenuItem("menu.maintain.holiday_info", "maintain/holiday_list", false));
 		list.add(new MenuItem("menu.maintain.attendance_status_info", "maintain/adtnsSts", false));
