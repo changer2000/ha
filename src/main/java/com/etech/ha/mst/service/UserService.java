@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.etech.ha.constants.HaConstants;
 import com.etech.ha.dao.UserDAO;
 import com.etech.ha.login.bean.LoginForm;
 import com.etech.ha.mst.bean.UserListSearchBean;
@@ -20,8 +21,7 @@ public class UserService {
 	private UserDAO userDao;
 	
 	public UserPeer checkLogin(LoginForm user) {
-		//UserPeer dbUser = userDao.searchByEmpeNum2(user.getEmpe_num());
-		UserPeer dbUser = userDao.searchByEmpeNum3(user.getEmpe_num());
+		UserPeer dbUser = userDao.searchPeerByEmpeNum(user.getEmpe_num());
 		if (dbUser==null || !StringUtils.equals(user.getPwd(), dbUser.getPwd())) {
 			return null;
 		} else {
@@ -35,6 +35,10 @@ public class UserService {
 	
 	public List<UserPeer> search(UserListSearchBean searchBean) {
 		return userDao.search(searchBean);
+	}
+	
+	public void register(UserPeer peer) {
+		userDao.saveOrUpdate(peer);
 	}
 	
 	public void delete(String[] selKey) {

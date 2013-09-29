@@ -87,4 +87,14 @@
 		<put-attribute name="b" value="/WEB-INF/views/mst/user_list_b.jsp"/>
 		<put-attribute name="c" value="/WEB-INF/views/mst/user_list_c.jsp"/>
 	</definition>
+	
+	<definition name="userInfo" extends="baseLayout.definition">
+		<put-attribute name="aHeight" value="60"/>
+		<put-attribute name="bHeight" value="450"/>
+		<put-attribute name="titleKey" value="title.maintain.user_info"/>
+		<put-attribute name="action" value="user_info"/>
+		<put-attribute name="a" value="/WEB-INF/views/mst/user_info_a.jsp"/>
+		<put-attribute name="b" value="/WEB-INF/views/mst/user_info_b.jsp"/>
+		<put-attribute name="c" value="/WEB-INF/views/mst/user_info_c.jsp"/>
+	</definition>
 </tiles-definitions>

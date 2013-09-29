@@ -29,6 +29,10 @@ public class UserDAO extends BaseDao<UserPeer> {
 		return null;
 	}
 	
+	public UserPeer searchPeerByEmpeNum(String empeNum) {
+		return this.findPeer("from UserPeer as user where user.empe_num=?", empeNum);
+	}
+	
 	public List<UserPeer> search(UserListSearchBean searchBean) {
 		List<Object> paramsList = new ArrayList<Object>();
 		StringBuilder buf = new StringBuilder("from UserPeer a ");
@@ -87,10 +91,6 @@ public class UserDAO extends BaseDao<UserPeer> {
 		
 		List<UserPeer> list = (List<UserPeer>) this.createQuery(buf.toString(), paramsList.toArray()).list();
 		return list;
-	}
-	
-	public UserPeer searchByEmpeNum3(String empeNum) {
-		return this.findPeer("from UserPeer as user where user.empe_num=?", empeNum);
 	}
 	
 }

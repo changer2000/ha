@@ -46,12 +46,12 @@ public class UserPeer extends BaseDomain {
 	@Column(name="empe_num")
 	@NotEmpty
 	@SingleByte
-	@Length(min=5, max=20, groups=FirstGroup.class)
+	@Length(min=4, max=20, message="{error.length}", groups=FirstGroup.class)
 	private String empe_num;
 	
 	@Column(name="empe_name")
 	@NotEmpty
-	@Length(min=5, max=100, groups=FirstGroup.class)
+	@Length(min=4, max=100, message="{error.length}", groups=FirstGroup.class)
 	private String empe_name;
 	
 	@Column(name="pwd")
@@ -59,11 +59,11 @@ public class UserPeer extends BaseDomain {
 	
 	@Column(name="mobile")
 	@NotEmpty
-	@Length(min=11, max=11, groups=FirstGroup.class)
+	@Length(min=11, max=11, message="{error.length}", groups=FirstGroup.class)
 	private String mobile;
 	
 	@Column(name="tel_no")
-	@Length(min=8, max=50, groups=FirstGroup.class)
+	@Length(min=8, max=50, message="{error.length}", groups=FirstGroup.class)
 	private String tel_no;
 	
 	@Column(name="email")

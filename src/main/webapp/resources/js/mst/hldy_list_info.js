@@ -15,9 +15,7 @@ function line_add() {
 		tmpIndex = parseInt(tmpName)+1;
 	}
 	var tmpJs = sample_js_dtl.replace(/##/g,tmpIndex);
-	alert(tmpJs);
 	$('#tableb_body').eq(0).append(tmpJs);
-	var tt = $('#tableb_body').eq(0);
 	initDatePicker();
 	return true;
 }

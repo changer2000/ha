@@ -1,6 +1,5 @@
 <%@page import="java.util.List"%>
 <%@ include file="/WEB-INF/views/common/taglibs.jsp"%>
-<script src='<c:url value="/resources/js/mst/hldy_list_list.js"/>'></script>
 <br/>
 <table border="0" cellspacing="1" cellpadding="1"  class="span8">
 <tr>
@@ -14,7 +13,6 @@
 		<s:message code="label.holiday.name"></s:message>
 	</td>
 	<td class="span4">
-		<%List myList = (List) pageContext.getAttribute("hldyOptions", pageContext.REQUEST_SCOPE); %>
 		<form:select path="searchBean.hldy_id" items="<%=(List) pageContext.getAttribute(\"hldyOptions\", pageContext.REQUEST_SCOPE)%>"
 			itemLabel="name" itemValue="id" cssClass="span2"
 		>	

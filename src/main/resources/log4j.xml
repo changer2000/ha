@@ -15,23 +15,23 @@
 	</logger>
 	
 	<logger name="org.springframework.core">
-		<level value="error" />
+		<level value="trace" />
 	</logger>
 	
 	<logger name="org.springframework.beans">
-		<level value="error" />
+		<level value="trace" />
 	</logger>
 	
 	<logger name="org.springframework.context">
-		<level value="error" />
+		<level value="trace" />
 	</logger>
 
 	<logger name="org.springframework.http">
-		<level value="error" />
+		<level value="trace" />
 	</logger>
 
 	<logger name="org.springframework.web">
-		<level value="error" />
+		<level value="trace" />
 	</logger>
 	
 	<logger name="org.apache.jasper.compiler.TldLocationsCache">

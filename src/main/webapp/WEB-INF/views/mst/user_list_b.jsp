@@ -7,8 +7,8 @@
 		<th width="80px"><s:message code="label.login.empe_num"/></th>
 		<th width="150px"><s:message code="label.empe.name"/></th>
 		<th width="150px"><s:message code="label.mobile"/></th>
-		<th width="200px"><s:message code="label.tel_no"/></th>
-		<th width="200px"><s:message code="label.email"/></th>
+		<th width="150px"><s:message code="label.tel_no"/></th>
+		<th width="250px"><s:message code="label.email"/></th>
 	</tr>
 </thead>
 </table>
@@ -29,7 +29,7 @@
 			<td width="148px">
 				<c:out value="${peer.mobile}"/>
 			</td>
-			<td width="197px">
+			<td width="149px">
 				<c:out value="${peer.tel_no }"/>
 			</td>
 			<td>

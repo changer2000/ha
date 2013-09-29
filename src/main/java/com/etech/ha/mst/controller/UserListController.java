@@ -105,7 +105,7 @@ public class UserListController extends BaseController {
 		return mv;
 	}
 	
-	private ModelAndView errorHndl(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, 
+	public ModelAndView errorHndl(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, 
 				UserListForm frm, String messageKey) {
 		UserListSearchBean searchBean = (UserListSearchBean) userInfo.getSessionMap().get(HaConstants.SESSION_KEY_USER_LIST_SEARCH_KEY);
 		if (searchBean==null)
