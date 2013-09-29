@@ -13,6 +13,7 @@ mobile varchar(11),
 tel_no varchar(50),
 email varchar(50),
 dept_cd varchar(20),
+admin_flg int default 0,
 del_flg int
 ) engine=InnoDB;
 alter table t_user change empe_num empe_num varchar(50);
@@ -89,7 +90,7 @@ alter table t_attendance_info add unique (user_id, work_date);
 
 
 -----------------------------------
-insert into t_user(empe_num,empe_name,pwd,mobile,tel_no,email,dept_cd,del_flg) values ('1404','li','1234','13524656789','021-12345678',null,null,0);
+insert into t_user(empe_num,empe_name,pwd,mobile,tel_no,email,dept_cd,admin_flg,del_flg) values ('1404','li','1234','13524656789','021-12345678',null,null,1,0);
 
 insert into  t_attendance_status(atndnc_name) values('休息-在沪');
 

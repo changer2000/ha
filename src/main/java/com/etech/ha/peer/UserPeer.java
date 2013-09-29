@@ -7,13 +7,23 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
+import javax.validation.GroupSequence;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import com.etech.system.bean.BaseDomain;
+import com.etech.validator.constraints.SingleByte;
+import com.etech.validator.group.FirstGroup;
 
 
 @Entity
 @Table(name="t_user", uniqueConstraints={@UniqueConstraint(columnNames={"email"})})
+@GroupSequence(value={UserPeer.class, FirstGroup.class})
 public class UserPeer extends BaseDomain {
 	
 	private static final long serialVersionUID = 5349810873546597127L;
@@ -34,21 +44,31 @@ public class UserPeer extends BaseDomain {
 	
 	@Id
 	@Column(name="empe_num")
+	@NotEmpty
+	@SingleByte
+	@Length(min=5, max=20, groups=FirstGroup.class)
 	private String empe_num;
 	
 	@Column(name="empe_name")
+	@NotEmpty
+	@Length(min=5, max=100, groups=FirstGroup.class)
 	private String empe_name;
 	
 	@Column(name="pwd")
 	private String pwd;
 	
 	@Column(name="mobile")
+	@NotEmpty
+	@Length(min=11, max=11, groups=FirstGroup.class)
 	private String mobile;
 	
 	@Column(name="tel_no")
+	@Length(min=8, max=50, groups=FirstGroup.class)
 	private String tel_no;
 	
 	@Column(name="email")
+	@NotEmpty
+	@Email
 	private String email;
 	
 	@Column(name="dept_cd")
@@ -57,9 +77,18 @@ public class UserPeer extends BaseDomain {
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="dflt_atndnc_sts_id")
 	private AttendanceStatusPeer attendanceStatusPeer;
+	
+	@Column(name="admin_flg")
+	private Integer admin_flg;
 
 	@Column(name="del_flg")
 	protected Integer del_flg;
+	
+	
+	//only for jsp.
+	@Transient
+	@NotNull
+	private Long dflt_atndnc_sts_id;
 	
 	public String getEmpe_num() {
 		return empe_num;
@@ -115,6 +144,22 @@ public class UserPeer extends BaseDomain {
 	}
 	public void setAttendanceStatusPeer(AttendanceStatusPeer attendanceStatusPeer) {
 		this.attendanceStatusPeer = attendanceStatusPeer;
+	}
+
+	public Integer getAdmin_flg() {
+		return admin_flg;
+	}
+
+	public void setAdmin_flg(Integer admin_flg) {
+		this.admin_flg = admin_flg;
+	}
+
+	public Long getDflt_atndnc_sts_id() {
+		return dflt_atndnc_sts_id;
+	}
+
+	public void setDflt_atndnc_sts_id(Long dflt_atndnc_sts_id) {
+		this.dflt_atndnc_sts_id = dflt_atndnc_sts_id;
 	}
 	
 	
