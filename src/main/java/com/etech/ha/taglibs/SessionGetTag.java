@@ -5,6 +5,9 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import com.etech.ha.constants.HaConstants;
+import com.etech.system.bean.UserInfo;
+
 public class SessionGetTag extends TagSupport {
 
 	private static final long serialVersionUID = 6216185681100265999L;
@@ -67,7 +70,7 @@ public class SessionGetTag extends TagSupport {
 		
         Object value = null;
 		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-		value = request.getSession().getAttribute(key);
+		value = ((UserInfo) request.getSession().getAttribute(HaConstants.SESSION_KEY_USER_INFO)).getSessionMap().get(key);
         if (value!=null){
             pageContext.setAttribute(id, value, inScope);
         }
