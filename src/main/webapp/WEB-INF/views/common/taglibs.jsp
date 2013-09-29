@@ -17,4 +17,5 @@
 <%@ taglib uri="/WEB-INF/tld/spring.tld" prefix="s" %>
 <%@ taglib uri="/WEB-INF/tld/spring-form.tld" prefix="form" %>
 <%@ taglib uri="/WEB-INF/tld/tiles-jsp.tld" prefix="tiles"%>
+<%@ taglib uri="/WEB-INF/tld/ha.tld" prefix="ha"%>
 <%-- next21 tags --%>
