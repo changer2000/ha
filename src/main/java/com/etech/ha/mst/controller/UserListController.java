@@ -2,7 +2,6 @@ package com.etech.ha.mst.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.lang.StringUtils;
@@ -12,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.etech.ha.constants.HaConstants;
@@ -20,10 +20,12 @@ import com.etech.ha.mst.form.UserListForm;
 import com.etech.ha.mst.service.UserService;
 import com.etech.ha.peer.UserPeer;
 import com.etech.system.bean.MessagesBean;
+import com.etech.system.bean.UserInfo;
 import com.etech.system.controller.BaseController;
 
 @Controller
 @RequestMapping("/maintain/user_list")
+@SessionAttributes("SESSION_KEY_USER_INFO")
 public class UserListController extends BaseController {
 	
 	@Autowired
@@ -38,12 +40,12 @@ public class UserListController extends BaseController {
 	}
 
 	@RequestMapping(method=RequestMethod.POST)
-	public ModelAndView search(HttpServletRequest request, @Valid @ModelAttribute("command") UserListForm frm, BindingResult result) {
+	public ModelAndView search(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, @Valid @ModelAttribute("command") UserListForm frm, BindingResult result) {
 		ModelAndView mv = new ModelAndView("userList");
 		if (result.hasErrors())
 			return mv;
 		
-		request.getSession().setAttribute(HaConstants.SESSION_KEY_USER_LIST_SEARCH_KEY, frm.getSearchBean());
+		userInfo.getSessionMap().put(HaConstants.SESSION_KEY_USER_LIST_SEARCH_KEY, frm.getSearchBean());
 		
 		List<UserPeer> list = userSvc.search(frm.getSearchBean());
 		frm.setUserList(list);
@@ -51,61 +53,61 @@ public class UserListController extends BaseController {
 	}
 	
 	@RequestMapping(params="create", method=RequestMethod.POST)
-	public ModelAndView create(HttpServletRequest request, @ModelAttribute("command") UserListForm frm) {
+	public ModelAndView create(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, @ModelAttribute("command") UserListForm frm) {
 		ModelAndView mv = new ModelAndView("userInfo");
-		request.getSession().setAttribute(HaConstants.SESSION_KEY_USER_INFO_MODE, HaConstants.MODE_NEW);
+		userInfo.getSessionMap().put(HaConstants.SESSION_KEY_USER_INFO_MODE, HaConstants.MODE_NEW);
 		mv.addObject("command", new UserPeer());
 		return mv;
 	}
 	
 	@RequestMapping(params="modify", method=RequestMethod.POST)
-	public ModelAndView modify(HttpServletRequest request, @Valid @ModelAttribute("command") UserListForm frm, BindingResult result) {
-		ModelAndView mv = new ModelAndView("userInfo");
+	public ModelAndView modify(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, @Valid @ModelAttribute("command") UserListForm frm, BindingResult result) {
 		if (result.hasErrors()) {
-			return errorHndl(request, frm, null);
+			return errorHndl(userInfo, frm, null);
 		}
 		
+		ModelAndView mv = null;	//userInfo
 		String[] selKey = frm.getSelKey();
 		if (selKey==null || selKey.length==0) {
-			mv = errorHndl(request, frm, "error.need.select.one");
+			return errorHndl(userInfo, frm, "error.need.select.one");
 		} else if (selKey.length>1) {
-			mv = errorHndl(request, frm, "error.cant.select.more.than.one");
+			return errorHndl(userInfo, frm, "error.cant.select.more.than.one");
 		} else {
 			UserPeer peer = userSvc.searchByEmpeNum(selKey[0]);
 			if (peer!=null) {
-				request.getSession().setAttribute(HaConstants.SESSION_KEY_USER_INFO_MODE, HaConstants.MODE_MODIFY);
-				mv.addObject("command", peer);
+				userInfo.getSessionMap().put(HaConstants.SESSION_KEY_USER_INFO_MODE, HaConstants.MODE_MODIFY);
+				mv = new ModelAndView("redirect:user_info?empe_num="+peer.getEmpe_num());
 			} else {
-				mv = errorHndl(request, frm, "error.data.is.not.exist");
+				return errorHndl(userInfo, frm, "error.data.is.not.exist");
 			}
 		}
 		return mv;
 	}
 
 	@RequestMapping(params="delete", method=RequestMethod.POST)
-	public ModelAndView delete(HttpServletRequest request, @Valid @ModelAttribute("command") UserListForm frm, BindingResult result) {
+	public ModelAndView delete(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, @Valid @ModelAttribute("command") UserListForm frm, BindingResult result) {
 		if (result.hasErrors()) {
-			return errorHndl(request, frm, null);
+			return errorHndl(userInfo, frm, null);
 		}
 		
 		ModelAndView mv = new ModelAndView("userInfo");
 		
 		String[] selKey = frm.getSelKey();
 		if (selKey==null || selKey.length==0) {
-			mv = errorHndl(request, frm, "error.need.select.one");
+			return errorHndl(userInfo, frm, "error.need.select.one");
 		} else if (selKey.length>1) {
-			mv = errorHndl(request, frm, "error.cant.select.more.than.one");
+			return errorHndl(userInfo, frm, "error.cant.select.more.than.one");
 		} else {
 			userSvc.delete(frm.getSelKey());
 			
-			mv = search(request, frm, result);
+			mv = search(userInfo, frm, result);
 		}
 		return mv;
 	}
 	
-	private ModelAndView errorHndl(HttpServletRequest request, 
+	private ModelAndView errorHndl(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, 
 				UserListForm frm, String messageKey) {
-		UserListSearchBean searchBean = (UserListSearchBean) request.getSession().getAttribute(HaConstants.SESSION_KEY_USER_LIST_SEARCH_KEY);
+		UserListSearchBean searchBean = (UserListSearchBean) userInfo.getSessionMap().get(HaConstants.SESSION_KEY_USER_LIST_SEARCH_KEY);
 		if (searchBean==null)
 			searchBean = new UserListSearchBean();
 		
@@ -115,7 +117,7 @@ public class UserListController extends BaseController {
 		ModelAndView mv = new ModelAndView("userList");
 		if (StringUtils.isNotBlank(messageKey)) {
 			MessagesBean msgBean = new MessagesBean();
-			msgBean.addError(request, messageSource, messageKey, null)
+			msgBean.addError(userInfo.getLocale(), messageSource, messageKey, null)
 				.setErrorsIntoModelView(mv);
 		}
 		return mv;

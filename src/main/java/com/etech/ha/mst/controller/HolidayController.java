@@ -2,7 +2,6 @@ package com.etech.ha.mst.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.lang.math.NumberUtils;
@@ -14,15 +13,18 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.etech.ha.mst.service.HolidayService;
 import com.etech.ha.peer.HolidayPeer;
 import com.etech.system.bean.MessagesBean;
+import com.etech.system.bean.UserInfo;
 import com.etech.system.controller.BaseController;
 
 @Controller
 @RequestMapping("/maintain/holiday")
+@SessionAttributes(value="SESSION_KEY_USER_INFO")
 public class HolidayController extends BaseController {
 	
 	private static Log logger = LogFactory.getLog(HolidayController.class);
@@ -46,19 +48,19 @@ public class HolidayController extends BaseController {
 	}
 	
 	@RequestMapping(params="modify", method=RequestMethod.POST)
-	public ModelAndView modify(HttpServletRequest request, String[] id) {
+	public ModelAndView modify(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, String[] id) {
 		ModelAndView mv = new ModelAndView();
 		
 		if (id==null || id.length==0) {
 			mv = list();
 			MessagesBean msgBean = new MessagesBean();
-			msgBean.addError(request, messageSource, "error.need.select.one", null)
+			msgBean.addError(userInfo.getLocale(), messageSource, "error.need.select.one", null)
 				.setErrorsIntoModelView(mv);
 			return mv;
 		} else if (id.length>1) {
 			mv = list();
 			MessagesBean msgBean = new MessagesBean();
-			msgBean.addError(request, messageSource, "error.cant.select.more.than.one", null)
+			msgBean.addError(userInfo.getLocale(), messageSource, "error.cant.select.more.than.one", null)
 				.setErrorsIntoModelView(mv);
 			return mv;
 		}
@@ -70,12 +72,12 @@ public class HolidayController extends BaseController {
 	}
 	
 	@RequestMapping(params="delete")
-	public ModelAndView delete(HttpServletRequest request, String[] id) {
+	public ModelAndView delete(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, String[] id) {
 		ModelAndView mv = new ModelAndView();
 		if (id==null || id.length==0) {
 			mv = list();
 			MessagesBean msgBean = new MessagesBean();
-			msgBean.addError(request, messageSource, "error.need.select.one", null)
+			msgBean.addError(userInfo.getLocale(), messageSource, "error.need.select.one", null)
 				.setErrorsIntoModelView(mv);
 			return mv;
 		}
@@ -85,12 +87,12 @@ public class HolidayController extends BaseController {
 	}
 	
 	@RequestMapping(params="register")
-	public ModelAndView register(HttpServletRequest request, @Valid @ModelAttribute(value="command") HolidayPeer peer, BindingResult result) {
+	public ModelAndView register(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, @Valid @ModelAttribute(value="command") HolidayPeer peer, BindingResult result) {
 		ModelAndView mv = new ModelAndView("hldyInfo");
 		if (!result.hasErrors()) {
 			hldySvc.register(peer);
 			MessagesBean msgBean = new MessagesBean();
-			msgBean.addMessage(request, messageSource, "msg.info.register.success", null)
+			msgBean.addMessage(userInfo.getLocale(), messageSource, "msg.info.register.success", null)
 				.setMessagesIntoModelView(mv);
 		}
 		return mv;

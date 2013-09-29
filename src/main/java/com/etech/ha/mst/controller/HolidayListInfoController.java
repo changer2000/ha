@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.lang.time.DateUtils;
@@ -16,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.etech.ha.constants.HaConstants;
@@ -27,10 +27,12 @@ import com.etech.ha.peer.HolidayListDtlPeer;
 import com.etech.ha.peer.HolidayListPeer;
 import com.etech.ha.peer.HolidayPeer;
 import com.etech.system.bean.MessagesBean;
+import com.etech.system.bean.UserInfo;
 import com.etech.system.controller.BaseController;
 
 @Controller
 @RequestMapping("/maintain/holiday_info")
+@SessionAttributes(value="SESSION_KEY_USER_INFO")
 public class HolidayListInfoController extends BaseController {
 	
 	@Autowired
@@ -48,10 +50,10 @@ public class HolidayListInfoController extends BaseController {
 	}
 	
 	@RequestMapping(params="back", method=RequestMethod.POST)
-	public ModelAndView back(HttpServletRequest request) {
+	public ModelAndView back(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo) {
 		ModelAndView mv = new ModelAndView("hldyListList");
 		HolidayListSearchBean searchBean = (HolidayListSearchBean)
-				request.getSession().getAttribute(HaConstants.SESSION_KEY_HOLIDAY_LIST_SEARCH_KEY);
+				userInfo.getSessionMap().get(HaConstants.SESSION_KEY_HOLIDAY_LIST_SEARCH_KEY);
 		
 		List<HolidayListPeer> list = hldyListSvc.search(searchBean);
 		HolidayListForm frm = new HolidayListForm();
@@ -61,11 +63,11 @@ public class HolidayListInfoController extends BaseController {
 	}
 	
 	@RequestMapping(params="register", method=RequestMethod.POST)
-	public ModelAndView register(HttpServletRequest request, @Valid @ModelAttribute(value="command") HolidayListPeer listPeer, BindingResult result) {
+	public ModelAndView register(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, @Valid @ModelAttribute(value="command") HolidayListPeer listPeer, BindingResult result) {
 		ModelAndView mv = new ModelAndView("hldyListInfo");
 		if (!result.hasErrors()) {
 			//logic validate date
-			validateRegister(request, listPeer, result);
+			validateRegister(userInfo, listPeer, result);
 			
 			if (!result.hasErrors()) {
 				//prepare peer
@@ -79,14 +81,14 @@ public class HolidayListInfoController extends BaseController {
 				hldyListSvc.register(listPeer);
 	
 				MessagesBean msgBean = new MessagesBean();
-				msgBean.addMessage(request, messageSource, "msg.info.register.success", null)
+				msgBean.addMessage(userInfo.getLocale(), messageSource, "msg.info.register.success", null)
 					.setMessagesIntoModelView(mv);
 			}
 		}
 		return mv;
 	}
 	
-	private MessagesBean validateRegister(HttpServletRequest request, HolidayListPeer listPeer, BindingResult result) {
+	private MessagesBean validateRegister(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, HolidayListPeer listPeer, BindingResult result) {
 		MessagesBean msgBean = new MessagesBean();
 		if (listPeer.getStart_dt().compareTo(listPeer.getEnd_dt())>0) {
 			result.rejectValue("start_dt", "error.date.relation");

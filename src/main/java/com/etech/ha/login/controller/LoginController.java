@@ -41,6 +41,15 @@ public class LoginController extends BaseController {
 		return mv;
 	}
 	
+	@RequestMapping(value="/logout",method=RequestMethod.GET)
+	public ModelAndView logout(HttpServletRequest request) {
+		request.getSession().removeAttribute(HaConstants.SESSION_KEY_USER_INFO);
+		
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("redirect:/");
+		return mv;
+	}
+	
 	private AttendanceStatusPeer createPeer(long i) {
 		AttendanceStatusPeer peer = new AttendanceStatusPeer();
 		peer.setId(new Long(i));
@@ -113,6 +122,7 @@ public class LoginController extends BaseController {
 		if (userPeer!=null) {
 			UserInfo userInfo = new UserInfo();
 			userInfo.setUserPeer(userPeer);
+			userInfo.setLocale(request.getLocale());
 			//TODO 将来可能还有其他的属性需要被设置
 			
 			menuService.prepareMenu(userInfo, menu);

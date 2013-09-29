@@ -1,8 +1,7 @@
 package com.etech.system.bean;
 
+import java.util.Locale;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections.map.LinkedMap;
 import org.springframework.context.MessageSource;
@@ -15,13 +14,13 @@ public class MessagesBean {
 	private Map<String, String> errMap = new LinkedMap();
 	private Map<String, String> msgMap = new LinkedMap();
 	
-	public MessagesBean addError(HttpServletRequest req, MessageSource messageSource, String key, String[] args) {
-		errMap.put(key, messageSource.getMessage(key, args, req.getLocale()));
+	public MessagesBean addError(Locale locale, MessageSource messageSource, String key, String[] args) {
+		errMap.put(key, messageSource.getMessage(key, args, locale));
 		return this;
 	}
 	
-	public MessagesBean addMessage(HttpServletRequest req, MessageSource messageSource, String key, String[] args) {
-		msgMap.put(key, messageSource.getMessage(key, args, req.getLocale()));
+	public MessagesBean addMessage(Locale locale, MessageSource messageSource, String key, String[] args) {
+		msgMap.put(key, messageSource.getMessage(key, args, locale));
 		return this;
 	}
 	
