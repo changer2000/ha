@@ -64,7 +64,13 @@ public class UserInfoContorller extends BaseController {
 			return new ModelAndView("redirect:/logout");
 		} else {
 			ModelAndView mv = new ModelAndView("userInfo");
-			UserPeer peer = userSvc.searchByEmpeNum(empe_num);
+			UserPeer peer = null;
+			if (HaConstants.MODE_NEW.equals(userInfo.getSessionMap().get(HaConstants.SESSION_KEY_USER_INFO_MODE))) {
+				peer = new UserPeer();
+			} else {
+				peer = userSvc.searchByEmpeNum(empe_num);
+				peer.setDflt_atndnc_sts_id(peer.getAttendanceStatusPeer().getId());
+			}
 			mv.addObject("command", peer);
 			return mv;
 		}
@@ -108,10 +114,11 @@ public class UserInfoContorller extends BaseController {
 		} else {
 			//prepare data
 			peer.setAttendanceStatusPeer(atndcStsSvc.findById(peer.getDflt_atndnc_sts_id()));
-			peer.setAdmin_flg(dbPeer.getAdmin_flg());
-			peer.setDel_flg(dbPeer.getDel_flg());
-			peer.setPwd(dbPeer.getPwd());
-			
+			if (dbPeer!=null) {
+				peer.setAdmin_flg(dbPeer.getAdmin_flg());
+				peer.setDel_flg(dbPeer.getDel_flg());
+				peer.setPwd(dbPeer.getPwd());
+			}
 			userSvc.register(peer);
 			MessagesBean msgBean = new MessagesBean();
 			msgBean.addMessage(userInfo.getLocale(), messageSource, "msg.info.register.success", null)

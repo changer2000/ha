@@ -54,9 +54,8 @@ public class UserListController extends BaseController {
 	
 	@RequestMapping(params="create", method=RequestMethod.POST)
 	public ModelAndView create(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, @ModelAttribute("command") UserListForm frm) {
-		ModelAndView mv = new ModelAndView("userInfo");
 		userInfo.getSessionMap().put(HaConstants.SESSION_KEY_USER_INFO_MODE, HaConstants.MODE_NEW);
-		mv.addObject("command", new UserPeer());
+		ModelAndView mv = new ModelAndView("redirect:user_info?empe_num=");
 		return mv;
 	}
 	
