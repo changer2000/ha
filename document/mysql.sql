@@ -4,6 +4,12 @@ create database ha default character set utf8;
 
 use ha;
 
+drop table t_group;
+create table t_group(
+group_cd varchar(20) primary key,
+group_name varchar(200)
+) engine=InnoDB;
+
 drop table t_user;
 create table t_user(
 empe_num varchar(20) primary key,
@@ -12,13 +18,15 @@ pwd varchar(8),
 mobile varchar(11),
 tel_no varchar(50),
 email varchar(50),
-dept_cd varchar(20),
+group_cd varchar(20),
 admin_flg int default 0,
+dflt_atndnc_sts_id int default 1,
 del_flg int
 ) engine=InnoDB;
 alter table t_user change empe_num empe_num varchar(50);
-alter table t_user add dflt_atndnc_sts_id int;
 alter table t_user add unique(email);
+--alter table t_user add dflt_atndnc_sts_id int default 0;
+
 
 drop table t_role;
 create table t_role(
@@ -90,7 +98,12 @@ alter table t_attendance_info add unique (user_id, work_date);
 
 
 -----------------------------------
-insert into t_user(empe_num,empe_name,pwd,mobile,tel_no,email,dept_cd,admin_flg,del_flg) values ('1404','li','1234','13524656789','021-12345678',null,null,1,0);
+insert into t_group(group_cd, group_name) values ('001', 'Dev-1');
+insert into t_group(group_cd, group_name) values ('002', 'Dev-2');
+insert into t_group(group_cd, group_name) values ('003', 'Dev-3');
+insert into t_group(group_cd, group_name) values ('004', 'Dev-4');
+
+insert into t_user(empe_num,empe_name,pwd,mobile,tel_no,email,group_cd,admin_flg,del_flg,dflt_atndnc_sts_id) values ('1404','li','1234','13524656789','021-12345678',null,null,1,0,1);
 
 insert into  t_attendance_status(atndnc_name) values('休息-在沪');
 
