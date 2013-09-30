@@ -180,7 +180,12 @@ if (sc.getEffectiveMajorVersion() == 2 && sc.getEffectiveMinorVersion() < 4)，�
 UserListController.java中：
 mv = new ModelAndView("redirect:user_info?empe_num="+peer.getEmpe_num());
 
-
+public String handle() {  
+    // return "forward:/hello" => 转发到能够匹配 /hello 的 controller 上  
+    // return "hello" => 实际上还是转发，只不过是框架会找到该逻辑视图名对应的 View 并渲染  
+    // return "/hello" => 同 return "hello"  
+    return "forward:/hello";  
+} 
 	
 ------------------------------------------	
 1118.css的一些基本概念：
