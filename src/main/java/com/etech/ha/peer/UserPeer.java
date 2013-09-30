@@ -71,8 +71,9 @@ public class UserPeer extends BaseDomain {
 	@Email
 	private String email;
 	
-	@Column(name="dept_cd")
-	private String dept_cd;
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="group_cd")
+	private GroupPeer groupPeer;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="dflt_atndnc_sts_id")
@@ -89,6 +90,10 @@ public class UserPeer extends BaseDomain {
 	@Transient
 	@NotNull
 	private Long dflt_atndnc_sts_id;
+	
+	@Transient
+	@NotEmpty
+	private String group_cd;
 	
 	public String getEmpe_num() {
 		return empe_num;
@@ -126,11 +131,11 @@ public class UserPeer extends BaseDomain {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public String getDept_cd() {
-		return dept_cd;
+	public String getGroup_cd() {
+		return group_cd;
 	}
-	public void setDept_cd(String dept_cd) {
-		this.dept_cd = dept_cd;
+	public void setGroup_cd(String group_cd) {
+		this.group_cd = group_cd;
 	}
 
 	public Integer getDel_flg() {
@@ -160,6 +165,14 @@ public class UserPeer extends BaseDomain {
 
 	public void setDflt_atndnc_sts_id(Long dflt_atndnc_sts_id) {
 		this.dflt_atndnc_sts_id = dflt_atndnc_sts_id;
+	}
+
+	public GroupPeer getGroupPeer() {
+		return groupPeer;
+	}
+
+	public void setGroupPeer(GroupPeer groupPeer) {
+		this.groupPeer = groupPeer;
 	}
 	
 	

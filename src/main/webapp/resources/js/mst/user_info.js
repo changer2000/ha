@@ -1,5 +1,5 @@
 function preLoad() {
-	if (gMode==g_modify_mode) {
+	if (gMode!=g_new_mode) {
 		$('#empe_num').attr('readonly', true);
 	}
 }

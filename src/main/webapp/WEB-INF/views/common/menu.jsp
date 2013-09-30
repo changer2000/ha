@@ -33,7 +33,7 @@
 	    </div> 
 	    <div class="container" style="width:140px;margin-left:860px;" >
 	    	<span style="line-height:40px;vertical-align:middle;" >
-	    		<s:message code="label.welcome"/><a href="<c:url value="/maintain/user_info?empe_num="/><%= ((UserInfo)session.getAttribute(HaConstants.SESSION_KEY_USER_INFO)).getUserPeer().getEmpe_name() %>"><%= ((UserInfo)session.getAttribute(HaConstants.SESSION_KEY_USER_INFO)).getUserPeer().getEmpe_name() %></a>
+	    		<s:message code="label.welcome"/><a href="<c:url value="/maintain/user_info?empe_num="/><%= ((UserInfo)session.getAttribute(HaConstants.SESSION_KEY_USER_INFO)).getUserPeer().getEmpe_num() %>"><%= ((UserInfo)session.getAttribute(HaConstants.SESSION_KEY_USER_INFO)).getUserPeer().getEmpe_name() %></a>
 	    		&nbsp;&nbsp;&nbsp;<a href="<c:url value="/logout"/>"><s:message code="label.logout"/></a>
 	    		
 	    	</span>

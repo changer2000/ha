@@ -4,11 +4,12 @@
 <thead>
 	<tr class="title">
 		<th width="20px">&nbsp;</th>
+		<th width="80px"><s:message code="label.group.name"/></th>
 		<th width="80px"><s:message code="label.login.empe_num"/></th>
 		<th width="150px"><s:message code="label.empe.name"/></th>
-		<th width="150px"><s:message code="label.mobile"/></th>
+		<th width="110px"><s:message code="label.mobile"/></th>
 		<th width="150px"><s:message code="label.tel_no"/></th>
-		<th width="250px"><s:message code="label.email"/></th>
+		<th width="210px"><s:message code="label.email"/></th>
 	</tr>
 </thead>
 </table>
@@ -21,12 +22,15 @@
 				<input type="checkbox" name="selKey" value="<c:out value="${peer.empe_num}"/>"/>
 			</td>
 			<td width="80px">
+				<c:out value="${peer.groupPeer.group_name}"/>
+			</td>
+			<td width="80px">
 				<c:out value="${peer.empe_num}"/>
 			</td>
 			<td width="148px">
 				<c:out value="${peer.empe_name}"/>
 			</td>
-			<td width="148px">
+			<td width="108px">
 				<c:out value="${peer.mobile}"/>
 			</td>
 			<td width="149px">

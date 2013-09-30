@@ -28,6 +28,19 @@
 </div>
 <div class="row">
 	<div class="label span1">
+		<s:message code="label.group.name"></s:message>
+	</div>
+	<div class="span3">
+		<form:select path="group_cd" items="<%=(List) pageContext.getAttribute(\"groupOptions\", pageContext.REQUEST_SCOPE)%>"
+			itemLabel="group_name" itemValue="group_cd"
+		></form:select>
+	</div>
+	<div class="span2">
+		<form:errors path="group_cd" cssClass="error"></form:errors>
+	</div>
+</div>
+<div class="row">
+	<div class="label span1">
 		<s:message code="label.mobile"/>
 	</div>
 	<div class="span3">

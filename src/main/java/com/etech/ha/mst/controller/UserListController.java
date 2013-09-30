@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.etech.ha.constants.HaConstants;
 import com.etech.ha.mst.bean.UserListSearchBean;
+import com.etech.ha.mst.form.UserInfoForm;
 import com.etech.ha.mst.form.UserListForm;
 import com.etech.ha.mst.service.UserService;
 import com.etech.ha.peer.UserPeer;
@@ -47,14 +48,13 @@ public class UserListController extends BaseController {
 		
 		userInfo.getSessionMap().put(HaConstants.SESSION_KEY_USER_LIST_SEARCH_KEY, frm.getSearchBean());
 		
-		List<UserPeer> list = userSvc.search(frm.getSearchBean());
+		List<UserPeer> list = userSvc.search(userInfo, frm.getSearchBean());
 		frm.setUserList(list);
 		return mv;
 	}
 	
 	@RequestMapping(params="create", method=RequestMethod.POST)
 	public ModelAndView create(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, @ModelAttribute("command") UserListForm frm) {
-		userInfo.getSessionMap().put(HaConstants.SESSION_KEY_USER_INFO_MODE, HaConstants.MODE_NEW);
 		ModelAndView mv = new ModelAndView("redirect:user_info?empe_num=");
 		return mv;
 	}
@@ -74,7 +74,6 @@ public class UserListController extends BaseController {
 		} else {
 			UserPeer peer = userSvc.searchByEmpeNum(selKey[0]);
 			if (peer!=null) {
-				userInfo.getSessionMap().put(HaConstants.SESSION_KEY_USER_INFO_MODE, HaConstants.MODE_MODIFY);
 				mv = new ModelAndView("redirect:user_info?empe_num="+peer.getEmpe_num());
 			} else {
 				return errorHndl(userInfo, frm, "error.data.is.not.exist");
@@ -104,13 +103,34 @@ public class UserListController extends BaseController {
 		return mv;
 	}
 	
+	@RequestMapping(params="resetPwd", method=RequestMethod.POST)
+	public ModelAndView resetPwd(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, @ModelAttribute("command") UserListForm frm) {
+		if (frm.getSelKey()==null || frm.getSelKey().length==0) {
+			return errorHndl(userInfo, frm, "error.need.select.one");
+		} else if (frm.getSelKey().length>1) {
+			return errorHndl(userInfo, frm, "error.cant.select.more.than.one");
+		} else {
+			UserPeer peer = userSvc.searchByEmpeNum(frm.getSelKey()[0]);
+			if (peer==null) {
+				return errorHndl(userInfo, frm, "error.data.is.not.exist");
+			}
+
+			ModelAndView mv = new ModelAndView("forward:/maintain/pwdreset");
+			UserInfoForm pwdFrm = new UserInfoForm();
+			pwdFrm.setEmpe_num(peer.getEmpe_num());
+			pwdFrm.setEmpe_name(peer.getEmpe_name());
+			mv.addObject("command", pwdFrm);
+			return mv;
+		}
+	}
+	
 	public ModelAndView errorHndl(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, 
 				UserListForm frm, String messageKey) {
 		UserListSearchBean searchBean = (UserListSearchBean) userInfo.getSessionMap().get(HaConstants.SESSION_KEY_USER_LIST_SEARCH_KEY);
 		if (searchBean==null)
 			searchBean = new UserListSearchBean();
 		
-		List<UserPeer> list = userSvc.search(searchBean);
+		List<UserPeer> list = userSvc.search(userInfo, searchBean);
 		frm.setUserList(list);
 		
 		ModelAndView mv = new ModelAndView("userList");

@@ -12,6 +12,7 @@ import com.etech.ha.dao.UserDAO;
 import com.etech.ha.login.bean.LoginForm;
 import com.etech.ha.mst.bean.UserListSearchBean;
 import com.etech.ha.peer.UserPeer;
+import com.etech.system.bean.UserInfo;
 
 @Transactional
 @Service
@@ -33,8 +34,8 @@ public class UserService {
 		return userDao.searchByEmpeNum(empeNum);
 	}
 	
-	public List<UserPeer> search(UserListSearchBean searchBean) {
-		return userDao.search(searchBean);
+	public List<UserPeer> search(UserInfo userInfo, UserListSearchBean searchBean) {
+		return userDao.search(userInfo, searchBean);
 	}
 	
 	public void register(UserPeer peer) {

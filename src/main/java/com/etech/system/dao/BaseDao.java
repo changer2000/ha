@@ -70,8 +70,10 @@ public class BaseDao<T> {
 	
 	public Query createQuery(String hql, Object... params) {
 		Query query = getSession().createQuery(hql);
-		for (int i=0; i<params.length; i++) {
-			query.setParameter(i, params[i]);
+		if (params!=null) {
+			for (int i=0; i<params.length; i++) {
+				query.setParameter(i, params[i]);
+			}
 		}
 		return query;
 	}

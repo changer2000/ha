@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.etech.ha.mst.bean.UserListSearchBean;
 import com.etech.ha.peer.UserPeer;
+import com.etech.system.bean.UserInfo;
 import com.etech.system.dao.BaseDao;
 
 @Repository
@@ -33,7 +34,7 @@ public class UserDAO extends BaseDao<UserPeer> {
 		return this.findPeer("from UserPeer as user where user.empe_num=?", empeNum);
 	}
 	
-	public List<UserPeer> search(UserListSearchBean searchBean) {
+	public List<UserPeer> search(UserInfo userInfo, UserListSearchBean searchBean) {
 		List<Object> paramsList = new ArrayList<Object>();
 		StringBuilder buf = new StringBuilder("from UserPeer a ");
 		boolean bAddedCondition = false;
@@ -87,7 +88,17 @@ public class UserDAO extends BaseDao<UserPeer> {
 			buf.append(" a.email like ?");
 			paramsList.add(searchBean.getEmail() + "%");
 		}
-		
+		if (userInfo.getUserPeer().getAdmin_flg()==null || 0==userInfo.getUserPeer().getAdmin_flg().intValue()) {
+			if (!bAddedCondition) {
+				buf.append(" where ");
+				bAddedCondition = true;
+			} else {
+				buf.append(" and ");
+			}
+			buf.append(" a.empe_num = ?");
+			paramsList.add(userInfo.getUserPeer().getEmpe_num());
+		}
+		buf.append(" order by a.groupPeer.group_cd,a.empe_name ");
 		
 		List<UserPeer> list = (List<UserPeer>) this.createQuery(buf.toString(), paramsList.toArray()).list();
 		return list;
