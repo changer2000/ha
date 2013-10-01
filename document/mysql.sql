@@ -105,7 +105,7 @@ insert into t_group(group_cd, group_name) values ('004', 'Dev-4');
 
 insert into t_user(empe_num,empe_name,pwd,mobile,tel_no,email,group_cd,admin_flg,del_flg,dflt_atndnc_sts_id) values ('1404','li','1234','13524656789','021-12345678',null,null,1,0,1);
 
-insert into  t_attendance_status(atndnc_name) values('休息-在沪');
+insert into  t_attendance_status(1,atndnc_name) values('休息-在沪');
 
 
 ----------------------------------- 以下为参考的例子
