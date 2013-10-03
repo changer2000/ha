@@ -11,6 +11,16 @@
 <tagclass>com.etech.ha.taglibs.SessionGetTag</tagclass>
 <bodycontent>empty</bodycontent>
 <attribute>
+	<name>subSystem</name>
+	<required>true</required>
+	<rtexprvalue>true</rtexprvalue>
+</attribute>
+<attribute>
+	<name>module</name>
+	<required>true</required>
+	<rtexprvalue>true</rtexprvalue>
+</attribute>
+<attribute>
 	<name>key</name>
 	<required>true</required>
 	<rtexprvalue>true</rtexprvalue>

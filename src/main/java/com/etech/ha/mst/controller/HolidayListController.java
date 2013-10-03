@@ -21,6 +21,7 @@ import com.etech.ha.peer.HolidayPeer;
 import com.etech.system.bean.MessagesBean;
 import com.etech.system.bean.UserInfo;
 import com.etech.system.controller.BaseController;
+import com.etech.system.utils.WebUtils;
 
 @Controller
 @SessionAttributes(value="SESSION_KEY_USER_INFO")
@@ -55,8 +56,7 @@ public class HolidayListController extends BaseController {
 	@RequestMapping(params="search", method=RequestMethod.POST)
 	public ModelAndView search(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, @ModelAttribute("command") HolidayListForm frm) {
 		ModelAndView mv = new ModelAndView("hldyListList");
-		userInfo.getSessionMap().put(HaConstants.SESSION_KEY_HOLIDAY_LIST_SEARCH_KEY, frm.getSearchBean());
-		
+		WebUtils.setSessionAttribute(userInfo, HaConstants.SUB_SYSTEM_MST, HaConstants.MODULE_HOLIDAY_LIST, HaConstants.SESSION_KEY_HOLIDAY_LIST_SEARCH_KEY, frm.getSearchBean());
 		List<HolidayListPeer> list = hldyListSvc.search(frm.getSearchBean());
 		frm.setList(list);
 		//mv.addObject("command", frm);

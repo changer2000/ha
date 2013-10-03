@@ -29,6 +29,7 @@ import com.etech.ha.peer.HolidayPeer;
 import com.etech.system.bean.MessagesBean;
 import com.etech.system.bean.UserInfo;
 import com.etech.system.controller.BaseController;
+import com.etech.system.utils.WebUtils;
 
 @Controller
 @RequestMapping("/maintain/holiday_info")
@@ -53,8 +54,7 @@ public class HolidayListInfoController extends BaseController {
 	public ModelAndView back(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo) {
 		ModelAndView mv = new ModelAndView("hldyListList");
 		HolidayListSearchBean searchBean = (HolidayListSearchBean)
-				userInfo.getSessionMap().get(HaConstants.SESSION_KEY_HOLIDAY_LIST_SEARCH_KEY);
-		
+				WebUtils.getSessionAttribute(userInfo, HaConstants.SUB_SYSTEM_MST, HaConstants.MODULE_HOLIDAY_LIST, HaConstants.SESSION_KEY_HOLIDAY_LIST_SEARCH_KEY);
 		List<HolidayListPeer> list = hldyListSvc.search(searchBean);
 		HolidayListForm frm = new HolidayListForm();
 		frm.setList(list);

@@ -7,6 +7,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 import com.etech.ha.constants.HaConstants;
 import com.etech.system.bean.UserInfo;
+import com.etech.system.utils.WebUtils;
 
 public class SessionGetTag extends TagSupport {
 
@@ -38,8 +39,8 @@ public class SessionGetTag extends TagSupport {
     /**
      * subsystem,module,page,key are condition of get sessionvalue.
      */
-    //protected String subsystem = "";
-    //protected String module = "";
+    protected String subSystem = "";
+    protected String module = "";
     //protected String page = "";
     protected String key;
     public String getKey() {
@@ -57,7 +58,7 @@ public class SessionGetTag extends TagSupport {
     public int doStartTag() throws JspException {
 
         if (id == null || key == null) {
-            throw new JspException("toScope is error!");
+            throw new JspException("id or key is error!");
         }
 
         // Expose this value as a scripting variable
@@ -70,10 +71,23 @@ public class SessionGetTag extends TagSupport {
 		
         Object value = null;
 		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-		value = ((UserInfo) request.getSession().getAttribute(HaConstants.SESSION_KEY_USER_INFO)).getSessionMap().get(key);
+		value = ((UserInfo) request.getSession().getAttribute(HaConstants.SESSION_KEY_USER_INFO))
+				.getSessionMap().get(WebUtils.generateKey(subSystem, module, key));
         if (value!=null){
             pageContext.setAttribute(id, value, inScope);
         }
         return SKIP_BODY;
     }
+	public String getSubSystem() {
+		return subSystem;
+	}
+	public void setSubSystem(String subSystem) {
+		this.subSystem = subSystem;
+	}
+	public String getModule() {
+		return module;
+	}
+	public void setModule(String module) {
+		this.module = module;
+	}
 }
