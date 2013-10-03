@@ -105,7 +105,7 @@ insert into t_group(group_cd, group_name) values ('004', 'Dev-4');
 
 insert into t_user(empe_num,empe_name,pwd,mobile,tel_no,email,group_cd,admin_flg,del_flg,dflt_atndnc_sts_id) values ('1404','li','1234','13524656789','021-12345678',null,null,1,0,1);
 
-insert into  t_attendance_status(1,atndnc_name) values('休息-在沪');
+insert into  t_attendance_status(id,atndnc_name,in_shanghai) values(1,'休息',1);
 
 
 ----------------------------------- 以下为参考的例子
@@ -168,3 +168,10 @@ mysql> ALTER TABLE table_name CHANGE old_field_name new_field_name field_type;
 
 删除字段：549830479
 mysql> ALTER TABLE table_name DROP field_name; 
+
+SHOW VARIABLES LIKE 'character%';
+SET character_set_client = utf8;  
+SET character_set_connection = utf8;  
+SET character_set_database = utf8;  
+SET character_set_results = utf8;  
+SET character_set_server = utf8;
