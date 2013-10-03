@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.etech.ha.constants.HaConstants;
 import com.etech.ha.dao.UserDAO;
 import com.etech.ha.login.bean.LoginForm;
 import com.etech.ha.mst.bean.UserListSearchBean;
+import com.etech.ha.mst.form.PwdInfoForm;
 import com.etech.ha.peer.UserPeer;
 import com.etech.system.bean.UserInfo;
 
@@ -50,6 +50,10 @@ public class UserService {
 				userDao.delete(peer);
 			}
 		}
+	}
+	
+	public void changePwd(PwdInfoForm frm) {
+		userDao.updatePwd(frm);
 	}
 	
 	

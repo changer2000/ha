@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.etech.ha.constants.HaConstants;
-import com.etech.ha.mst.bean.UserListSearchBean;
-import com.etech.ha.mst.form.UserListForm;
 import com.etech.ha.mst.service.AttendanceStatusService;
 import com.etech.ha.mst.service.GroupService;
 import com.etech.ha.mst.service.UserService;
@@ -91,15 +89,7 @@ public class UserInfoContorller extends BaseController {
 	
 	@RequestMapping(params="back", method=RequestMethod.POST)
 	public ModelAndView back(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo) {
-		UserListForm frm = new UserListForm();
-		ModelAndView mv = userListController.errorHndl(userInfo, frm, null);
-		
-		UserListSearchBean searchBean = (UserListSearchBean) userInfo.getSessionMap().get(HaConstants.SESSION_KEY_USER_LIST_SEARCH_KEY);
-		if (searchBean==null)
-			searchBean = new UserListSearchBean();
-		frm.setSearchBean(searchBean);
-		mv.addObject("command", frm);
-		
+		ModelAndView mv = new ModelAndView("forward:/maintain/user_list");
 		return mv;
 	}
 	

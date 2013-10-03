@@ -16,13 +16,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.etech.ha.constants.HaConstants;
 import com.etech.ha.mst.bean.UserListSearchBean;
-import com.etech.ha.mst.form.UserInfoForm;
+import com.etech.ha.mst.form.PwdInfoForm;
 import com.etech.ha.mst.form.UserListForm;
 import com.etech.ha.mst.service.UserService;
 import com.etech.ha.peer.UserPeer;
 import com.etech.system.bean.MessagesBean;
 import com.etech.system.bean.UserInfo;
 import com.etech.system.controller.BaseController;
+import com.etech.system.utils.WebUtils;
 
 @Controller
 @RequestMapping("/maintain/user_list")
@@ -39,15 +40,28 @@ public class UserListController extends BaseController {
 		mv.addObject("command", frm);
 		return mv;
 	}
-
+	
 	@RequestMapping(method=RequestMethod.POST)
+	public ModelAndView show4Post(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo) {
+		UserListForm frm = new UserListForm();
+		ModelAndView mv = errorHndl(userInfo, frm, null);
+		
+		UserListSearchBean searchBean = (UserListSearchBean) WebUtils.getSessionAttribute(userInfo, HaConstants.SUB_SYSTEM_MST, HaConstants.MODULE_USER_LIST, HaConstants.SESSION_KEY_USER_LIST_SEARCH_KEY);
+		if (searchBean==null)
+			searchBean = new UserListSearchBean();
+		frm.setSearchBean(searchBean);
+		mv.addObject("command", frm);
+		
+		return mv;
+	}
+
+	@RequestMapping(params="search", method=RequestMethod.POST)
 	public ModelAndView search(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, @Valid @ModelAttribute("command") UserListForm frm, BindingResult result) {
 		ModelAndView mv = new ModelAndView("userList");
 		if (result.hasErrors())
 			return mv;
 		
-		userInfo.getSessionMap().put(HaConstants.SESSION_KEY_USER_LIST_SEARCH_KEY, frm.getSearchBean());
-		
+		WebUtils.setSessionAttribute(userInfo, HaConstants.SUB_SYSTEM_MST, HaConstants.MODULE_USER_LIST, HaConstants.SESSION_KEY_USER_LIST_SEARCH_KEY, frm.getSearchBean());
 		List<UserPeer> list = userSvc.search(userInfo, frm.getSearchBean());
 		frm.setUserList(list);
 		return mv;
@@ -115,18 +129,24 @@ public class UserListController extends BaseController {
 				return errorHndl(userInfo, frm, "error.data.is.not.exist");
 			}
 
-			ModelAndView mv = new ModelAndView("forward:/maintain/pwdreset");
-			UserInfoForm pwdFrm = new UserInfoForm();
+			ModelAndView mv = new ModelAndView("forward:/maintain/pwd_info");
+			//forward:/maintain/pwdreset?empe_num=test&empe_name=testname  只有这样才可以将数据以parameter方式传入下一个页面
+			
+			
+			PwdInfoForm pwdFrm = new PwdInfoForm();
 			pwdFrm.setEmpe_num(peer.getEmpe_num());
 			pwdFrm.setEmpe_name(peer.getEmpe_name());
-			mv.addObject("command", pwdFrm);
+			WebUtils.setSessionAttribute(userInfo, HaConstants.SUB_SYSTEM_MST, 
+					HaConstants.MODULE_PWD_RESET_INFO, HaConstants.FRM_PWDRESET,
+					pwdFrm);
+			
 			return mv;
 		}
 	}
 	
 	public ModelAndView errorHndl(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, 
 				UserListForm frm, String messageKey) {
-		UserListSearchBean searchBean = (UserListSearchBean) userInfo.getSessionMap().get(HaConstants.SESSION_KEY_USER_LIST_SEARCH_KEY);
+		UserListSearchBean searchBean = (UserListSearchBean) WebUtils.getSessionAttribute(userInfo, HaConstants.SUB_SYSTEM_MST, HaConstants.MODULE_USER_LIST, HaConstants.SESSION_KEY_USER_LIST_SEARCH_KEY);
 		if (searchBean==null)
 			searchBean = new UserListSearchBean();
 		

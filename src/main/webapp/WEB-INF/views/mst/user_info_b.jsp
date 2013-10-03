@@ -1,6 +1,8 @@
 <%@page import="java.util.List" %>
 <%@ include file="/WEB-INF/views/common/taglibs.jsp"%>
 <ha:sessionget id="gMode"
+	subSystem="<%=com.etech.ha.constants.HaConstants.SUB_SYSTEM_MST%>"
+	module="<%=com.etech.ha.constants.HaConstants.MODULE_USER_INFO%>"
 	key="<%=com.etech.ha.constants.HaConstants.SESSION_KEY_USER_INFO_MODE%>"
 	toScope="page" />
 <script type="text/javascript">

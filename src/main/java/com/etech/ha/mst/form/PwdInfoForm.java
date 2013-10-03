@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class UserInfoForm implements Serializable {
+public class PwdInfoForm implements Serializable {
 
 	private static final long serialVersionUID = 7752772155984684231L;
 	
