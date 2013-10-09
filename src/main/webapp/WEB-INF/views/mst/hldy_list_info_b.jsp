@@ -14,8 +14,7 @@
 		<s:message code="label.holiday.name"/>
 	</td>
 	<td class='span2'>
-		<%List hldyList = (List) pageContext.getAttribute("hldyOptions", pageContext.REQUEST_SCOPE); %>
-		<form:select path="holidayPeerId" items="<%= hldyList %>"
+		<form:select path="holidayPeerId" items="hldyOptions"
 			itemLabel="name" itemValue="id" cssClass="span2"/><form:errors path="holidayPeerId" cssClass="error"/>
 	</td>
 	<td class='span2 label'>

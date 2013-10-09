@@ -33,7 +33,7 @@
 		<s:message code="label.group.name"></s:message>
 	</div>
 	<div class="span3">
-		<form:select path="group_cd" items="<%=(List) pageContext.getAttribute(\"groupOptions\", pageContext.REQUEST_SCOPE)%>"
+		<form:select path="group_cd" items="groupOptions"
 			itemLabel="group_name" itemValue="group_cd"
 		></form:select>
 	</div>
@@ -79,7 +79,7 @@
 		<s:message code="label.dflt_atndnc_sts_id"/>
 	</div>
 	<div class="span3">
-		<form:select path="dflt_atndnc_sts_id" items="<%=(List) pageContext.getAttribute(\"atndcStsOptions\", pageContext.REQUEST_SCOPE)%>"
+		<form:select path="dflt_atndnc_sts_id" items="atndcStsOptions"
 			itemLabel="atndnc_name" itemValue="id" cssClass="span2"
 		>	
 		</form:select>

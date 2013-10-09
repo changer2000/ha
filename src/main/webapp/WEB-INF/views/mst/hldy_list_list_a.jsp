@@ -13,7 +13,7 @@
 		<s:message code="label.holiday.name"></s:message>
 	</td>
 	<td class="span4">
-		<form:select path="searchBean.hldy_id" items="<%=(List) pageContext.getAttribute(\"hldyOptions\", pageContext.REQUEST_SCOPE)%>"
+		<form:select path="searchBean.hldy_id" items="hldyOptions"
 			itemLabel="name" itemValue="id" cssClass="span2"
 		>	
 		</form:select>

@@ -176,6 +176,17 @@ if (sc.getEffectiveMajorVersion() == 2 && sc.getEffectiveMinorVersion() < 4)，�
 	也就是意味着<form:select>里的items="${***}"基本上是不能用了
 
 
+后来找到一个不是很好看的写法，可以解决问题：
+	<%List hldyList = (List) pageContext.getAttribute("hldyOptions", pageContext.REQUEST_SCOPE); %>
+		<form:select path="holidayPeerId" items="<%= hldyList %>"
+			itemLabel="name" itemValue="id" cssClass="span2"/><form:errors path="holidayPeerId" cssClass="error"/>
+
+
+今天，修改了springmvc工程的SelectTag.java文件的setItems(Object items)，以后只要传入变量名就可以了
+	<form:select path="searchBean.hldy_id" items="hldyOptions"
+			itemLabel="name" itemValue="id" cssClass="span2"
+		>
+
 8.类似于struts中的BaseAction，可以把进入页面的代码统一写在一处，用以下方法进入
 UserListController.java中：
 mv = new ModelAndView("redirect:user_info?empe_num="+peer.getEmpe_num());
