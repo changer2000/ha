@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -21,6 +22,8 @@ public class ZipCompress {
 		FileOutputStream f = new FileOutputStream(file);
 		ZipOutputStream zos = new ZipOutputStream(f);
 		BufferedOutputStream out = new BufferedOutputStream(zos);
+		//一个stream转writer的例子： OutputStreamWriter osw = new OutputStreamWriter(zos);
+		
 		for (String arg :args) {
 			System.out.println("Writing file " + arg);
 			
