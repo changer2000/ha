@@ -39,10 +39,9 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 	
-	<beans:bean id="userArgumentResolver" class="com.etech.system.resolver.UserArgumentResolver">
-	</beans:bean>
 	
-	<!-- org.springframework.web.servlet.mvc.annotation.OwnAnnotationMethodHandlerAdapter -->
+	
+	<!-- org.springframework.web.servlet.mvc.annotation.OwnAnnotationMethodHandlerAdapter 
 	<beans:bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
 		<beans:property name="customArgumentResolvers">
 			<beans:list>
@@ -50,6 +49,9 @@
 			</beans:list>
 		</beans:property>
 	</beans:bean>
+	<beans:bean id="userArgumentResolver" class="com.etech.system.resolver.UserArgumentResolver">
+	</beans:bean>
+	-->
 	
 	<!-- Imports user-defined @Controller beans that process client requests -->
 	<beans:import resource="controllers.xml"/>

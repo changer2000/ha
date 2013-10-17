@@ -197,6 +197,50 @@ public String handle() {
     // return "/hello" => 同 return "hello"  
     return "forward:/hello";  
 } 
+
+
+9.以前在每个Controller里，为了使用UserInfo，每次都是在Controller类的头部定义一个
+import org.springframework.web.bind.annotation.SessionAttributes;
+....
+@SessionAttributes(value="SESSION_KEY_USER_INFO")
+***Controller {
+
+}
+
+然后在Controller的方法中，声明如下使用：
+public ModelAndView register(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, 
+	..... ) {
+	
+}
+
+
+感觉这样做很不方便，后来参考了
+http://lvdong5830.iteye.com/blog/1508987：
+	描述Session中的User是怎么被放到具体方法里的，很经典。不过是针对Spring2.5的,所以所说的方法三已经不能用了。
+	按照这个链接给出的思路，做了一个解决方法，即com.etech.system.resolver.UserArgumentResolver
+		和servlet-context.xml文件中的：
+			<beans:bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+				<beans:property name="customArgumentResolvers">
+					<beans:list>
+						<beans:ref bean="userArgumentResolver"/>	
+					</beans:list>
+				</beans:property>
+			</beans:bean>
+			<beans:bean id="userArgumentResolver" class="com.etech.system.resolver.UserArgumentResolver">
+			</beans:bean>
+		发现，日期型的数据，无法设定。会报Date对象创建错
+	
+后来又参考了http://starscream.iteye.com/blog/1098880：提出了新的方法，很合适目前这个问题的解决。
+	按照这个链接给出的思路，做了一个解决方法，即com.etech.system.resolver.UserArgument2Resolver
+		和controllers.xml 文件中的：
+			<mvc:annotation-driven validator="validator" conversion-service="conversion-service">
+				<mvc:argument-resolvers>
+					<bean class="com.etech.system.resolver.UserArgument2Resolver"/>
+				</mvc:argument-resolvers>	
+			</mvc:annotation-driven>
+		顺带发现controllers.xml头部定义的xsd是3.0的，不支持上面的语法，要改成3.2才行。
+		然后，把所有的Controller的SessionAttributes和“@ModelAttribute("SESSION_KEY_USER_INFO")”都去掉就可以了
+
 	
 ------------------------------------------	
 1118.css的一些基本概念：
