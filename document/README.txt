@@ -229,6 +229,7 @@ http://lvdong5830.iteye.com/blog/1508987：
 			<beans:bean id="userArgumentResolver" class="com.etech.system.resolver.UserArgumentResolver">
 			</beans:bean>
 		发现，日期型的数据，无法设定。会报Date对象创建错
+		
 	
 后来又参考了http://starscream.iteye.com/blog/1098880：提出了新的方法，很合适目前这个问题的解决。
 	按照这个链接给出的思路，做了一个解决方法，即com.etech.system.resolver.UserArgument2Resolver
@@ -241,6 +242,10 @@ http://lvdong5830.iteye.com/blog/1508987：
 		顺带发现controllers.xml头部定义的xsd是3.0的，不支持上面的语法，要改成3.2才行。
 		然后，把所有的Controller的SessionAttributes和“@ModelAttribute("SESSION_KEY_USER_INFO")”都去掉就可以了
 
+前一种方法，是实现HandlerMethodArgumentResolver接口，看api文档，Resolves a method parameter into an argument value from a given request.
+后一种方法，是事项WebArgumentResolver接口，看api文档，Resolve an argument for the given handler method parameter within the given web request.
+比较2者，猜测前一种方法会在数据绑定之前起作用，导致屏蔽了后面的spring数据parse/绑定，导致Date对象创建错。
+而后一种方法，明确指定了传入handle（即Controller中的具体方法）的参数时起作用，估计切点更明确。
 	
 ------------------------------------------	
 1118.css的一些基本概念：
