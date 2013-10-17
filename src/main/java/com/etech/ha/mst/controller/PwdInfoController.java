@@ -22,14 +22,14 @@ import com.etech.system.utils.WebUtils;
 
 @Controller
 @RequestMapping("maintain/pwd_info")
-@SessionAttributes(value="SESSION_KEY_USER_INFO")
+//@SessionAttributes(value="SESSION_KEY_USER_INFO")
 public class PwdInfoController extends BaseController {
 	
 	@Autowired
 	private UserService userSvc;
 	
 	@RequestMapping(method=RequestMethod.POST)
-	public ModelAndView show(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo) {
+	public ModelAndView show(UserInfo userInfo) {
 		PwdInfoForm form = (PwdInfoForm) WebUtils.getSessionAttribute(userInfo, 
 				HaConstants.SUB_SYSTEM_MST, HaConstants.MODULE_PWD_RESET_INFO,
 				HaConstants.FRM_PWDRESET);
@@ -47,7 +47,7 @@ public class PwdInfoController extends BaseController {
 	}
 	
 	@RequestMapping(params="register", method=RequestMethod.POST)
-	public ModelAndView register(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo,
+	public ModelAndView register(UserInfo userInfo,
 			@ModelAttribute("command") @Valid PwdInfoForm frm, BindingResult result) {
 		ModelAndView mv = new ModelAndView("pwdInfo");
 		if (result.hasErrors())

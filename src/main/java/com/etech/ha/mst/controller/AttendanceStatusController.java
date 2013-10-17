@@ -24,7 +24,7 @@ import com.etech.system.controller.BaseController;
 
 @Controller
 //@SessionAttributes(value="menu")
-@SessionAttributes(value="SESSION_KEY_USER_INFO")
+//@SessionAttributes(value="SESSION_KEY_USER_INFO")
 @RequestMapping("/maintain/adtnsSts")
 public class AttendanceStatusController extends BaseController {
 	
@@ -50,7 +50,7 @@ public class AttendanceStatusController extends BaseController {
 	}
 	
 	@RequestMapping(params="modify", method=RequestMethod.POST)
-	public ModelAndView modify(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, String[] id) {
+	public ModelAndView modify(UserInfo userInfo, String[] id) {
 		ModelAndView mv = new ModelAndView();
 		
 		if (id==null || id.length==0) {
@@ -74,7 +74,7 @@ public class AttendanceStatusController extends BaseController {
 	}
 	
 	@RequestMapping(params="delete")
-	public ModelAndView delete(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, String[] id) {
+	public ModelAndView delete(UserInfo userInfo, String[] id) {
 		ModelAndView mv = new ModelAndView();
 		
 		if (id==null || id.length==0) {
@@ -90,7 +90,7 @@ public class AttendanceStatusController extends BaseController {
 	}
 	
 	@RequestMapping(params="register", method=RequestMethod.POST)
-	public ModelAndView register(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, @Valid @ModelAttribute(value="command") AttendanceStatusPeer peer, BindingResult result) {
+	public ModelAndView register(UserInfo userInfo, @Valid @ModelAttribute(value="command") AttendanceStatusPeer peer, BindingResult result) {
 		ModelAndView mv = new ModelAndView();
 		if (!result.hasErrors()) {
 			atndcStsSvc.reisger(peer);

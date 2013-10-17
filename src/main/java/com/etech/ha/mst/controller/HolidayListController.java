@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
+//import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.etech.ha.constants.HaConstants;
@@ -24,7 +24,6 @@ import com.etech.system.controller.BaseController;
 import com.etech.system.utils.WebUtils;
 
 @Controller
-@SessionAttributes(value="SESSION_KEY_USER_INFO")
 @RequestMapping("/maintain/holiday_list")
 public class HolidayListController extends BaseController {
 	
@@ -54,7 +53,7 @@ public class HolidayListController extends BaseController {
 	}
 	
 	@RequestMapping(params="search", method=RequestMethod.POST)
-	public ModelAndView search(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, @ModelAttribute("command") HolidayListForm frm) {
+	public ModelAndView search(UserInfo userInfo, @ModelAttribute("command") HolidayListForm frm) {
 		ModelAndView mv = new ModelAndView("hldyListList");
 		WebUtils.setSessionAttribute(userInfo, HaConstants.SUB_SYSTEM_MST, HaConstants.MODULE_HOLIDAY_LIST, HaConstants.SESSION_KEY_HOLIDAY_LIST_SEARCH_KEY, frm.getSearchBean());
 		List<HolidayListPeer> list = hldyListSvc.search(frm.getSearchBean());
@@ -73,7 +72,7 @@ public class HolidayListController extends BaseController {
 	}
 	
 	@RequestMapping(params="modify", method=RequestMethod.POST)
-	public ModelAndView modify(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, @ModelAttribute("command") HolidayListForm frm) {
+	public ModelAndView modify(UserInfo userInfo, @ModelAttribute("command") HolidayListForm frm) {
 		ModelAndView mv = null;
 		
 		String[] selKey = frm.getSelKey();
@@ -101,7 +100,7 @@ public class HolidayListController extends BaseController {
 	}
 	
 	@RequestMapping(params="delete", method=RequestMethod.POST)
-	public ModelAndView delete(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, @ModelAttribute("command") HolidayListForm frm) {
+	public ModelAndView delete(UserInfo userInfo, @ModelAttribute("command") HolidayListForm frm) {
 		ModelAndView mv = null;
 		if (frm.getSelKey()==null || frm.getSelKey().length==0) {
 			mv = search(userInfo, frm);

@@ -28,7 +28,7 @@ import com.etech.system.controller.BaseController;
 
 @Controller
 @RequestMapping("maintain/user_info")
-@SessionAttributes(value="SESSION_KEY_USER_INFO")
+//@SessionAttributes(value="SESSION_KEY_USER_INFO")
 public class UserInfoContorller extends BaseController {
 	
 	@Autowired
@@ -44,7 +44,7 @@ public class UserInfoContorller extends BaseController {
 	private UserListController userListController;
 	
 	@ModelAttribute("atndcStsOptions")
-	public List<AttendanceStatusPeer> optionsList(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo) {
+	public List<AttendanceStatusPeer> optionsList(UserInfo userInfo) {
 		List<AttendanceStatusPeer> list = atndcStsSvc.loadAll();
 		if (list!=null && list.size()>0) {
 			String lblInShanghai = "option.in.shanghai";
@@ -62,12 +62,12 @@ public class UserInfoContorller extends BaseController {
 	}
 	
 	@ModelAttribute("groupOptions")
-	public List<GroupPeer> groupOptionsList(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo) {
+	public List<GroupPeer> groupOptionsList(UserInfo userInfo) {
 		return groupSvc.searchAll();
 	}
 	
 	@RequestMapping(method={RequestMethod.GET})
-	public ModelAndView show(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, @RequestParam String empe_num) {
+	public ModelAndView show(UserInfo userInfo, @RequestParam String empe_num) {
 		if (isError(userInfo, empe_num)) {
 			return new ModelAndView("redirect:/logout");
 		} else {
@@ -88,13 +88,13 @@ public class UserInfoContorller extends BaseController {
 	}
 	
 	@RequestMapping(params="back", method=RequestMethod.POST)
-	public ModelAndView back(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo) {
+	public ModelAndView back(UserInfo userInfo) {
 		ModelAndView mv = new ModelAndView("forward:/maintain/user_list");
 		return mv;
 	}
 	
 	@RequestMapping(params="register", method=RequestMethod.POST)
-	public ModelAndView register(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, 
+	public ModelAndView register(UserInfo userInfo, 
 			@ModelAttribute("command") @Valid UserPeer peer,
 			BindingResult result) {
 		if (isError(userInfo, peer.getEmpe_num())) {

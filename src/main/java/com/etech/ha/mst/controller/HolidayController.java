@@ -24,7 +24,7 @@ import com.etech.system.controller.BaseController;
 
 @Controller
 @RequestMapping("/maintain/holiday")
-@SessionAttributes(value="SESSION_KEY_USER_INFO")
+//@SessionAttributes(value="SESSION_KEY_USER_INFO")
 public class HolidayController extends BaseController {
 	
 	private static Log logger = LogFactory.getLog(HolidayController.class);
@@ -48,7 +48,7 @@ public class HolidayController extends BaseController {
 	}
 	
 	@RequestMapping(params="modify", method=RequestMethod.POST)
-	public ModelAndView modify(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, String[] id) {
+	public ModelAndView modify(UserInfo userInfo, String[] id) {
 		ModelAndView mv = new ModelAndView();
 		
 		if (id==null || id.length==0) {
@@ -72,7 +72,7 @@ public class HolidayController extends BaseController {
 	}
 	
 	@RequestMapping(params="delete")
-	public ModelAndView delete(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, String[] id) {
+	public ModelAndView delete(UserInfo userInfo, String[] id) {
 		ModelAndView mv = new ModelAndView();
 		if (id==null || id.length==0) {
 			mv = list();
@@ -87,7 +87,7 @@ public class HolidayController extends BaseController {
 	}
 	
 	@RequestMapping(params="register")
-	public ModelAndView register(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, @Valid @ModelAttribute(value="command") HolidayPeer peer, BindingResult result) {
+	public ModelAndView register(UserInfo userInfo, @Valid @ModelAttribute(value="command") HolidayPeer peer, BindingResult result) {
 		ModelAndView mv = new ModelAndView("hldyInfo");
 		if (!result.hasErrors()) {
 			hldySvc.register(peer);

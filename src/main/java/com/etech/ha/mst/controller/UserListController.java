@@ -27,7 +27,7 @@ import com.etech.system.utils.WebUtils;
 
 @Controller
 @RequestMapping("/maintain/user_list")
-@SessionAttributes("SESSION_KEY_USER_INFO")
+//@SessionAttributes("SESSION_KEY_USER_INFO")
 public class UserListController extends BaseController {
 	
 	@Autowired
@@ -42,7 +42,7 @@ public class UserListController extends BaseController {
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
-	public ModelAndView show4Post(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo) {
+	public ModelAndView show4Post(UserInfo userInfo) {
 		UserListForm frm = new UserListForm();
 		ModelAndView mv = errorHndl(userInfo, frm, null);
 		
@@ -56,7 +56,7 @@ public class UserListController extends BaseController {
 	}
 
 	@RequestMapping(params="search", method=RequestMethod.POST)
-	public ModelAndView search(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, @Valid @ModelAttribute("command") UserListForm frm, BindingResult result) {
+	public ModelAndView search(UserInfo userInfo, @Valid @ModelAttribute("command") UserListForm frm, BindingResult result) {
 		ModelAndView mv = new ModelAndView("userList");
 		if (result.hasErrors())
 			return mv;
@@ -68,13 +68,13 @@ public class UserListController extends BaseController {
 	}
 	
 	@RequestMapping(params="create", method=RequestMethod.POST)
-	public ModelAndView create(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, @ModelAttribute("command") UserListForm frm) {
+	public ModelAndView create(UserInfo userInfo, @ModelAttribute("command") UserListForm frm) {
 		ModelAndView mv = new ModelAndView("redirect:user_info?empe_num=");
 		return mv;
 	}
 	
 	@RequestMapping(params="modify", method=RequestMethod.POST)
-	public ModelAndView modify(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, @Valid @ModelAttribute("command") UserListForm frm, BindingResult result) {
+	public ModelAndView modify(UserInfo userInfo, @Valid @ModelAttribute("command") UserListForm frm, BindingResult result) {
 		if (result.hasErrors()) {
 			return errorHndl(userInfo, frm, null);
 		}
@@ -97,7 +97,7 @@ public class UserListController extends BaseController {
 	}
 
 	@RequestMapping(params="delete", method=RequestMethod.POST)
-	public ModelAndView delete(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, @Valid @ModelAttribute("command") UserListForm frm, BindingResult result) {
+	public ModelAndView delete(UserInfo userInfo, @Valid @ModelAttribute("command") UserListForm frm, BindingResult result) {
 		if (result.hasErrors()) {
 			return errorHndl(userInfo, frm, null);
 		}
@@ -118,7 +118,7 @@ public class UserListController extends BaseController {
 	}
 	
 	@RequestMapping(params="resetPwd", method=RequestMethod.POST)
-	public ModelAndView resetPwd(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, @ModelAttribute("command") UserListForm frm) {
+	public ModelAndView resetPwd(UserInfo userInfo, @ModelAttribute("command") UserListForm frm) {
 		if (frm.getSelKey()==null || frm.getSelKey().length==0) {
 			return errorHndl(userInfo, frm, "error.need.select.one");
 		} else if (frm.getSelKey().length>1) {
@@ -144,7 +144,7 @@ public class UserListController extends BaseController {
 		}
 	}
 	
-	public ModelAndView errorHndl(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, 
+	public ModelAndView errorHndl(UserInfo userInfo, 
 				UserListForm frm, String messageKey) {
 		UserListSearchBean searchBean = (UserListSearchBean) WebUtils.getSessionAttribute(userInfo, HaConstants.SUB_SYSTEM_MST, HaConstants.MODULE_USER_LIST, HaConstants.SESSION_KEY_USER_LIST_SEARCH_KEY);
 		if (searchBean==null)

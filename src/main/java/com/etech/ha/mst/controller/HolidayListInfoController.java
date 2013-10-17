@@ -33,7 +33,7 @@ import com.etech.system.utils.WebUtils;
 
 @Controller
 @RequestMapping("/maintain/holiday_info")
-@SessionAttributes(value="SESSION_KEY_USER_INFO")
+//@SessionAttributes(value="SESSION_KEY_USER_INFO")
 public class HolidayListInfoController extends BaseController {
 	
 	@Autowired
@@ -51,7 +51,7 @@ public class HolidayListInfoController extends BaseController {
 	}
 	
 	@RequestMapping(params="back", method=RequestMethod.POST)
-	public ModelAndView back(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo) {
+	public ModelAndView back(UserInfo userInfo) {
 		ModelAndView mv = new ModelAndView("hldyListList");
 		HolidayListSearchBean searchBean = (HolidayListSearchBean)
 				WebUtils.getSessionAttribute(userInfo, HaConstants.SUB_SYSTEM_MST, HaConstants.MODULE_HOLIDAY_LIST, HaConstants.SESSION_KEY_HOLIDAY_LIST_SEARCH_KEY);
@@ -63,7 +63,7 @@ public class HolidayListInfoController extends BaseController {
 	}
 	
 	@RequestMapping(params="register", method=RequestMethod.POST)
-	public ModelAndView register(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, @Valid @ModelAttribute(value="command") HolidayListPeer listPeer, BindingResult result) {
+	public ModelAndView register(UserInfo userInfo, @Valid @ModelAttribute(value="command") HolidayListPeer listPeer, BindingResult result) {
 		ModelAndView mv = new ModelAndView("hldyListInfo");
 		if (!result.hasErrors()) {
 			//logic validate date
@@ -88,7 +88,7 @@ public class HolidayListInfoController extends BaseController {
 		return mv;
 	}
 	
-	private MessagesBean validateRegister(@ModelAttribute("SESSION_KEY_USER_INFO") UserInfo userInfo, HolidayListPeer listPeer, BindingResult result) {
+	private MessagesBean validateRegister(UserInfo userInfo, HolidayListPeer listPeer, BindingResult result) {
 		MessagesBean msgBean = new MessagesBean();
 		if (listPeer.getStart_dt().compareTo(listPeer.getEnd_dt())>0) {
 			result.rejectValue("start_dt", "error.date.relation");
