@@ -1,0 +1,50 @@
+org.springframework.web：
+	WebApplicationInitializer <-----|
+	SpringServletContainerInitializer：猜测这个是spring web启动的起点
+
+org.springframework.web.accept
+
+org.springframework.web.bind
+	EscapedErrors:有很多rejectValue(......)方法。Errors wrapper that adds automatic HTML escaping to the wrapped instance, for convenient usage in HTML views. Can be retrieved easily via RequestContext's getErrors method. 
+	ServletRequestDataBinder
+		例子：
+			 MyBean myBean = new MyBean();
+			 // apply binder to custom target object
+			 ServletRequestDataBinder binder = new ServletRequestDataBinder(myBean);
+			 // register custom editors, if desired
+			 binder.registerCustomEditor(...);
+			 // trigger actual binding of request parameters
+			 binder.bind(request);
+			 // optionally evaluate binding errors
+			 Errors errors = binder.getErrors();
+	ServletRequestParameterPropertyValues
+	ServletRequestUtils，里面有很多从request里得到值的方法
+	WebDataBinder（子类：PortletRequestDataBinder, ServletRequestDataBinder, WebRequestDataBinder）
+
+org.springframework.web.bind.annotation.support
+	HandlerMethodInvoker
+	HandlerMethodResolver
+	
+	
+org.springframework.web.bind.annotation：	里面定义了很多annotation，可以在很多地方使用
+	ExceptionHandler：被它声明的方法，可以捕获特定的exception
+	MatrixVariable
+	ModelAttribute
+	RequestHeader
+	RequestMapping
+	RequestBody: 用于没有上传文件的form
+	RequestPart：用于有上传文件的form。@RequestParam annotation can also be used to associate the part of a "multipart/form-data" request with a method argument supporting the same method argument types. The main difference is that when the method argument is not a String, @RequestParam relies on type conversion via a registered Converter or PropertyEditor while @RequestPart relies on HttpMessageConverters taking into consideration the 'Content-Type' header of the request part. @RequestParam is likely to be used with name-value form fields while @RequestPart is likely to be used with parts containing more complex content (e.g. JSON, XML).
+	ResponseStatus
+	SessionStatus.setComplete()
+	
+org.springframework.web.bind.annotation.support
+	
+	
+HtmlUtils
+JavaScriptUtils
+UriComponents.encode()
+UriComponentsBuilder
+	UriTemplate template = new UriTemplate("http://example.com/hotels/{hotel}/bookings/{booking}");
+	System.out.println(template.match("http://example.com/hotels/1/bookings/42"));
+UrlPathHelper：得到uri的部分内容，比较有用
+WebUtils：比较有用
