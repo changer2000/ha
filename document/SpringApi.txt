@@ -1,5 +1,63 @@
 org.springframework.web：
 	WebApplicationInitializer <-----|
+		 <servlet>
+		   <servlet-name>dispatcher</servlet-name>
+		   <servlet-class>
+			 org.springframework.web.servlet.DispatcherServlet
+		   </servlet-class>
+		   <init-param>
+			 <param-name>contextConfigLocation</param-name>
+			 <param-value>/WEB-INF/spring/dispatcher-config.xml</param-value>
+		   </init-param>
+		   <load-on-startup>1</load-on-startup>
+		 </servlet>
+
+		 <servlet-mapping>
+		   <servlet-name>dispatcher</servlet-name>
+		   <url-pattern>/</url-pattern>
+		 </servlet-mapping>
+	
+		 ===========================================================================================
+		 public class MyWebAppInitializer implements WebApplicationInitializer {
+
+			@Override
+			public void onStartup(ServletContext container) {
+			  XmlWebApplicationContext appContext = new XmlWebApplicationContext();
+			  appContext.setConfigLocation("/WEB-INF/spring/dispatcher-config.xml");
+
+			  ServletRegistration.Dynamic dispatcher =
+				container.addServlet("dispatcher", new DispatcherServlet(appContext));
+			  dispatcher.setLoadOnStartup(1);
+			  dispatcher.addMapping("/");
+			}
+
+		 }
+		
+		 ===========================================================================================
+		@Override
+		public void onStartup(ServletContext container) {
+		  // Create the 'root' Spring application context
+		  AnnotationConfigWebApplicationContext rootContext =
+			new AnnotationConfigWebApplicationContext();
+		  rootContext.register(AppConfig.class);
+
+		  // Manage the lifecycle of the root application context
+		  container.addListener(new ContextLoaderListener(rootContext));
+
+		  // Create the dispatcher servlet's Spring application context
+		  AnnotationConfigWebApplicationContext dispatcherContext =
+			new AnnotationConfigWebApplicationContext();
+		  dispatcherContext.register(DispatcherConfig.class);
+
+		  // Register and map the dispatcher servlet
+		  ServletRegistration.Dynamic dispatcher =
+			container.addServlet("dispatcher", new DispatcherServlet(dispatcherContext));
+		  dispatcher.setLoadOnStartup(1);
+		  dispatcher.addMapping("/");
+		}
+
+				 
+	
 	SpringServletContainerInitializer：猜测这个是spring web启动的起点
 
 org.springframework.web.accept
@@ -38,8 +96,227 @@ org.springframework.web.bind.annotation：	里面定义了很多annotation，可
 	SessionStatus.setComplete()
 	
 org.springframework.web.bind.annotation.support
+	HandlerMethodInvoker:Used by AnnotationMethodHandlerAdapter and AnnotationMethodHandlerAdapter.   <====== 是个很重要的类
+		有很多类似resolveRequestBody() / resolveCookieValue()这样的方法
+	HandlerMethodResolver:Support class for resolving web method annotations in a handler type. Processes @RequestMapping, @InitBinder, @ModelAttribute and @SessionAttributes. 
+		Used by AnnotationMethodHandlerAdapter and AnnotationMethodHandlerAdapter.
+
+org.springframework.web.bind.support
+    SessionAttributeStore
+    SessionStatus
+*** WebArgumentResolver: 可以处理controller中具体方法的某个参数，非常有用的东东
+    WebBindingInitializer: Callback interface for initializing a WebDataBinder for performing data binding in the context of a specific web request.
+		initBinder(WebDataBinder binder, WebRequest request)：当request来时，对绑定的binder进行初始化
+    WebDataBinderFactory
+		WebDataBinder createBinder(NativeWebRequest webRequest,
+                         Object target,
+                         String objectName)
+                           throws Exception		创建一个webDataBinder
+						   
+	ConfigurableWebBindingInitializer: Convenient WebBindingInitializer for declarative configuration in a Spring application context. Allows for reusing pre-configured initializers with multiple controller/handlers.
+	DefaultDataBinderFactory: 
+		initBinder(WebDataBinder dataBinder, NativeWebRequest webRequest): Extension point to further initialize the created data binder instance (e.g.
+	DefaultSessionAttributeStore:
+		setAttributeNamePrefix
+		storeAttribute(WebRequest request, String attributeName,  Object attributeValue)
+		Object retrieveAttribute(WebRequest request, String attributeName)
+		void cleanupAttribute(WebRequest request, String attributeName)
+	SimpleSessionStatus
+		isComplete()
+		setComplete()
+	WebRequestDataBinder: Special DataBinder to perform data binding from web request parameters to JavaBeans, including support for multipart files. 
+		 MyBean myBean = new MyBean();
+		 // apply binder to custom target object
+		 WebRequestDataBinder binder = new WebRequestDataBinder(myBean);
+		 // register custom editors, if desired
+		 binder.registerCustomEditor(...);
+		 // trigger actual binding of request parameters
+		 binder.bind(request);
+		 // optionally evaluate binding errors
+		 Errors errors = binder.getErrors();
+		
+		public void bind(WebRequest request):
+			Bind the parameters of the given request to this binder's target, also binding multipart files in case of a multipart request.
+			This call can create field errors, representing basic binding errors like a required field (code "required"), or type mismatch between value and bean property (code "typeMismatch").
+			Multipart files are bound via their parameter name, just like normal HTTP parameters: i.e. "uploadedFile" to an "uploadedFile" bean property, invoking a "setUploadedFile" setter method.
+			The type of the target property for a multipart file can be MultipartFile, byte[], or String. The latter two receive the contents of the uploaded file; all metadata like original file name, content type, etc are lost in those cases.
+
+			
+org.springframework.web.client
+	RequestCallback: Callback interface for code that operates on a ClientHttpRequest. Allows to manipulate the request headers, and write to the request body. 
+		Used internally by the RestTemplate, but also useful for application code.
+		
+		void doWithRequest(ClientHttpRequest request) throws IOException : Gets called by RestTemplate.execute(java.lang.String, org.springframework.http.HttpMethod, org.springframework.web.client.RequestCallback, org.springframework.web.client.ResponseExtractor<T>, java.lang.Object...) with an opened ClientHttpRequest. 
+			Does not need to care about closing the request or about handling errors: this will all be handled by the RestTemplate.
+	
+	ResponseErrorHandler: Strategy interface used by the RestTemplate to determine whether a particular response has an error or not.
+	ResponseExtractor<T>: Generic callback interface used by RestTemplate's retrieval methods Implementations of this interface perform the actual work of extracting data from a ClientHttpResponse, but don't need to worry about exception handling or closing resources.
+							Used internally by the RestTemplate, but also useful for application code.
+		T extractData(ClientHttpResponse response) throws IOException : Extract data from the given ClientHttpResponse and return it.
+	RestOperations: Interface specifying a basic set of RESTful operations. Implemented by RestTemplate. Not often used directly, but a useful option to enhance testability, as it can easily be mocked or stubbed.
+		在test时候会用
+	
+	DefaultResponseErrorHandler： This error handler checks for the status code on the ClientHttpResponse: any code with series HttpStatus.Series.CLIENT_ERROR or HttpStatus.Series.SERVER_ERROR is considered to be an error. 
+		This behavior can be changed by overriding the hasError(HttpStatus) method.
+	HttpMessageConverterExtractor<T>： Response extractor that uses the given entity converters to convert the response into a type T.
+		public HttpMessageConverterExtractor(Class<T> responseType,
+                             List<HttpMessageConverter<?>> messageConverters): Creates a new instance of the HttpMessageConverterExtractor with the given response type and message converters. The given converters must support the response type.
+		public HttpMessageConverterExtractor(Type responseType,
+                             List<HttpMessageConverter<?>> messageConverters): Creates a new instance of the HttpMessageConverterExtractor with the given response type and message converters. The given converters must support the response type.
+							 
+***	RestTemplate extends InterceptingHttpAccessor implements RestOperations:非常有用的一个测试url的东东
+		The central class for client-side HTTP access. It simplifies communication with HTTP servers, and enforces RESTful principles. It handles HTTP connections, leaving application code to provide URLs (with possible template variables) and extract results. 
+		The exchange and execute methods are generalized versions of the more specific methods listed above them. They support additional, less frequently used combinations including support for requests using the HTTP PATCH method. However, note that the underlying HTTP library must also support the desired combination.
+		For each of these HTTP methods, there are three corresponding Java methods in the RestTemplate. Two variant take a String URI as first argument (eg. getForObject(String, Class, Object[]), getForObject(String, Class, Map)), and are capable of substituting any URI templates in that URL using either a String variable arguments array, or a Map<String, String>. The string varargs variant expands the given template variables in order, so that
+		 String result = restTemplate.getForObject("http://example.com/hotels/{hotel}/bookings/{booking}", String.class,"42",
+		 "21");
+
+		will perform a GET on http://example.com/hotels/42/bookings/21. The map variant expands the template based on variable name, and is therefore more useful when using many variables, or when a single variable is used multiple times. For example:
+
+		 Map<String, String> vars = Collections.singletonMap("hotel", "42");
+		 String result = restTemplate.getForObject("http://example.com/hotels/{hotel}/rooms/{hotel}", String.class, vars);
+		will perform a GET on http://example.com/hotels/42/rooms/42. Alternatively, there are URI variant methods (getForObject(URI, Class)), which do not allow for URI templates, but allow you to reuse a single, expanded URI multiple times.
+
+		Furthermore, the String-argument methods assume that the URL String is unencoded. This means that
+		 restTemplate.getForObject("http://example.com/hotel list");
+		will perform a GET on http://example.com/hotel%20list. As a result, any URL passed that is already encoded will be encoded twice (i.e. http://example.com/hotel%20list will become http://example.com/hotel%2520list). If this behavior is undesirable, use the URI-argument methods, which will not perform any URL encoding.
+
+		Objects passed to and returned from these methods are converted to and from HTTP messages by HttpMessageConverter instances. Converters for the main mime types are registered by default, but you can also write your own converter and register it via the messageConverters bean property.
+		This template uses a SimpleClientHttpRequestFactory and a DefaultResponseErrorHandler as default strategies for creating HTTP connections or handling HTTP errors, respectively. These defaults can be overridden through the requestFactory and errorHandler bean properties.
+	
+	HttpClientErrorException: Exception thrown when an HTTP 4xx is received.
+	HttpServerErrorException: Exception thrown when an HTTP 5xx is received.
+		public HttpHeaders getResponseHeaders()
+		public byte[] getResponseBodyAsByteArray()
+		public String getResponseBodyAsString()
+	ResourceAccessException: Exception thrown when an I/O error occurs.
+	RestClientException extends NestedRuntimeException: Base class for exceptions thrown by RestTemplate whenever it encounters client-side HTTP errors.
+	UnknownHttpStatusCodeException: Exception thrown when an unknown (or custom) HTTP status code is received.
+		getRawStatusCode(): Return the raw HTTP status code value.
+		getResponseBodyAsByteArray(): Return the response body as a byte array.
+		getResponseBodyAsString(): Return the response body as a string.
+		getResponseHeaders(): Return the HTTP response headers.
+		getStatusText(): Return the HTTP status text.
+
+		
+org.springframework.web.client.support
+	RestGatewaySupport: Convenient super class for application classes that need REST access. Requires a ClientHttpRequestFactory or a RestTemplate instance to be set.
+
+
+org.springframework.web.context
+***	ConfigurableWebApplicationContext: 
+		All Superinterfaces:
+			ApplicationContext, ApplicationEventPublisher, AutoCloseable, BeanFactory, Closeable, ConfigurableApplicationContext, EnvironmentCapable, HierarchicalBeanFactory, Lifecycle, ListableBeanFactory, MessageSource, ResourceLoader, ResourcePatternResolver, WebApplicationContext 
+		All Known Implementing Classes:
+			AbstractRefreshableWebApplicationContext, AnnotationConfigWebApplicationContext, GenericWebApplicationContext, StaticWebApplicationContext, XmlWebApplicationContext 
+	ConfigurableWebEnvironment extends ConfigurableEnvironment: Specialization of ConfigurableEnvironment allowing initialization of servlet-related PropertySource objects at the earliest moment that the ServletContext and (optionally) ServletConfig become available.
+		void initPropertySources(ServletContext servletContext, ServletConfig servletConfig): Replace any stub property source instances acting as placeholders with real servlet context/config property sources using the given parameters.
+***	ServletConfigAware: 非常有用的一个类，
+		Interface to be implemented by any object that wishes to be notified of the ServletConfig (typically determined by the WebApplicationContext) that it runs in.
+		Note: Only satisfied if actually running within a Servlet-specific WebApplicationContext. Otherwise, no ServletConfig will be set.
+		void setServletConfig(ServletConfig servletConfig)： Set the ServletConfig that this object runs in.
+			Invoked after population of normal bean properties but before an init callback like InitializingBean's afterPropertiesSet or a custom init-method. Invoked after ApplicationContextAware's setApplicationContext.
+***	WebApplicationContext: 非常有用的一个类，
+		All Superinterfaces:
+			ApplicationContext, ApplicationEventPublisher, BeanFactory, EnvironmentCapable, HierarchicalBeanFactory, ListableBeanFactory, MessageSource, ResourceLoader, ResourcePatternResolver
+		All Known Subinterfaces:
+			ConfigurablePortletApplicationContext, ConfigurableWebApplicationContext
+		All Known Implementing Classes:
+			AbstractRefreshablePortletApplicationContext, AbstractRefreshableWebApplicationContext, AnnotationConfigWebApplicationContext, GenericWebApplicationContext, StaticPortletApplicationContext, StaticWebApplicationContext, XmlPortletApplicationContext, XmlWebApplicationContext 
+		Interface to provide configuration for a web application. This is read-only while the application is running, but may be reloaded if the implementation supports this.
+		This interface adds a getServletContext() method to the generic ApplicationContext interface, and defines a well-known application attribute name that the root context must be bound to in the bootstrap process.
+		Like generic application contexts, web application contexts are hierarchical. There is a single root context per application, while each servlet in the application (including a dispatcher servlet in the MVC framework) has its own child context.
+		In addition to standard application context lifecycle capabilities, WebApplicationContext implementations need to detect ServletContextAware beans and invoke the setServletContext method accordingly.
+		ServletContext getServletContext(): 
+***	AbstractContextLoaderInitializer: Convenient base class for WebApplicationInitializer implementations that register a ContextLoaderListener in the servlet context.
+		The only method required to be implemented by subclasses is createRootApplicationContext(), which gets invoked from registerContextLoaderListener(javax.servlet.ServletContext).
+		All Implemented Interfaces:
+			WebApplicationInitializer 
+		Direct Known Subclasses:
+			AbstractDispatcherServletInitializer 
+	ContextCleanupListener
+****ContextLoader: 非常重要的一个类，要仔细看api文档。Performs the actual initialization work for the root application context. Called by ContextLoaderListener. 
+****ContextLoaderListener: ContextLoader的子类, 非常重要的一个类，要仔细看api文档。Bootstrap listener to start up and shut down Spring's root WebApplicationContext. Simply delegates to ContextLoader as well as to ContextCleanupListener. 
+		As of Spring 3.1, ContextLoaderListener supports injecting the root web application context via the ContextLoaderListener(WebApplicationContext) constructor, allowing for programmatic configuration in Servlet 3.0+ environments. See WebApplicationInitializer for usage examples.
+		
+		Create a new ContextLoaderListener with the given application context. This constructor is useful in Servlet 3.0+ environments where instance-based registration of listeners is possible through the ServletContext.addListener(java.lang.String) API.
+
+		The context may or may not yet be refreshed. If it (a) is an implementation of ConfigurableWebApplicationContext and (b) has not already been refreshed (the recommended approach), then the following will occur:
+
+			If the given context has not already been assigned an id, one will be assigned to it
+			ServletContext and ServletConfig objects will be delegated to the application context
+			ContextLoader.customizeContext(javax.servlet.ServletContext, org.springframework.web.context.ConfigurableWebApplicationContext) will be called
+			Any ApplicationContextInitializers specified through the "contextInitializerClasses" init-param will be applied.
+			refresh() will be called
+
+		If the context has already been refreshed or does not implement ConfigurableWebApplicationContext, none of the above will occur under the assumption that the user has performed these actions (or not) per his or her specific needs.
+		See WebApplicationInitializer for usage examples.
+		In any case, the given application context will be registered into the ServletContext under the attribute name WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE and the Spring application context will be closed when the contextDestroyed(javax.servlet.ServletContextEvent) lifecycle method is invoked on this listener.
+		
+		void  contextInitialized(ServletContextEvent event)
+		ContextLoader createContextLoader()
+		void contextDestroyed(ServletContextEvent event)
+		
+		
+org.springframework.web.context.request
+***	AsyncWebRequestInterceptor:异步请求处理拦截器，下面的描述，精准的把处理流程表达出来了。仔细看
+		All Superinterfaces:
+			WebRequestInterceptor
+		All Known Implementing Classes:
+			Log4jNestedDiagnosticContextInterceptor, OpenEntityManagerInViewInterceptor, OpenSessionInViewInterceptor, OpenSessionInViewInterceptor 
+		Extends WebRequestInterceptor with a callback method invoked during asynchronous request handling.
+		When a handler starts asynchronous request handling, the DispatcherServlet exits without invoking postHandle and afterCompletion, as it normally does, since the results of request handling (e.g. ModelAndView) are not available in the current thread and handling is not yet complete. In such scenarios, the afterConcurrentHandlingStarted(WebRequest) method is invoked instead allowing implementations to perform tasks such as cleaning up thread bound attributes.
+		When asynchronous handling completes, the request is dispatched to the container for further processing. At this stage the DispatcherServlet invokes preHandle, postHandle and afterCompletion as usual.
+		
+		void afterConcurrentHandlingStarted(WebRequest request)
+		
+	NativeWebRequest:
+	RequestAttributes: Abstraction for accessing attribute objects associated with a request. Supports access to request-scoped attributes as well as to session-scoped attributes, with the optional notion of a "global session".
+		Can be implemented for any kind of request/session mechanism, in particular for servlet requests and portlet requests.
+		
+		All Known Subinterfaces:
+			AsyncWebRequest, NativeWebRequest, WebRequest
+
+		All Known Implementing Classes:
+			AbstractRequestAttributes, DispatcherServletWebRequest, FacesRequestAttributes, FacesWebRequest, NoSupportAsyncWebRequest, PortletRequestAttributes, PortletWebRequest, ServletRequestAttributes, ServletWebRequest, StandardServletAsyncWebRequest 
+	
+		getAttribute(String name, int scope)
+		getAttributeNames(int scope)
+		getSessionId()
+		getSessionMutex()
+		registerDestructionCallback(String name, Runnable callback, int scope)
+		removeAttribute(String name, int scope)
+		resolveReference(String key)
+		setAttribute(String name, Object value, int scope)
 	
 	
+	WebRequest: Generic interface for a web request. Mainly intended for generic web request interceptors, giving them access to general request metadata, not for actual handling of the request.
+		All Superinterfaces:
+			RequestAttributes
+
+		All Known Subinterfaces:
+			AsyncWebRequest, NativeWebRequest
+
+		All Known Implementing Classes:
+			DispatcherServletWebRequest, FacesWebRequest, NoSupportAsyncWebRequest, PortletWebRequest, ServletWebRequest, StandardServletAsyncWebRequest 
+		checkNotModified(long lastModifiedTimestamp)
+		checkNotModified(String eTag)
+		getContextPath()
+		getDescription(boolean includeClientInfo)
+		getHeader(String headerName)
+		getHeaderNames()
+		getHeaderValues(String headerName)
+		getLocale()
+		getParameter(String paramName)
+		getParameterMap()
+		getParameterNames()
+		getParameterValues(String paramName)
+		getRemoteUser()
+		getUserPrincipal()
+		isSecure()
+		isUserInRole(String role)
+		
+		
 HtmlUtils
 JavaScriptUtils
 UriComponents.encode()
