@@ -316,7 +316,157 @@ org.springframework.web.context.request
 		isSecure()
 		isUserInRole(String role)
 		
-		
+***	WebRequestInterceptor: interface for general web request interception. Allows for being applied to Servlet request as well as Portlet request environments, by building on the WebRequest abstraction.
+		This interface assumes MVC-style request processing: A handler gets executed, exposes a set of model objects, then a view gets rendered based on that model. Alternatively, a handler may also process the request completely, with no view to be rendered.
+		In an async processing scenario, the handler may be executed in a separate thread while the main thread exits without rendering or invoking the postHandle and afterCompletion callbacks. 
+		When concurrent handler execution completes, the request is dispatched back in order to proceed with rendering the model and all methods of this contract are invoked again. 
+		For further options and comments see org.springframework.web.context.request.async.AsyncWebRequestInterceptor
+		This interface is deliberately minimalistic to keep the dependencies of generic request interceptors as minimal as feasible.
+		NOTE: While this interceptor is applied to the entire request processing in a Servlet environment, it is by default only applied to the render phase in a Portlet environment, 
+			preparing and rendering a Portlet view. To apply WebRequestInterceptors to the action phase as well, set the HandlerMapping's "applyWebRequestInterceptorsToRenderPhaseOnly" flag to "false". 
+			Alternatively, consider using the Portlet-specific HandlerInterceptor mechanism for such needs.
+	AbstractRequestAttributes: Abstract support class for RequestAttributes implementations, offering a request completion mechanism for request-specific destruction callbacks and for updating accessed session attributes.
+		public void requestCompleted()
+***		protected final boolean isRequestActive(): 这个方法挺有用的, Determine whether the original request is still active.
+***		protected final void registerRequestDestructionCallback(String name, Runnable callback): Register the given callback as to be executed after request completion.
+		protected final void removeRequestDestructionCallback(String name)
+		protected abstract void updateAccessedSessionAttributes()
+	AbstractRequestAttributesScope: Abstract Scope implementation that reads from a particular scope in the current thread-bound RequestAttributes object.
+		Subclasses simply need to implement getScope() to instruct this class which RequestAttributes scope to read attributes from.
+		Subclasses may wish to override the get(java.lang.String, org.springframework.beans.factory.ObjectFactory) and remove(java.lang.String) methods to add synchronization around the call back into this super class.
+		get(String name, ObjectFactory objectFactory)
+		protected abstract int 	getScope()
+		registerDestructionCallback(String name, Runnable callback)
+		remove(String name)
+		resolveContextualObject(String key)
+	DestructionCallbackBindingListener: Adapter that implements the Servlet 2.3 HttpSessionBindingListener interface, wrapping a session destruction callback.
+		valueBound(HttpSessionBindingEvent event) 
+		valueUnbound(HttpSessionBindingEvent event) 
+	FacesRequestAttributes: RequestAttributes adapter for a JSF FacesContext. Used as default in a JSF environment, wrapping the current FacesContext. 
+	FacesWebRequest: WebRequest adapter for a JSF FacesContext.
+		All Implemented Interfaces:
+			NativeWebRequest, RequestAttributes, WebRequest 
+	Log4jNestedDiagnosticContextInterceptor: Request logging interceptor that adds a request context message to the Log4J nested diagnostic context (NDC) before the request is processed, removing it again after the request is processed.
+	RequestContextHolder: Holder class to expose the web request in the form of a thread-bound RequestAttributes object. The request will be inherited by any child threads spawned by the current thread if the inheritable flag is set to true.
+		Use RequestContextListener or RequestContextFilter to expose the current web request. Note that DispatcherServlet and DispatcherPortlet already expose the current request by default.
+		static currentRequestAttributes()
+		static getRequestAttributes()
+		static resetRequestAttributes()
+		static setRequestAttributes(RequestAttributes attributes)
+		static setRequestAttributes(RequestAttributes attributes, boolean inheritable)
+**	RequestContextListener: 
+		Servlet 2.4+ listener that exposes the request to the current thread, through both LocaleContextHolder and RequestContextHolder. To be registered as listener in web.xml.
+		Alternatively, Spring's RequestContextFilter and Spring's DispatcherServlet also expose the same request context to the current thread. In contrast to this listener, advanced options are available there (e.g. "threadContextInheritable").
+		This listener is mainly for use with third-party servlets, e.g. the JSF FacesServlet. Within Spring's own web support, DispatcherServlet's processing is perfectly sufficient.
+		requestDestroyed(ServletRequestEvent requestEvent) 
+		requestInitialized(ServletRequestEvent requestEvent) 
+	RequestScope: extends AbstractRequestAttributesScope
+		Relies on a thread-bound RequestAttributes instance, which can be exported through RequestContextListener, RequestContextFilter or DispatcherServlet.
+		This Scope will also work for Portlet environments, through an alternate RequestAttributes implementation (as exposed out-of-the-box by Spring's DispatcherPortlet.
+	ServletRequestAttributes implements RequestAttributes
+		Servlet-based implementation of the RequestAttributes interface.
+		Accesses objects from servlet request and HTTP session scope, with no distinction between "session" and "global session".
+****ServletWebRequest:WebRequest adapter for an HttpServletRequest.
+		All Implemented Interfaces:
+			NativeWebRequest, RequestAttributes, WebRequest
+		Direct Known Subclasses:
+***			DispatcherServletWebRequest, NoSupportAsyncWebRequest, StandardServletAsyncWebRequest 
+		getContextPath()
+		getDescription(boolean includeClientInfo)
+		getHeader(String headerName)
+		getHeaderNames()
+		getHeaderValues(String headerName)
+		getLocale()
+		getNativeRequest()
+		getNativeRequest(Class<T> requiredType)
+		getNativeResponse()
+		getNativeResponse(Class<T> requiredType)
+		getParameter(String paramName)
+		getParameterMap()
+		getParameterNames()
+		getParameterValues(String paramName)
+		getRemoteUser()
+		getResponse()
+		getUserPrincipal()
+		isNotModified() 
+		isSecure()
+		isUserInRole(String role)
+	SessionScope:	
+	
+	
+org.springframework.web.context.request.async	
+***	AsyncWebRequest: Extends NativeWebRequest with methods for asynchronous request processing. 异步处理的一个很重要的类
+		All Superinterfaces:
+			NativeWebRequest, RequestAttributes, WebRequest
+		All Known Implementing Classes:
+			NoSupportAsyncWebRequest, StandardServletAsyncWebRequest 
+		addCompletionHandler(Runnable runnable): Add a handle to invoke when request processing completes.
+		addTimeoutHandler(Runnable runnable): Add a handler to invoke when concurrent handling has timed out.
+		dispatch(): Dispatch the request to the container in order to resume processing after concurrent execution in an application thread.
+		isAsyncComplete(): Whether asynchronous processing has completed.
+		isAsyncStarted(): Whether the request is in async mode following a call to startAsync().
+		setTimeout(Long timeout): Set the time required for concurrent handling to complete.
+	***	startAsync(): Mark the start of asynchronous request processing so that when the main processing thread exits, the response remains open for further processing in another thread.
+	
+****CallableProcessingInterceptor: 异步处理的一个很重要的类。 Intercepts concurrent request handling, where the concurrent result is obtained by executing a Callable on behalf of the application with an AsyncTaskExecutor.
+		All Known Implementing Classes:
+			CallableProcessingInterceptorAdapter, TimeoutCallableProcessingInterceptor 
+		A CallableProcessingInterceptor is invoked before and after the invocation of the Callable task in the asynchronous thread, as well as on timeout from a container thread, or after completing for any reason including a timeout or network error.
+		As a general rule exceptions raised by interceptor methods will cause async processing to resume by dispatching back to the container and using the Exception instance as the concurrent result. Such exceptions will then be processed through the HandlerExceptionResolver mechanism.
+		The afterTimeout method can select a value to be used to resume processing.
+		afterCompletion(NativeWebRequest request, Callable<T> task): Invoked from a container thread when async processing completes for any reason including timeout or network error.
+		beforeConcurrentHandling(NativeWebRequest request, Callable<T> task): Invoked before the start of concurrent handling in the original thread in which the Callable is submitted for concurrent handling.
+			This is useful for capturing the state of the current thread just prior to invoking the Callable. Once the state is captured, it can then be transfered to the new Thread in preProcess(NativeWebRequest, Callable). Capturing the state of Spring Security's SecurityContextHolder and migrating it to the new Thread is a concrete example of where this is useful. 
+		handleTimeout(NativeWebRequest request, Callable<T> task): Invoked from a container thread when the async request times out before the Callable task completes. Implementations may return a value, including an Exception, to use instead of the value the Callable did not return in time.
+		postProcess(NativeWebRequest request, Callable<T> task, Object concurrentResult): Invoked after the Callable has produced a result in the async thread in which the Callable is executed. This method may be invoked later than afterTimeout or afterCompletion depending on when the Callable finishes processing.
+		preProcess(NativeWebRequest request, Callable<T> task): Invoked after the start of concurrent handling in the async thread in which the Callable is executed and before the actual invocation of the Callable.
+	DeferredResult.DeferredResultHandler:延期的
+		Handles a DeferredResult value when set.
+		handleResult(Object result) 
+**	DeferredResultProcessingInterceptor: 
+		Intercepts concurrent request handling, where the concurrent result is obtained by waiting for a DeferredResult to be set from a thread chosen by the application (e.g. in response to some external event).
+		A DeferredResultProcessingInterceptor is invoked before the start of async processing, after the DeferredResult is set as well as on timeout, or or after completing for any reason including a timeout or network error.
+		As a general rule exceptions raised by interceptor methods will cause async processing to resume by dispatching back to the container and using the Exception instance as the concurrent result. Such exceptions will then be processed through the HandlerExceptionResolver mechanism.
+		The afterTimeout method can set the DeferredResult in order to resume processing.
+		afterCompletion(NativeWebRequest request, DeferredResult<T> deferredResult)
+		beforeConcurrentHandling(NativeWebRequest request, DeferredResult<T> deferredResult)
+		handleTimeout(NativeWebRequest request, DeferredResult<T> deferredResult)
+		postProcess(NativeWebRequest request, DeferredResult<T> deferredResult, Object concurrentResult)
+		preProcess(NativeWebRequest request, DeferredResult<T> deferredResult): Invoked immediately after the start of concurrent handling, in the same thread that started it.
+	CallableProcessingInterceptorAdapter: Abstract adapter class for the CallableProcessingInterceptor interface, for simplified implementation of individual methods.
+		方法基本都是空的
+**	DeferredResult: 异步处理结果类，
+		DeferredResult provides an alternative to using a Callable for asynchronous request processing. While a Callable is executed concurrently on behalf of the application, with a DeferredResult the application can produce the result from a thread of its choice.
+		Subclasses can extend this class to easily associate additional data or behavior with the DeferredResult. For example, one might want to associate the user used to create the DeferredResult by extending the class and adding an additional property for the user. In this way, the user could easily be accessed later without the need to use a data structure to do the mapping.
+		An example of associating additional behavior to this class might be realized by extending the class to implement an additional interface. For example, one might want to implement Comparable so that when the DeferredResult is added to a PriorityQueue it is handled in the correct order.
+		isSetOrExpired():
+*		onCompletion(Runnable callback): Register code to invoke when the async request completes. This method is called from a container thread when an async request completed for any reason including timeout and network error. This method is useful for detecting that a DeferredResult instance is no longer usable.
+		onTimeout(Runnable callback)
+		setErrorResult(Object result)
+*		setResult(T result): Set the value for the DeferredResult and handle it.
+		setResultHandler(DeferredResult.DeferredResultHandler resultHandler): Provide a handler to use to handle the result value.
+	DeferredResultProcessingInterceptorAdapter: Abstract adapter class for the DeferredResultProcessingInterceptor interface for simplified implementation of individual methods.
+**	NoSupportAsyncWebRequest: An AsyncWebRequest to use when there is no underlying async support.
+		org.springframework.web.context.request.AbstractRequestAttributes
+			org.springframework.web.context.request.ServletRequestAttributes
+				org.springframework.web.context.request.ServletWebRequest
+					org.springframework.web.context.request.async.NoSupportAsyncWebRequest
+		addCompletionHandler(Runnable runnable)
+		addTimeoutHandler(Runnable runnable)
+		dispatch(): Dispatch the request to the container in order to resume processing after concurrent execution in an application thread.
+		isAsyncComplete(): 
+		isAsyncStarted(): 
+		setTimeout(Long timeout): 
+		startAsync(): 
+****StandardServletAsyncWebRequest: 要在web.xml里面配置参数<async-support>true</async-support>以支持异步操作。猜测是异步操作的基础(不确定)
+		org.springframework.web.context.request.AbstractRequestAttributes
+			org.springframework.web.context.request.ServletRequestAttributes
+				org.springframework.web.context.request.ServletWebRequest
+					org.springframework.web.context.request.async.StandardServletAsyncWebRequest
+		The servlet and all filters involved in an async request must have async support enabled using the Servlet API or by adding an <async-support>true</async-support> element to servlet and filter declarations in web.xml
+	
+	
+	
 HtmlUtils
 JavaScriptUtils
 UriComponents.encode()
