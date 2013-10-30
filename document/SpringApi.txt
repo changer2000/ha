@@ -464,8 +464,298 @@ org.springframework.web.context.request.async
 				org.springframework.web.context.request.ServletWebRequest
 					org.springframework.web.context.request.async.StandardServletAsyncWebRequest
 		The servlet and all filters involved in an async request must have async support enabled using the Servlet API or by adding an <async-support>true</async-support> element to servlet and filter declarations in web.xml
-	
-	
+		onComplete(AsyncEvent event)
+		onError(AsyncEvent event)
+		onStartAsync(AsyncEvent event)
+		onTimeout(AsyncEvent event)
+		......
+	TimeoutCallableProcessingInterceptor: 	
+		Sends a 503 (SERVICE_UNAVAILABLE) in case of a timeout if the response is not already committed. Registered at the end, after all other interceptors and therefore invoked only if no other interceptor handles the timeout.
+		Note that according to RFC 2616, a 503 without a 'Retry-After' header is interpreted as a 500 error and the client should not retry. Applications can install their own interceptor to handle a timeout and add a 'Retry-After' header if necessary.
+		handleTimeout(NativeWebRequest request, Callable<T> task): This implementation always returns RESULT_NONE.
+	TimeoutDeferredResultProcessingInterceptor: 同上
+	WebAsyncManager: 没怎么看懂
+		The central class for managing asynchronous request processing, mainly intended as an SPI and not typically used directly by application classes.
+		An async scenario starts with request processing as usual in a thread (T1). Concurrent request handling can be initiated by calling startCallableProcessing or startDeferredResultProcessing, both of which produce a result in a separate thread (T2). The result is saved and the request dispatched to the container, to resume processing with the saved result in a third thread (T3). Within the dispatched thread (T3), the saved result can be accessed via getConcurrentResult() or its presence detected via hasConcurrentResult().
+	WebAsyncTask<V>: Holder for a Callable, a timeout value, and a task executor. 被上面的WebAsyncManager使用
+	WebAsyncManager: Utility methods related to processing asynchronous web requests.
+		createAsyncWebRequest(HttpServletRequest request, HttpServletResponse response): Create an AsyncWebRequest instance.
+		getAsyncManager(ServletRequest servletRequest): Obtain the WebAsyncManager for the current request, or if not found, create and associate it with the request.
+		getAsyncManager(WebRequest webRequest): Obtain the WebAsyncManager for the current request, or if not found, create and associate it with the request.
+
+
+org.springframework.web.context.support
+***	AbstractRefreshableWebApplicationContext:
+		继承层次：
+		org.springframework.core.io.DefaultResourceLoader
+			org.springframework.context.support.AbstractApplicationContext
+				org.springframework.context.support.AbstractRefreshableApplicationContext
+					org.springframework.context.support.AbstractRefreshableConfigApplicationContext
+						org.springframework.web.context.support.AbstractRefreshableWebApplicationContext
+		All Implemented Interfaces:
+			Closeable, AutoCloseable, Aware, BeanFactory, BeanNameAware, DisposableBean, HierarchicalBeanFactory, InitializingBean, ListableBeanFactory, ApplicationContext, 
+			ApplicationEventPublisher, ConfigurableApplicationContext, Lifecycle, MessageSource, EnvironmentCapable, ResourceLoader, ResourcePatternResolver, 
+			ThemeSource, ConfigurableWebApplicationContext, WebApplicationContext
+
+		Direct Known Subclasses:
+			AnnotationConfigWebApplicationContext, XmlWebApplicationContext 
+		createEnvironment()
+		getApplicationName()
+		getApplicationName()
+		getNamespace()
+		getResourceByPath(String path)
+		getResourcePatternResolver()
+		getServletConfig()
+		getServletContext()
+		getTheme(String themeName)
+		initPropertySources()
+		onRefresh()
+		postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory)
+		setNamespace(String namespace)
+		setServletConfig(ServletConfig servletConfig)
+		setServletContext(ServletContext servletContext)
+***	AnnotationConfigWebApplicationContext
+		java.lang.Object
+			org.springframework.core.io.DefaultResourceLoader
+				org.springframework.context.support.AbstractApplicationContext
+					org.springframework.context.support.AbstractRefreshableApplicationContext
+						org.springframework.context.support.AbstractRefreshableConfigApplicationContext
+							org.springframework.web.context.support.AbstractRefreshableWebApplicationContext
+								org.springframework.web.context.support.AnnotationConfigWebApplicationContext
+		WebApplicationContext implementation which accepts annotated classes as input - in particular @Configuration-annotated classes, but also plain @Component classes and JSR-330 compliant classes using javax.inject annotations. Allows for registering classes one by one (specifying class names as config location) as well as for classpath scanning (specifying base packages as config location).
+		This is essentially the equivalent of AnnotationConfigApplicationContext for a web environment.
+		To make use of this application context, the "contextClass" context-param for ContextLoader and/or "contextClass" init-param for FrameworkServlet must be set to the fully-qualified name of this class.
+		As of Spring 3.1, this class may also be directly instantiated and injected into Spring's DispatcherServlet or ContextLoaderListener when using the new WebApplicationInitializer code-based alternative to web.xml. See its Javadoc for details and usage examples.
+		Unlike XmlWebApplicationContext, no default configuration class locations are assumed. Rather, it is a requirement to set the "contextConfigLocation" context-param for ContextLoader and/or "contextConfigLocation" init-param for FrameworkServlet. The param-value may contain both fully-qualified class names and base packages to scan for components. 
+		See loadBeanDefinitions(org.springframework.beans.factory.support.DefaultListableBeanFactory) for exact details on how these locations are processed.
+		As an alternative to setting the "contextConfigLocation" parameter, users may implement an ApplicationContextInitializer and set the "contextInitializerClasses" context-param / init-param. In such cases, users should favor the AbstractApplicationContext.refresh() and scan(String...) methods over the setConfigLocation(String) method, which is primarily for use by ContextLoader
+		Note: In case of multiple @Configuration classes, later @Bean definitions will override ones defined in earlier loaded files. This can be leveraged to deliberately override certain bean definitions via an extra Configuration class.
+		getBeanNameGenerator():
+		getScopeMetadataResolver():
+		loadBeanDefinitions(DefaultListableBeanFactory beanFactory):
+		register(Class<?>... annotatedClasses):
+		scan(String... basePackages):
+		setBeanNameGenerator(BeanNameGenerator beanNameGenerator) :
+		setConfigLocation(String location):
+		setConfigLocations(String[] locations):
+		setScopeMetadataResolver(ScopeMetadataResolver scopeMetadataResolver)
+***	ContextExposingHttpServletRequest: 装饰器类，HttpServletRequest decorator that makes all Spring beans in a given WebApplicationContext accessible as request attributes, through lazy checking once an attribute gets accessed.
+		java.lang.Object
+			javax.servlet.ServletRequestWrapper
+				javax.servlet.http.HttpServletRequestWrapper
+					org.springframework.web.context.support.ContextExposingHttpServletRequest
+		All Implemented Interfaces:
+			HttpServletRequest, ServletRequest 
+		getAttribute(String name):
+		getWebApplicationContext():
+		setAttribute(String name, Object value):
+***	GenericWebApplicationContext:	用于编程方式的bean defination取得。If you intend to implement a WebApplicationContext that reads bean definitions from configuration files, consider deriving from AbstractRefreshableWebApplicationContext, reading the bean definitions in an implementation of the loadBeanDefinitions method.
+		Interprets resource paths as servlet context resources, i.e. as paths beneath the web application root. Absolute paths, e.g. for files outside the web app root, can be accessed via "file:" URLs, as implemented by AbstractApplicationContext.
+		In addition to the special beans detected by AbstractApplicationContext, this class detects a ThemeSource bean in the context, with the name "themeSource".
+		java.lang.Object
+			org.springframework.core.io.DefaultResourceLoader
+				org.springframework.context.support.AbstractApplicationContext
+					org.springframework.context.support.GenericApplicationContext
+						org.springframework.web.context.support.GenericWebApplicationContext
+		All Implemented Interfaces:
+			Closeable, AutoCloseable, BeanFactory, DisposableBean, HierarchicalBeanFactory, ListableBeanFactory, BeanDefinitionRegistry, 
+			ApplicationContext, ApplicationEventPublisher, ConfigurableApplicationContext, Lifecycle, MessageSource, AliasRegistry, 
+			EnvironmentCapable, ResourceLoader, ResourcePatternResolver, ThemeSource, ConfigurableWebApplicationContext, WebApplicationContext 
+		createEnvironment()
+		getApplicationName()
+		getApplicationName()
+		getNamespace()
+		getResourceByPath(String path)
+		getResourcePatternResolver()
+		getServletConfig()
+		getServletContext()
+		getTheme(String themeName)
+		initPropertySources()
+		onRefresh()
+		postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory)
+		setConfigLocation(String configLocation)
+		setConfigLocations(String[] configLocations)
+		setNamespace(String namespace)
+		setServletConfig(ServletConfig servletConfig)
+		setServletContext(ServletContext servletContext)
+	HttpRequestHandlerServlet: 	
+		Simple HttpServlet that delegates to an HttpRequestHandler bean defined in Spring's root web application context. The target bean name must match the HttpRequestHandlerServlet servlet-name as defined in web.xml.
+		This can for example be used to expose a single Spring remote exporter, such as HttpInvokerServiceExporter or HessianServiceExporter, per HttpRequestHandlerServlet definition. 
+		This is a minimal alternative to defining remote exporters as beans in a DispatcherServlet context (with advanced mapping and interception facilities being available there).
+		init():
+		service(HttpServletRequest request, HttpServletResponse response):
+	LiveBeansViewServlet: Generates a JSON snapshot for current beans and their dependencies in all ApplicationContexts that live within the current web application.
+	RequestHandledEvent: Event raised when a request is handled within an ApplicationContext. 
+		Supported by Spring's own FrameworkServlet (through a specific ServletRequestHandledEvent subclass), but can also be raised by any other web component. Used, for example, by Spring's out-of-the-box PerformanceMonitorListener.
+		getDescription():
+		getDescription():
+		getProcessingTimeMillis():
+		getSessionId():
+		getShortDescription():
+		getUserName():
+		toString():
+		wasFailure():
+	ServletConfigPropertySource: PropertySource that reads init parameters from a ServletConfig object.
+		getProperty(String name)
+		getPropertyNames()
+*	ServletContextAttributeExporter: 
+		Exporter that takes Spring-defined objects and exposes them as ServletContext attributes. Usually, bean references will be used to export Spring-defined beans as ServletContext attributes.
+		Useful to make Spring-defined beans available to code that is not aware of Spring at all, but rather just of the Servlet API. Client code can then use plain ServletContext attribute lookups to access those objects, despite them being defined in a Spring application context.
+		Alternatively, consider using the WebApplicationContextUtils class to access Spring-defined beans via the WebApplicationContext interface. 
+		This makes client code aware of Spring API, of course.
+		setAttributes(Map<String,Object> attributes): Set the ServletContext attributes to expose as key-value pairs.
+		setServletContext(ServletContext servletContext)
+	ServletContextAttributeFactoryBean:下面这些方法都是从接口中继承来的
+		All Implemented Interfaces:
+			Aware, FactoryBean<Object>, ServletContextAware 
+		FactoryBean that fetches a specific, existing ServletContext attribute. Exposes that ServletContext attribute when used as bean reference, effectively making it available as named Spring bean instance.
+		Intended to link in ServletContext attributes that exist before the startup of the Spring application context. Typically, such attributes will have been put there by third-party web frameworks. In a purely Spring-based web application, no such linking in of ServletContext attributes will be necessary. 
+		NOTE: As of Spring 3.0, you may also use the "contextAttributes" default bean which is of type Map, and dereference it using an "#{contextAttributes.myKey}" expression to access a specific attribute by name.
+		getObject():
+		getObjectType():
+		isSingleton():
+		setAttributeName(String attributeName):
+		setServletContext(ServletContext servletContext):
+**	ServletContextAwareProcessor implements BeanPostProcessor: 
+		BeanPostProcessor implementation that passes the ServletContext to beans that implement the ServletContextAware interface. 
+		Web application contexts will automatically register this with their underlying bean factory. Applications do not use this directly.
+		postProcessAfterInitialization(Object bean, String beanName):
+		postProcessBeforeInitialization(Object bean, String beanName):
+	ServletContextFactoryBean: 	Deprecated
+	ServletContextLiveBeansView: LiveBeansView subclass which looks for all ApplicationContexts in the web application, as exposed in ServletContext attributes.
+		All Implemented Interfaces:
+			Aware, ApplicationContextAware, LiveBeansViewMBean 
+		findApplicationContexts(): Find all applicable ApplicationContexts for the current application.
+*	ServletContextParameterFactoryBean: implements FactoryBean<String>, ServletContextAware	
+		FactoryBean that retrieves a specific ServletContext init parameter (that is, a "context-param" defined in web.xml). Exposes that ServletContext init parameter when used as bean reference, effectively making it available as named Spring bean instance.
+		NOTE: As of Spring 3.0, you may also use the "contextParameters" default bean which is of type Map, and dereference it using an "#{contextParameters.myKey}" expression to access a specific parameter by name.
+	ServletContextPropertyPlaceholderConfigurer: Deprecated
+		org.springframework.core.io.support.PropertiesLoaderSupport
+			org.springframework.beans.factory.config.PropertyResourceConfigurer
+				org.springframework.beans.factory.config.PlaceholderConfigurerSupport
+					org.springframework.beans.factory.config.PropertyPlaceholderConfigurer
+						org.springframework.web.context.support.ServletContextPropertyPlaceholderConfigurer
+	ServletContextPropertySource: PropertySource that reads init parameters from a ServletContext object.
+		org.springframework.core.env.PropertySource<T>
+			org.springframework.core.env.EnumerablePropertySource<ServletContext>
+		getProperty(String name)
+		getPropertyNames()
+	ServletContextResource: Implemented ContextResource, InputStreamSource, Resource
+		org.springframework.core.io.AbstractResource
+			org.springframework.core.io.AbstractFileResolvingResource
+				org.springframework.web.context.support.ServletContextResource
+		Resource implementation for ServletContext resources, interpreting relative paths within the web application root directory.
+		Always supports stream access and URL access, but only allows java.io.File access when the web application archive is expanded.
+	ServletContextResourceLoader:
+		org.springframework.core.io.DefaultResourceLoader
+			org.springframework.web.context.support.ServletContextResourceLoader
+		ResourceLoader implementation that resolves paths as ServletContext resources, for use outside a WebApplicationContext (for example, in an HttpServletBean or GenericFilterBean subclass).
+		Within a WebApplicationContext, resource paths are automatically resolved as ServletContext resources by the context implementation.
+		getResourceByPath(String path): This implementation supports file paths beneath the root of the web application.
+	ServletContextResourcePatternResolver: Implemented ResourceLoader, ResourcePatternResolver
+		ServletContext-aware subclass of PathMatchingResourcePatternResolver, able to find matching resources below the web application root directory via Servlet 2.3's ServletContext.getResourcePaths. Falls back to the superclass' file system checking for other resources.
+		doFindPathMatchingFileResources(Resource rootDirResource, String subPattern): Overridden version which checks for ServletContextResource and uses ServletContext.getResourcePaths to find matching resources below the web application root directory.
+		doRetrieveMatchingServletContextResources(ServletContext servletContext, String fullPattern, String dir, Set<Resource> result):
+			Recursively retrieve ServletContextResources that match the given pattern, adding them to the given result set.
+	ServletContextScope:
+		Scope wrapper for a ServletContext, i.e. for global web application attributes.
+		This differs from traditional Spring singletons in that it exposes attributes in the ServletContext. Those attributes will get destroyed whenever the entire application shuts down, which might be earlier or later than the shutdown of the containing Spring ApplicationContext.
+		The associated destruction mechanism relies on a ContextCleanupListener being registered in web.xml. Note that ContextLoaderListener includes ContextCleanupListener's functionality.
+		This scope is registered as default scope with key "application".
+*	ServletRequestHandledEvent:  Servlet-specific subclass of RequestHandledEvent, adding servlet-specific context information.
+		java.util.EventObject
+			org.springframework.context.ApplicationEvent
+				org.springframework.web.context.support.RequestHandledEvent
+					org.springframework.web.context.support.ServletRequestHandledEvent
+		getClientAddress()
+		getDescription()
+		getMethod()
+		getRequestUrl()
+		getServletName()
+		getShortDescription()
+		toString()
+****SpringBeanAutowiringSupport: 
+		Convenient base class for self-autowiring classes that gets constructed within a Spring-based web application. Resolves @Autowired annotations in the endpoint class against beans in the current Spring root web application context (as determined by the current thread's context ClassLoader, which needs to be the web application's ClassLoader). Can alternatively be used as a delegate instead of as a base class.
+		A typical usage of this base class is a JAX-WS endpoint class: Such a Spring-based JAX-WS endpoint implementation will follow the standard JAX-WS contract for endpoint classes but will be 'thin' in that it delegates the actual work to one or more Spring-managed service beans - typically obtained using @Autowired. The lifecycle of such an endpoint instance will be managed by the JAX-WS runtime, hence the need for this base class to provide @Autowired processing based on the current Spring context.
+		NOTE: If there is an explicit way to access the ServletContext, prefer such a way over using this class. The WebApplicationContextUtils class allows for easy access to the Spring root web application context based on the ServletContext.
+		processInjectionBasedOnCurrentContext(Object target):
+			Process @Autowired injection for the given target object, based on the current web application context.
+		processInjectionBasedOnServletContext(Object target, ServletContext servletContext)
+			Process @Autowired injection for the given target object, based on the current root web application context as stored in the ServletContext.
+	StandardServletEnvironment:Implemented ConfigurableEnvironment, ConfigurablePropertyResolver, Environment, PropertyResolver, ConfigurableWebEnvironment
+		org.springframework.core.env.AbstractEnvironment
+			org.springframework.core.env.StandardEnvironment
+				org.springframework.web.context.support.StandardServletEnvironment
+		JNDI_PROPERTY_SOURCE_NAME: JNDI property source name: "jndiProperties"
+		SERVLET_CONFIG_PROPERTY_SOURCE_NAME: Servlet config init parameters property source name: "servletConfigInitParams"
+		SERVLET_CONTEXT_PROPERTY_SOURCE_NAME: Servlet context init parameters property source name: "servletContextInitParams"
+		customizePropertySources(MutablePropertySources propertySources):
+			Customize the set of property sources with those contributed by superclasses as well as those appropriate for standard servlet-based environments: "servletConfigInitParams" "servletContextInitParams" "jndiProperties" 
+		initPropertySources(ServletContext servletContext, ServletConfig servletConfig): Replace any stub property source instances acting as placeholders with real servlet context/config property sources using the given parameters.
+***	StaticWebApplicationContext: 仅用于测试，不能用在产品中！！！ Static WebApplicationContext implementation for testing. Not intended for use in production applications. 
+		org.springframework.core.io.DefaultResourceLoader
+			org.springframework.context.support.AbstractApplicationContext
+				org.springframework.context.support.GenericApplicationContext
+					org.springframework.context.support.StaticApplicationContext
+						org.springframework.web.context.support.StaticWebApplicationContext
+		All Implemented Interfaces:
+			Closeable, AutoCloseable, BeanFactory, DisposableBean, HierarchicalBeanFactory, ListableBeanFactory, BeanDefinitionRegistry, 
+			ApplicationContext, ApplicationEventPublisher, ConfigurableApplicationContext, Lifecycle, MessageSource, AliasRegistry, 
+			EnvironmentCapable, ResourceLoader, ResourcePatternResolver, ThemeSource, ConfigurableWebApplicationContext, WebApplicationContext 
+***	WebApplicationContextUtils: 比较有用
+		Convenience methods for retrieving the root WebApplicationContext for a given ServletContext. This is e.g. useful for accessing a Spring context from within custom web views or Struts actions.
+		Note that there are more convenient ways of accessing the root context for many web frameworks, either part of Spring or available as external library. This helper class is just the most generic way to access the root context.
+		getRequiredWebApplicationContext(ServletContext sc):
+			Find the root WebApplicationContext for this web application, which is typically loaded via ContextLoaderListener.
+		getWebApplicationContext(ServletContext sc)
+			Find the root WebApplicationContext for this web application, which is typically loaded via ContextLoaderListener.
+		getWebApplicationContext(ServletContext sc, String attrName)
+			Find a custom WebApplicationContext for this web application.
+		initServletPropertySources(MutablePropertySources propertySources, ServletContext servletContext)
+			Convenient variant of initServletPropertySources(MutablePropertySources, ServletContext, ServletConfig) that always provides null for the ServletConfig parameter.
+		initServletPropertySources(MutablePropertySources propertySources, ServletContext servletContext, ServletConfig servletConfig)
+			Replace Servlet-based stub property sources with actual instances populated with the given servletContext and servletConfig objects.
+		registerEnvironmentBeans(ConfigurableListableBeanFactory bf, ServletContext sc)
+			Register web-specific environment beans ("contextParameters", "contextAttributes") with the given BeanFactory, as used by the WebApplicationContext.
+		registerEnvironmentBeans(ConfigurableListableBeanFactory bf, ServletContext sc, ServletConfig config)
+			Register web-specific environment beans ("contextParameters", "contextAttributes") with the given BeanFactory, as used by the WebApplicationContext.
+		registerWebApplicationScopes(ConfigurableListableBeanFactory beanFactory)
+			Register web-specific scopes ("request", "session", "globalSession") with the given BeanFactory, as used by the WebApplicationContext.
+		registerWebApplicationScopes(ConfigurableListableBeanFactory beanFactory, ServletContext sc)
+			Register web-specific scopes ("request", "session", "globalSession", "application") with the given BeanFactory, as used by the WebApplicationContext.	
+**	abstract class WebApplicationObjectSupport: Convenient superclass for application objects running in a WebApplicationContext. Provides getWebApplicationContext(), getServletContext(), and getTempDir() methods.
+		org.springframework.context.support.ApplicationObjectSupport
+			org.springframework.web.context.support.WebApplicationObjectSupport
+		All Implemented Interfaces:
+			Aware, ApplicationContextAware, ServletContextAware
+		Direct Known Subclasses:
+			AbstractCachingViewResolver, AbstractHandlerMapping, AbstractView, BeanNameViewResolver, 
+			ContentNegotiatingViewResolver, TilesConfigurer, WebContentGenerator 
+		getServletContext()
+*		getTempDir(): Return the temporary directory for the current web application, as provided by the servlet container.
+		getWebApplicationContext(): 
+		initApplicationContext(ApplicationContext context): 
+		initServletContext(ServletContext servletContext):  Subclasses may override this for custom initialization based on the ServletContext that this application object runs in. 
+		isContextRequired(): 
+		setServletContext(ServletContext servletContext): 
+****XmlWebApplicationContext: web系统启动的基础类，这个类的继承层次的每个接口可以好好看看，功能分布的挺散。非常重要!!!
+		org.springframework.core.io.DefaultResourceLoader
+			org.springframework.context.support.AbstractApplicationContext
+				org.springframework.context.support.AbstractRefreshableApplicationContext
+					org.springframework.context.support.AbstractRefreshableConfigApplicationContext
+						org.springframework.web.context.support.AbstractRefreshableWebApplicationContext
+							org.springframework.web.context.support.XmlWebApplicationContext
+		All Implemented Interfaces:
+			Closeable, AutoCloseable, Aware, BeanFactory, BeanNameAware, DisposableBean, HierarchicalBeanFactory, 
+			InitializingBean, ListableBeanFactory, ApplicationContext, ApplicationEventPublisher, 
+			ConfigurableApplicationContext, Lifecycle, MessageSource, EnvironmentCapable, ResourceLoader, 
+			ResourcePatternResolver, ThemeSource, ConfigurableWebApplicationContext, WebApplicationContext
+
+
+
+		
+		
+		
 	
 HtmlUtils
 JavaScriptUtils
