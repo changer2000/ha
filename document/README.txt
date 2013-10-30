@@ -229,7 +229,16 @@ http://lvdong5830.iteye.com/blog/1508987：
 			<beans:bean id="userArgumentResolver" class="com.etech.system.resolver.UserArgumentResolver">
 			</beans:bean>
 		发现，日期型的数据，无法设定。会报Date对象创建错
-		
+		\-----------------------------------------------> 继续补充（2013-10-30）：
+		今天在看spring-mvc-showcase的servlet-context.xml文件，发现它用的就是
+		用我上面的方法，是能够起作用的。比较之后发现，应该如下例配置类似：
+			<mvc:annotation-driven validator="validator" conversion-service="conversion-service">
+				<mvc:argument-resolvers>
+					<bean class="com.etech.system.resolver.UserArgumentResolver"/>
+				</mvc:argument-resolvers>	
+			</mvc:annotation-driven>
+		这样整个都能用了，而且效率估计比下面的好一些（因为有support()方法）
+		------------------------------------------------------------------------
 	
 后来又参考了http://starscream.iteye.com/blog/1098880：提出了新的方法，很合适目前这个问题的解决。
 	按照这个链接给出的思路，做了一个解决方法，即com.etech.system.resolver.UserArgument2Resolver

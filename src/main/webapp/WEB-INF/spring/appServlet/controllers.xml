@@ -20,7 +20,8 @@
 	-->
 	<mvc:annotation-driven validator="validator" conversion-service="conversion-service">
 		<mvc:argument-resolvers>
-			<bean class="com.etech.system.resolver.UserArgument2Resolver"/>
+			<!--<bean class="com.etech.system.resolver.UserArgument2Resolver"/>-->
+			<bean class="com.etech.system.resolver.UserArgumentResolver"/>
 		</mvc:argument-resolvers>	
 	</mvc:annotation-driven>
 	
