@@ -255,6 +255,13 @@ http://lvdong5830.iteye.com/blog/1508987：
 后一种方法，是事项WebArgumentResolver接口，看api文档，Resolve an argument for the given handler method parameter within the given web request.
 比较2者，猜测前一种方法会在数据绑定之前起作用，导致屏蔽了后面的spring数据parse/绑定，导致Date对象创建错。
 而后一种方法，明确指定了传入handle（即Controller中的具体方法）的参数时起作用，估计切点更明确。
+
+
+
+10.Spring 全局的exception处理
+	具体程序是GlobalExceptionHandler.java
+	但一定要在controller.xml文件里配置如下，否则上面的java代码不起作用
+		<context:component-scan base-package="com.etech.system.exceptions"></context:component-scan>
 	
 ------------------------------------------	
 1118.css的一些基本概念：
