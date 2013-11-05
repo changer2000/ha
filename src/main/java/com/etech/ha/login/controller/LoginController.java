@@ -104,15 +104,18 @@ public class LoginController extends BaseController {
 	 */
 	//public ModelAndView doLogin(HttpServletRequest request, @ModelAttribute(value="user") @Valid LoginForm user, BindingResult result) {
 	//public ModelAndView doLogin(HttpServletRequest request, @ModelAttribute(value="user") @Valid LoginForm user, BindingResult result) {
-	public ModelAndView doLogin(HttpServletRequest request, @ModelAttribute(value="menu") Menu menu, @ModelAttribute(value="user") @Valid LoginForm user, BindingResult result) {
+	public ModelAndView doLogin(HttpServletRequest request, @ModelAttribute(value="menu") Menu menu, @ModelAttribute(value="user") @Valid LoginForm user, BindingResult result) throws Exception {
 		if (result.hasErrors()) {
 			return new ModelAndView("login");
 		}
+		
 		//ObjectError err = new ObjectError();
 		//result.addError(arg0)
 		if ("haha".equals(user.getEmpe_num())) {	//如果框架validator无法实现，可以在这里加入程序，自己实现。
 			//result.rejectValue("empe_num", "reserved");
 			result.rejectValue("empe_num", "reserved.data", new Object[] {user.getEmpe_num()}, null);
+		} else if ("excpt".equals(user.getEmpe_num())) {
+			throw new Exception("Invalide user.");
 		}
 		if (result.hasErrors()) {
 			return new ModelAndView("login");
