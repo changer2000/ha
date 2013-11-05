@@ -5,6 +5,6 @@
 <title>Error</title>
 </head>
 <body>
-	<span></span><c:out value="${errMsgBean.errMessage}" escapeXml="false"/></span>
+	<span><c:out value="${errMsgBean.errMessage}" escapeXml="false"/></span>
 </body>
 </html>
