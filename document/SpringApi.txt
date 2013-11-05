@@ -750,10 +750,14 @@ org.springframework.web.context.support
 			InitializingBean, ListableBeanFactory, ApplicationContext, ApplicationEventPublisher, 
 			ConfigurableApplicationContext, Lifecycle, MessageSource, EnvironmentCapable, ResourceLoader, 
 			ResourcePatternResolver, ThemeSource, ConfigurableWebApplicationContext, WebApplicationContext
-
-
-
-		
+org.springframework.web.filter
+	AbstractRequestLoggingFilter: 可用于log记录
+		org.springframework.web.filter.GenericFilterBean
+			org.springframework.web.filter.OncePerRequestFilter
+				org.springframework.web.filter.AbstractRequestLoggingFilter
+		Direct Known Subclasses:
+			CommonsRequestLoggingFilter, Log4jNestedDiagnosticContextFilter, ServletContextRequestLoggingFilter 
+	CharacterEncodingFilter	
 		
 		
 	
