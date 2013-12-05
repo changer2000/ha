@@ -757,9 +757,47 @@ org.springframework.web.filter
 				org.springframework.web.filter.AbstractRequestLoggingFilter
 		Direct Known Subclasses:
 			CommonsRequestLoggingFilter, Log4jNestedDiagnosticContextFilter, ServletContextRequestLoggingFilter 
-	CharacterEncodingFilter	
-		
-		
+	CharacterEncodingFilter: encoding设置
+	CommonsRequestLoggingFilter: Simple request logging filter that writes the request URI (and optionally the query string) to the Commons Log.
+	CompositeFilter: A generic composite servlet Filter that just delegates its behaviour to a chain (list) of user supplied filters, 
+		achieving the functionality of a FilterChain, but conveniently using only Filter instances. 
+		This is useful for filters that require dependency injection, and can therefore be set up in a Spring application context. 
+		Typically this composite would be used in conjunction with DelegatingFilterProxy, so that it can be declared in Spring but applied to a servlet context.
+	DelegatingFilterProxy: 	
+		Proxy for a standard Servlet 2.3 Filter, delegating to a Spring-managed bean that implements the Filter interface. Supports a "targetBeanName" filter init-param in web.xml, specifying the name of the target bean in the Spring application context.
+		web.xml will usually contain a DelegatingFilterProxy definition, with the specified filter-name corresponding to a bean name in Spring's root application context. All calls to the filter proxy will then be delegated to that bean in the Spring context, which is required to implement the standard Servlet 2.3 Filter interface.
+		This approach is particularly useful for Filter implementation with complex setup needs, allowing to apply the full Spring bean definition machinery to Filter instances. Alternatively, consider standard Filter setup in combination with looking up service beans from the Spring root application context.
+		NOTE: The lifecycle methods defined by the Servlet Filter interface will by default not be delegated to the target bean, relying on the Spring application context to manage the lifecycle of that bean. Specifying the "targetFilterLifecycle" filter init-param as "true" will enforce invocation of the Filter.init and Filter.destroy lifecycle methods on the target bean, letting the servlet container manage the filter lifecycle.
+		As of Spring 3.1, DelegatingFilterProxy has been updated to optionally accept constructor parameters when using Servlet 3.0's instance-based filter registration methods, usually in conjunction with Spring 3.1's WebApplicationInitializer SPI. These constructors allow for providing the delegate Filter bean directly, or providing the application context and bean name to fetch, avoiding the need to look up the application context from the ServletContext.
+		This class was originally inspired by Spring Security's FilterToBeanProxy class, written by Ben Alex.
+	GenericFilterBean: Simple base implementation of Filter which treats its config parameters (init-param entries within the filter tag in web.xml) as bean properties. 
+		All Implemented Interfaces:
+			Filter, Aware, BeanNameAware, DisposableBean, InitializingBean, EnvironmentAware, ServletContextAware
+		Direct Known Subclasses:
+			DelegatingFilterProxy, OncePerRequestFilter 	
+		A handy superclass for any type of filter. Type conversion of config parameters is automatic, with the corresponding setter method getting invoked with the converted value. 
+		It is also possible for subclasses to specify required properties. Parameters without matching bean property setter will simply be ignored.
+		This filter leaves actual filtering to subclasses, which have to implement the Filter.doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain) method.
+		This generic filter base class has no dependency on the Spring ApplicationContext concept. 
+		Filters usually don't load their own context but rather access service beans from the Spring root application context, 
+		accessible via the filter's ServletContext (see WebApplicationContextUtils).
+	HiddenHttpMethodFilter: 
+		org.springframework.web.filter.GenericFilterBean
+			org.springframework.web.filter.OncePerRequestFilter
+				org.springframework.web.filter.HiddenHttpMethodFilter
+		All Implemented Interfaces:
+			Filter, Aware, BeanNameAware, DisposableBean, InitializingBean, EnvironmentAware, ServletContextAware 
+		Filter that converts posted method parameters into HTTP methods, retrievable via HttpServletRequest.getMethod(). 
+		Since browsers currently only support GET and POST, a common technique - used by the Prototype library, 
+		for instance - is to use a normal POST with an additional hidden form field (_method) to pass the "real" HTTP method along. 
+		This filter reads that parameter and changes the HttpServletRequestWrapper.getMethod() return value accordingly.
+		The name of the request parameter defaults to _method, but can be adapted via the methodParam property.
+		NOTE: This filter needs to run after multipart processing in case of a multipart POST request, due to its inherent need for checking a POST body parameter. 
+		So typically, put a Spring MultipartFilter before this HiddenHttpMethodFilter in your web.xml filter chain.
+
+
+
+
 	
 HtmlUtils
 JavaScriptUtils
