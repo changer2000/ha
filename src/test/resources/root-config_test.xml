@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd"
+	>
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<context:component-scan base-package="com.etech.ha.**.dao"></context:component-scan>
+	<context:component-scan base-package="com.etech.ha.**.service"></context:component-scan>
+	<context:component-scan base-package="com.etech.ha.**.controller"></context:component-scan>
+	
+	<context:property-placeholder location="classpath:jdbc_test.properties"/>
+	
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename" value="conf/messages"></property>
+	</bean>
+	
+	<!-- 老的hibernate sessionFactory写法
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="configLocation" value="classpath:hibernate.cfg.xml"/>
+	</bean>
+	--> 
+	
+	<!-- 用了以下这种配置后，hibernate.cfg.xml就用不到了-->
+	<!--  
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="mappingLocations" value="classpath:/com/etech/ha/peer/*.xml"/>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+			</props>
+		</property>
+	</bean>
+	-->
+	
+	<!-- 用了以下这种配置后，com/etech/ha/peer/*.xml就用不到了-->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<!--  
+		<property name="mappingLocations" value="classpath:/com/etech/ha/peer/*.xml"/>
+		-->
+		<property name="packagesToScan">
+			<list>
+				<value>com.etech.ha.peer</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
+		  p:driverClassName="${jdbc.driverClassName}"
+		  p:url="${jdbc.url}"
+		  p:username="${jdbc.username}"
+		  p:password="${jdbc.password}">
+				
+			<property name="maxActive" value="3"/>
+			<property name="maxIdle" value="3"/>
+			<property name="minIdle" value="1"/>
+			
+			<property name="validationQuery" value="select 1"/>
+			<property name="testOnBorrow" value="true"/>
+			<property name="testOnReturn" value="true"/>
+			<property name="testWhileIdle" value="true"/>
+			<property name="timeBetweenEvictionRunsMillis" value="1800000"/>
+			<property name="minEvictableIdleTimeMillis" value="1800000"/>
+			<property name="numTestsPerEvictionRun" value="10"/>
+		
+	</bean>
+	
+	
+	<!-- 用了以下这种配置后，hibernate.cfg.xml应该就用不到了 ，
+	还需要加上2个jar：lib\hibernate-annotations-3.2.1.ga.jar 和 com.springsource.javax.persistence-1.0.0.jar
+	但是Peer里的class都需要加上annotation，否则数据库操作无法正常进行
+	-->	  
+	<!--
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="packagesToScan" value="com.etech.ha.peer"/>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+			</props>
+		</property>
+	</bean>
+	-->
+	
+	<bean id="hibernateTemplate"
+          class="org.springframework.orm.hibernate3.HibernateTemplate"
+          p:sessionFactory-ref="sessionFactory"/>
+	
+	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<!-- 用声明方式的事务,每个service文件中都要有@Transaction的声明  -->
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	
+	<!-- 最原始的配置方式
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+    	destroy-method="close"
+    	p:driverClassName="com.mysql.jdbc.Driver"
+    	p:url="jdbc:mysql://localhost:3306/ha"
+    	p:username="root"
+    	p:password=""
+    />
+    
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate"
+    	p:dataSource-ref="dataSource"
+    />
+    
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+		p:dataSource-ref="dataSource"
+    />
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+    	<tx:attributes>
+    		<tx:method name="*"/>
+    	</tx:attributes>
+    </tx:advice>
+    
+    <aop:config proxy-target-class="true">
+    	<aop:pointcut id="serviceMethod" expression=" execution(* com.etech.ha.service..*(..))"/>
+    	<aop:advisor pointcut-ref="serviceMethod" advice-ref="txAdvice"/>
+    </aop:config>
+    -->
+</beans>
