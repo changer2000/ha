@@ -23,7 +23,7 @@ import org.dbunit.dataset.excel.XlsDataSet;
 import org.unitils.core.UnitilsException;
 import org.unitils.dbunit.util.MultiSchemaDataSet;
 
-//EXCEL��ݼ���ȡ��
+//EXCEL数据集读取器
 public class MultiSchemaXlsDataSetReader {
 	private String defaultSchemaName;
 	
@@ -42,25 +42,25 @@ public class MultiSchemaXlsDataSetReader {
 							.toArray(new ITable[] {}));
 					dataSets.setDataSetForSchema(entry.getKey(), ds);
 				} catch (Exception e) {
-					throw new UnitilsException("����DataSetʧ��!",  e);
+					throw new UnitilsException("构造DataSet失败!",  e);
 				}
 			}
 			return dataSets;
 		} catch (Exception e) {
-			throw new UnitilsException("����EXCEL�ļ����?", e);
+			throw new UnitilsException("解析EXCEL文件出错：", e);
 		}
 	}
 
 	private Map<String, List<ITable>> getTables(File... dataSetFiles) {
 		Pattern pattern = Pattern.compile("\\.");
 		Map<String, List<ITable>> tableMap = new HashMap<String, List<ITable>>();
-		// ��Ҫ���schema��Table�������һ��
+		// 需要根据schema把Table重新组合一下
 		try {
 			for (File file : dataSetFiles) {
 				IDataSet dataSet = new XlsDataSet(new FileInputStream(file));
 				String[] tableNames = dataSet.getTableNames();
 				for (String each : tableNames) {
-					// ���ʵ���ϲ���schema, �Ƕ�Ӧ��spring��datasouceId
+					// 这个实际上不是schema, 是对应的spring的datasouceId
 					String schema = null;
 					String tableName;
 					String[] temp = pattern.split(each);
@@ -79,12 +79,12 @@ public class MultiSchemaXlsDataSetReader {
 				}
 			}
 		} catch (Exception e) {
-			throw new UnitilsException("������ݼ�ʧ��: "
+			throw new UnitilsException("创建数据集失败: "
 					+ Arrays.toString(dataSetFiles), e);
 		}
 		return tableMap;
 	}
-	//����XslTable��
+	//构造XslTable表
 	class XlsTable extends AbstractTable {
 		private ITable delegate;
 		private String tableName;

@@ -12,24 +12,24 @@ public class MultiSchemaXlsDataSetFactory implements DataSetFactory {
 
 	protected String defaultSchemaName;
 
-	//³õÊ¼»¯
+	//åˆå§‹åŒ–
 	public void init(Properties configuration, String defaultSchemaName) {
 		this.defaultSchemaName = defaultSchemaName;
 	}
 
-	//´´½¨Êı¾İ¼¯
+	//åˆ›å»ºæ•°æ®é›†
 	public MultiSchemaDataSet createDataSet(File... dataSetFiles) {
 		try {
 			MultiSchemaXlsDataSetReader xlsDataSetReader = new MultiSchemaXlsDataSetReader(
 					defaultSchemaName);
 			return xlsDataSetReader.readDataSetXls(dataSetFiles);
 		} catch (Exception e) {
-			throw new UnitilsException("´´½¨Êı¾İ¼¯Ê§°Ü: "
+			throw new UnitilsException("åˆ›å»ºæ•°æ®é›†å¤±è´¥: "
 					+ Arrays.toString(dataSetFiles), e);
 		}
 	}
 
-	// »ñÈ¡Êı¾İ¼¯ÎÄ¼şµÄÀ©Õ¹Ãû
+	// è·å–æ•°æ®é›†æ–‡ä»¶çš„æ‰©å±•å
 	public String getDataSetFileExtension() {
 		return "xls";
 	}
