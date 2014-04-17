@@ -25,7 +25,7 @@
 			<fieldset>
 				<legend>Login</legend>
 				<form:label path="empe_num"><s:message code="label.login.empe_num"/><br/><form:errors path="empe_num" cssClass="error" delimiter="<br/>"/></form:label>
-				<form:input path="empe_num"/>
+				<form:input path="empe_num" id="empe_num"/>
 				<form:label path="pwd"><s:message code="label.login.pwd"/><br/><form:errors path="pwd" cssClass="error" delimiter="<br/>"/></form:label>
 				<form:password path="pwd"/>
 				<br/>
@@ -40,5 +40,8 @@
 		<div class="span4"></div>
 	</div>
 </div>
+<script type="text/javascript">
+	$('#empe_num').focus();
+</script>
 </body>
 </html>

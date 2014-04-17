@@ -24,12 +24,17 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.springframework.context.annotation.Scope;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.stereotype.Component;
 import org.springframework.web.method.annotation.FilterEmptyBean;
 
+import com.etech.ha.annotation.NeedFilterEmptyBean;
 import com.etech.system.bean.BaseDomain;
 import com.etech.validator.group.SecondGroup;
 
+@Scope("prototype")
+@Component(value="holidayListPeer")
 @GroupSequence({HolidayListPeer.class, SecondGroup.class})
 @Entity
 @Table(name="t_holiday_list", uniqueConstraints={@UniqueConstraint(columnNames={"hldy_year","hldy_id"})})	//XXX
@@ -133,6 +138,7 @@ public class HolidayListPeer extends BaseDomain {
 		return hldyListDtlList;
 	}
 
+	@NeedFilterEmptyBean
 	public void setHldyListDtlList(List<HolidayListDtlPeer> hldyListDtlList) {
 		this.hldyListDtlList = hldyListDtlList;
 	}

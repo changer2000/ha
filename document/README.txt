@@ -94,6 +94,10 @@ org.springframework.beans.BeanWrapperImpl, line 525
 
 大位置：org.springframework.web.method.annotation.ModelAttributeMethodProcessor.resolveArgument(), line 106~107
 
+在HolidayListPeer的setHldyListDtlList方法里加了一个annotation:@NeedFilterEmptyBean，想测试是否能在传入controller类的方法的参数时，过滤掉那些为空的bean。
+实验下来，发现是不可以的。具体原因写在HolidayListInfoController.java line 68了
+
+*** 可以考虑PropertyEditorRegistrar这种方式（目前没有做过实验，先做个标记）
 
 (1)打包流程：
    a. 在C:下建立spring-web-3.2.1.RELEASE目录，把原始的jar里的文件解开，放到这个目录下

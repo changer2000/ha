@@ -64,6 +64,7 @@ public class HolidayListInfoController extends BaseController {
 	@RequestMapping(params="register", method=RequestMethod.POST)
 	public ModelAndView register(UserInfo userInfo, @Valid @ModelAttribute(value="command") HolidayListPeer listPeer, BindingResult result) {
 		ModelAndView mv = new ModelAndView("hldyListInfo");
+		//listPeer.setHldyListDtlList(listPeer.getHldyListDtlList()); 这一句验证了setHldyListDtlList()上的@NeedFilterEmptyBean没起作用。原因是：peer不是从spring容器中得到的，是直接从request中按parameter名组装在一起的
 		if (!result.hasErrors()) {
 			//logic validate date
 			validateRegister(userInfo, listPeer, result);
