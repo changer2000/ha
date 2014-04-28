@@ -20,7 +20,7 @@ public class HolidayService {
 	
 	
 	public List<HolidayPeer> listAll() {
-		return hldyDao.loadAll();
+		return hldyDao.find("from HolidayPeer order by order_no");
 	}
 	
 	public HolidayPeer findById(Long id) {

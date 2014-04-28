@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.GroupSequence;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -34,6 +35,12 @@ public class HolidayPeer extends BaseDomain {
 	@NotEmpty
 	@Length(min=2, max=100, message="{error.length}", groups=FirstGroup.class)
 	private String name;
+	
+	@Column(name="order_no")
+	@NotNull
+	@javax.validation.constraints.Min(value=1, message="{error.min}")
+	//@org.hibernate.validator.Min(value=1, message="{error.min}") 根本不起作用
+	private Long order_no;
 	
 	@OneToMany(mappedBy="holidayPeer", fetch=FetchType.LAZY)	//XXX Just for sample,fetch默认值就是FetchType.LAZY
 	private List<HolidayListPeer> hldyList;
@@ -60,6 +67,14 @@ public class HolidayPeer extends BaseDomain {
 
 	public void setHldyList(List<HolidayListPeer> hldyList) {
 		this.hldyList = hldyList;
+	}
+
+	public Long getOrder_no() {
+		return order_no;
+	}
+
+	public void setOrder_no(Long order_no) {
+		this.order_no = order_no;
 	}
 	
 }

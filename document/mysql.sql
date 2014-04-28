@@ -54,6 +54,7 @@ create table t_holiday(
 id int auto_increment primary key,
 name varchar(100)
 ) engine=InnoDB;
+alter table t_holiday add column order_no int;
 
 drop table if exists t_holiday_list;
 create table t_holiday_list(
