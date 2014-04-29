@@ -40,13 +40,10 @@ public class HolidayListInfoController extends BaseController {
 	
 	@Autowired
 	private HolidayListService hldyListSvc;
-	
-	@Autowired
-	private HolidayListController hldyListController;
-	
+		
 	@ModelAttribute("hldyOptions")
 	public List<HolidayPeer> initHldyOptions() {
-		return hldyListController.initHldyOptions();
+		return hldySvc.initHldyOptions();
 	}
 	
 	@RequestMapping(params="back", method=RequestMethod.POST)
@@ -140,14 +137,6 @@ public class HolidayListInfoController extends BaseController {
 
 	public void setHldySvc(HolidayService hldySvc) {
 		this.hldySvc = hldySvc;
-	}
-
-	public HolidayListController getHldyListController() {
-		return hldyListController;
-	}
-
-	public void setHldyListController(HolidayListController hldyListController) {
-		this.hldyListController = hldyListController;
 	}
 
 	public HolidayListService getHldyListSvc() {

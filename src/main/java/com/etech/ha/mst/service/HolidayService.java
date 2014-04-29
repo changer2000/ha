@@ -1,5 +1,6 @@
 package com.etech.ha.mst.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -17,6 +18,15 @@ public class HolidayService {
 	
 	@Autowired
 	private HolidayDAO hldyDao;
+	
+	public List<HolidayPeer> initHldyOptions() {
+		List<HolidayPeer> list = listAll();
+		if (list==null) {
+			list = new ArrayList<HolidayPeer>();
+		}
+		list.add(0, new HolidayPeer());
+		return list;
+	}
 	
 	
 	public List<HolidayPeer> listAll() {

@@ -14,7 +14,7 @@
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	<context:component-scan base-package="com.etech.ha.**.dao"></context:component-scan>
 	<context:component-scan base-package="com.etech.ha.**.service"></context:component-scan>
-	<context:component-scan base-package="com.etech.ha.**.controller"></context:component-scan>
+	<!-- <context:component-scan base-package="com.etech.ha.**.controller"></context:component-scan> -->
 	<context:component-scan base-package="com.etech.ha.peer"></context:component-scan>
 	
 	<context:property-placeholder location="classpath:jdbc.properties"/>

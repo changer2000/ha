@@ -1,6 +1,5 @@
 package com.etech.ha.mst.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.math.NumberUtils;
@@ -35,12 +34,7 @@ public class HolidayListController extends BaseController {
 	
 	@ModelAttribute("hldyOptions")
 	public List<HolidayPeer> initHldyOptions() {
-		List<HolidayPeer> list = hldySvc.listAll();
-		if (list==null) {
-			list = new ArrayList<HolidayPeer>();
-		}
-		list.add(0, new HolidayPeer());
-		return list;
+		return hldySvc.initHldyOptions();
 	}
 	
 	@RequestMapping(method=RequestMethod.GET)

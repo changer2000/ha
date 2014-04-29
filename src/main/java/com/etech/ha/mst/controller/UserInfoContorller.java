@@ -38,10 +38,7 @@ public class UserInfoContorller extends BaseController {
 	
 	@Autowired
 	private GroupService groupSvc;
-	
-	@Autowired
-	private UserListController userListController;
-	
+		
 	@ModelAttribute("atndcStsOptions")
 	public List<AttendanceStatusPeer> optionsList(UserInfo userInfo) {
 		List<AttendanceStatusPeer> list = atndcStsSvc.loadAll();
@@ -170,14 +167,6 @@ public class UserInfoContorller extends BaseController {
 
 	public void setAtndcStsSvc(AttendanceStatusService atndcStsSvc) {
 		this.atndcStsSvc = atndcStsSvc;
-	}
-
-	public UserListController getUserListController() {
-		return userListController;
-	}
-
-	public void setUserListController(UserListController userListController) {
-		this.userListController = userListController;
 	}
 
 	public GroupService getGroupSvc() {
