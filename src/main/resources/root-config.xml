@@ -16,6 +16,7 @@
 	<context:component-scan base-package="com.etech.ha.**.service"></context:component-scan>
 	<!-- <context:component-scan base-package="com.etech.ha.**.controller"></context:component-scan> -->
 	<context:component-scan base-package="com.etech.ha.peer"></context:component-scan>
+	<context:component-scan base-package="com.etech.ha.**.cmd"></context:component-scan>
 	
 	<context:property-placeholder location="classpath:jdbc.properties"/>
 	

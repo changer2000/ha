@@ -63,6 +63,38 @@ public class HolidayListInfoController extends BaseController {
 		ModelAndView mv = new ModelAndView("hldyListInfo");
 		//listPeer.setHldyListDtlList(listPeer.getHldyListDtlList()); 这一句验证了setHldyListDtlList()上的@NeedFilterEmptyBean没起作用。原因是：peer不是从spring容器中得到的，是直接从request中按parameter名组装在一起的
 		if (!result.hasErrors()) {
+			if (doRegister(userInfo, listPeer, result)) {
+				MessagesBean msgBean = new MessagesBean();
+				msgBean.addMessage(userInfo.getLocale(), messageSource, "msg.info.register.success", null)
+					.setMessagesIntoModelView(mv);
+			}
+		}
+		return mv;
+	}
+	
+	private boolean doRegister(UserInfo userInfo, HolidayListPeer listPeer, BindingResult result) {
+		//logic validate date
+		validateRegister(userInfo, listPeer, result);
+		
+		if (!result.hasErrors()) {
+			//prepare peer
+			listPeer.setHolidayPeer(new HolidayPeer());
+			listPeer.getHolidayPeer().setId(listPeer.getHolidayPeerId());
+			if (listPeer.getHldyListDtlList()!=null) {
+				for (HolidayListDtlPeer dtlPeer : listPeer.getHldyListDtlList()) {
+					dtlPeer.setHldyListPeer(listPeer);
+				}
+			}
+			hldyListSvc.register(listPeer);
+			return true;
+		} else
+			return false;
+	}
+	
+	@RequestMapping(params="initAttndncInfo", method=RequestMethod.POST)
+	public ModelAndView initAttndncInfo(UserInfo userInfo, @ModelAttribute("command") HolidayListPeer listPeer, BindingResult result) {
+		ModelAndView mv = new ModelAndView("hldyListInfo");
+		if (!result.hasErrors()) {
 			//logic validate date
 			validateRegister(userInfo, listPeer, result);
 			
@@ -75,11 +107,12 @@ public class HolidayListInfoController extends BaseController {
 						dtlPeer.setHldyListPeer(listPeer);
 					}
 				}
-				hldyListSvc.register(listPeer);
-	
-				MessagesBean msgBean = new MessagesBean();
-				msgBean.addMessage(userInfo.getLocale(), messageSource, "msg.info.register.success", null)
-					.setMessagesIntoModelView(mv);
+
+				if (hldyListSvc.initAttndncInfo(listPeer)) {
+					MessagesBean msgBean = new MessagesBean();
+					msgBean.addMessage(userInfo.getLocale(), messageSource, "msg.info.init.success", null)
+						.setMessagesIntoModelView(mv);
+				}
 			}
 		}
 		return mv;

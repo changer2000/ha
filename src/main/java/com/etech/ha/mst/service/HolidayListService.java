@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,17 +15,23 @@ import org.springframework.transaction.annotation.Transactional;
 import com.etech.ha.dao.AttendanceInfoDAO;
 import com.etech.ha.dao.HolidayListDAO;
 import com.etech.ha.mst.bean.HolidayListSearchBean;
+import com.etech.ha.mst.cmd.InitAttndncInfoCMD;
 import com.etech.ha.peer.HolidayListPeer;
 
 @Service
 @Transactional
 public class HolidayListService {
 	
+	private static final Log logger = LogFactory.getLog(HolidayListService.class);
+	
 	@Autowired
 	private HolidayListDAO hldyListDao;
 	
 	@Autowired
 	private AttendanceInfoDAO attendanceInfoDao;
+	
+	@Autowired
+	private InitAttndncInfoCMD initAttndcInfocmd;
 	
 	public List<HolidayListPeer> search(HolidayListSearchBean searchBean) {
 		List<HolidayListPeer> list = hldyListDao.search(searchBean);
@@ -74,8 +82,20 @@ public class HolidayListService {
 		return peer;
 	}
 	
-	public void initDate(HolidayListPeer peer) {
-		//TODO
+	public boolean initAttndncInfo(HolidayListPeer listPeer) {
+
+		if (logger.isDebugEnabled()) {
+			logger.debug(">>> flg=" + initAttndcInfocmd.getFlg());
+			logger.debug(">>> listPeer=" + initAttndcInfocmd.getListPeer());
+		}
+		
+		initAttndcInfocmd.setListPeer(listPeer);
+		initAttndcInfocmd.doExecute();
+		//attendanceInfoDao.deleteByHldyList(listPeer);
+		
+		
+		
+		return true;
 	}
 	
 	public void delete(String[] ids) {
@@ -106,6 +126,14 @@ public class HolidayListService {
 
 	public void setAttendanceInfoDao(AttendanceInfoDAO attendanceInfoDao) {
 		this.attendanceInfoDao = attendanceInfoDao;
+	}
+
+	public InitAttndncInfoCMD getInitAttndcInfocmd() {
+		return initAttndcInfocmd;
+	}
+
+	public void setInitAttndcInfocmd(InitAttndncInfoCMD initAttndcInfocmd) {
+		this.initAttndcInfocmd = initAttndcInfocmd;
 	}
 	
 }
