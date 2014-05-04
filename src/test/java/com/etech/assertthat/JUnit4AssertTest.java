@@ -1,3 +1,8 @@
+/******************
+ * 此例子引用于<<Spring 3.x企业应用开发实战>>第16章
+ * 
+ * 最后2个例子做了适当修改，与原代码不一样
+ */
 package com.etech.assertthat;
 
 import static org.junit.Assert.*;
