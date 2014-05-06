@@ -1,4 +1,4 @@
-package com.etech.system.core;
+package com.etech.system.cmd;
 
 public abstract class BaseCMD {
 	
