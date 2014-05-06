@@ -92,7 +92,7 @@ public class HolidayListInfoController extends BaseController {
 	}
 	
 	@RequestMapping(params="initAttndncInfo", method=RequestMethod.POST)
-	public ModelAndView initAttndncInfo(UserInfo userInfo, @ModelAttribute("command") HolidayListPeer listPeer, BindingResult result) {
+	public ModelAndView initAttndncInfo(UserInfo userInfo, @ModelAttribute("command") HolidayListPeer listPeer, BindingResult result) throws Exception {
 		ModelAndView mv = new ModelAndView("hldyListInfo");
 		if (!result.hasErrors()) {
 			//logic validate date

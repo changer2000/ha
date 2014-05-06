@@ -84,7 +84,7 @@ public class HolidayListService extends BaseService {
 		return peer;
 	}
 	
-	public boolean initAttndncInfo(HolidayListPeer listPeer) {
+	public boolean initAttndncInfo(HolidayListPeer listPeer) throws Exception {
 		InitAttndncInfoCMD initAttndcInfocmd = this.cmdFactory.getInitAttndncInfoCMD();
 		
 		if (logger.isDebugEnabled()) {

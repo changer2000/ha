@@ -2,6 +2,6 @@ package com.etech.system.cmd;
 
 public abstract class BaseCMD {
 	
-	public abstract Object doExecute();
+	public abstract Object doExecute() throws Exception;
 	
 }

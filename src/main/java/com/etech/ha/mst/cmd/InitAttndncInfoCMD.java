@@ -23,7 +23,8 @@ public class InitAttndncInfoCMD extends BaseCMD {
 	
 	private HolidayListPeer listPeer;
 	
-	public Object doExecute() {
+	@Override
+	public Object doExecute() throws Exception {
 		attendanceInfoDao.deleteByHldyList(listPeer);
 		
 		return null;
