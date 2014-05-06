@@ -11,10 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.etech.ha.dao.HolidayDAO;
 import com.etech.ha.peer.HolidayPeer;
+import com.etech.system.service.BaseService;
 
 @Service
 @Transactional
-public class HolidayService {
+public class HolidayService extends BaseService {
 	
 	@Autowired
 	private HolidayDAO hldyDao;

@@ -17,11 +17,11 @@ import com.etech.ha.dao.HolidayListDAO;
 import com.etech.ha.mst.bean.HolidayListSearchBean;
 import com.etech.ha.mst.cmd.InitAttndncInfoCMD;
 import com.etech.ha.peer.HolidayListPeer;
-import com.etech.system.cmd.CmdFactory;
+import com.etech.system.service.BaseService;
 
 @Service
 @Transactional
-public class HolidayListService {
+public class HolidayListService extends BaseService {
 	
 	private static final Log logger = LogFactory.getLog(HolidayListService.class);
 	
@@ -31,8 +31,6 @@ public class HolidayListService {
 	@Autowired
 	private AttendanceInfoDAO attendanceInfoDao;
 	
-	@Autowired
-	private CmdFactory cmdFactory;
 	
 	//@Autowired
 	//private InitAttndncInfoCMD initAttndcInfocmd;
@@ -87,7 +85,7 @@ public class HolidayListService {
 	}
 	
 	public boolean initAttndncInfo(HolidayListPeer listPeer) {
-		InitAttndncInfoCMD initAttndcInfocmd = cmdFactory.getInitAttndncInfoCMD();
+		InitAttndncInfoCMD initAttndcInfocmd = this.cmdFactory.getInitAttndncInfoCMD();
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug(">>> listPeer=" + initAttndcInfocmd.getListPeer());
@@ -140,12 +138,5 @@ public class HolidayListService {
 		this.initAttndcInfocmd = initAttndcInfocmd;
 	}
 	*/
-	public CmdFactory getCmdFactory() {
-		return cmdFactory;
-	}
-
-	public void setCmdFactory(CmdFactory cmdFactory) {
-		this.cmdFactory = cmdFactory;
-	}
 	
 }

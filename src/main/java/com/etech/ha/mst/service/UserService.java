@@ -13,10 +13,11 @@ import com.etech.ha.mst.bean.UserListSearchBean;
 import com.etech.ha.mst.form.PwdInfoForm;
 import com.etech.ha.peer.UserPeer;
 import com.etech.system.bean.UserInfo;
+import com.etech.system.service.BaseService;
 
 @Transactional
 @Service
-public class UserService {
+public class UserService extends BaseService {
 	
 	@Autowired
 	private UserDAO userDao;

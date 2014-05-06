@@ -9,10 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.etech.ha.dao.AttendanceStatusDAO;
 import com.etech.ha.peer.AttendanceStatusPeer;
+import com.etech.system.service.BaseService;
 
 @Transactional
 @Service
-public class AttendanceStatusService {
+public class AttendanceStatusService extends BaseService {
 	
 	@Autowired
 	private AttendanceStatusDAO atndcStsDao;

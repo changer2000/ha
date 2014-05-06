@@ -8,10 +8,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.etech.ha.dao.GroupDAO;
 import com.etech.ha.peer.GroupPeer;
+import com.etech.system.service.BaseService;
 
 @Service
 @Transactional
-public class GroupService {
+public class GroupService extends BaseService {
 	
 	@Autowired
 	private GroupDAO groupDao;

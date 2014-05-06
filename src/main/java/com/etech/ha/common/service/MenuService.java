@@ -9,10 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.etech.system.bean.Menu;
 import com.etech.system.bean.MenuItem;
 import com.etech.system.bean.UserInfo;
+import com.etech.system.service.BaseService;
 
 @Transactional
 @Service
-public class MenuService {
+public class MenuService extends BaseService {
 	
 	public void prepareMenu(UserInfo userInfo, Menu menu) {
 		menu.getMenuList().clear();
