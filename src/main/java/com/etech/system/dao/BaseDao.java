@@ -36,6 +36,11 @@ public class BaseDao<T> {
 		return getHibernateTemplate().loadAll(entityClass);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<T> findAll() {
+		return (List<T>)find(" from " + entityClass.getSimpleName());
+	}
+	
 	public void save(T entity) {
 		getHibernateTemplate().save(entity);
 	}
