@@ -1,4 +1,6 @@
-package com.etech.test.template;
+package com.etech.test.template.test;
+
+import com.etech.test.template.Info;
 
 public class TypeTest {
 
