@@ -33,7 +33,7 @@
 		<filter-class>com.etech.system.filter.LoginCheckFilter</filter-class>
 		<init-param>
 			<param-name>excludePath</param-name>
-			<param-value>/resources,/index,/login</param-value>
+			<param-value>/resources,/index,/login,/test</param-value>
 		</init-param>
 	</filter>
 	<filter-mapping>
@@ -46,7 +46,7 @@
 		<filter-class>com.etech.system.filter.AccessCheckFilter</filter-class>
 		<init-param>
 			<param-name>excludePath</param-name>
-			<param-value>/resources,/index,/login</param-value>
+			<param-value>/resources,/index,/login,/test</param-value>
 		</init-param>
 	</filter>
 	<filter-mapping>
